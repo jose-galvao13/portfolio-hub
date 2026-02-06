@@ -1,0 +1,138 @@
+---
+import '../styles/global.css';
+import { Image } from 'astro:assets';
+import logoImg from '../assets/images/logo.png';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Business Data Analyst specializing in automation and financial workflows" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content={description}>
+  <title>{title}</title>
+
+<link rel="icon" type="image/png" href={logoImg.src} />
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="José Galvão | Business Data Analyst">
+  <meta property="og:description" content="Automation specialist eliminating 200h+ of manual work">
+  <meta property="og:image" content="/og-image.png">
+  <meta property="og:type" content="website">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "José Galvão",
+    "jobTitle": "Business Data Analyst",
+    "url": "https://seu-dominio.com",
+    "sameAs": [
+      "https://linkedin.com/in/jose-galvão",
+      "https://github.com/jose-galvao13"
+    ]
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZVWG09RGY6"></script>
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZVWG09RGY6');
+  </script>
+</head>
+<body>
+ <nav id="main-nav">
+  <div class="nav-container">
+    <div class="nav-content">
+      
+      <!-- LOGO COM A IMAGEM NOVA -->
+      <a href="#about" class="nav-logo">
+        <div class="logo-hexagon-wrapper">
+          <Image 
+          src={logoImg} 
+          alt="Logo JG" 
+          class="logo-image"
+          width={400}    
+          height={400}   
+          quality={100}  
+          format="webp"  
+          densities={[1.5, 2]} 
+          />
+        </div>
+      </a>
+      
+      <!-- Menu Central -->
+      <div class="nav-menu" id="nav-menu">
+        <ul class="nav-links">
+          <li><a href="#portfolio">Projects</a></li>
+          <li><a href="#timeline">Experience</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#efficiency">ROI Impact</a></li>
+        </ul>
+      </div>
+
+      <!-- CTA -->
+      <div class="nav-actions">
+        <a href="#contact" class="nav-cta-glow">Let's Talk</a>
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer>
+    <p>&copy; 2026 JOSÉ GALVÃO &bull; PORTFOLIO</p>
+  </footer>
+
+  <script>
+    // Navbar Scroll Effect
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 30) {
+        nav?.classList.add('scrolled');
+      } else {
+        nav?.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile Menu Toggle
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('nav-menu');
+    btn?.addEventListener('click', () => {
+      btn.classList.toggle('active');
+      menu?.classList.toggle('active');
+    });
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        if (href) {
+          const target = document.querySelector(href);
+          target?.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

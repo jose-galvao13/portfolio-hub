@@ -1,0 +1,94 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+  title: string;
+  type: string;
+  desc: string;
+  stack: string[];
+  linkRepo: string;
+  linkDemo?: string;
+  images: string[];
+  id: string;
+}
+
+const { title, type, desc, stack, linkRepo, linkDemo, images, id } = Astro.props;
+const hasMultipleImages = images.length > 1;
+
+// ✅ Importa apenas as imagens que este projeto precisa
+const allImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*.{jpeg,jpg,png,gif,webp}');
+const imageModules = await Promise.all(
+  images.map(img => allImages[img]())
+);
+---
+
+<div class="project-card" data-project-id={id}>
+  <div class="project-header">
+    <div class="project-title">{title}</div>
+    <div class="project-type">{type}</div>
+  </div>
+
+  <div class="project-image-container">
+    {imageModules.map((imgModule, index) => (
+      <Image 
+        src={imgModule.default}
+        alt={`Screenshot ${index + 1} de ${title}`}
+        class="project-image"
+        style={index === 0 ? '' : 'display: none;'}
+        quality={100}
+        width={1600}
+        format="webp"
+        densities={[1.5, 2]}
+        loading={index === 0 ? 'eager' : 'lazy'}
+      />
+    ))}
+  </div>
+
+  {hasMultipleImages && (
+    <div class="carousel-dots">
+      {images.map((_, index) => (
+        <button 
+          class={`dot ${index === 0 ? 'active' : ''}`}
+          data-index={index}
+          aria-label={`Ver imagem ${index + 1} de ${images.length} do projeto ${title}`}
+        ></button>
+      ))}
+    </div>
+  )}
+
+  <div class="project-description" set:html={desc}></div>
+
+  <div class="project-tags">
+    {stack.map(tag => (
+      <span class="skill-pill">{tag}</span>
+    ))}
+  </div>
+
+  <div class={`project-links ${!linkDemo || linkDemo === '#' ? 'single' : ''}`}>
+    <a href={linkRepo} target="_blank" rel="noopener noreferrer" class="project-btn" aria-label={`Ver código do projeto ${title} no GitHub`}>
+      📂 View Code
+    </a>
+    {linkDemo && linkDemo !== '#' && (
+      <a href={linkDemo} target="_blank" rel="noopener noreferrer" class="project-btn" aria-label={`Ver demonstração ao vivo do projeto ${title}`}>
+        🎬 Live Demo
+      </a>
+    )}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.project-card').forEach(card => {
+    const images = card.querySelectorAll('.project-image');
+    const dots = card.querySelectorAll('.dot');
+    
+    if (images.length <= 1) return;
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        images.forEach((img, i) => (img as HTMLElement).style.display = i === index ? 'block' : 'none');
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      });
+    });
+  });
+</script>
