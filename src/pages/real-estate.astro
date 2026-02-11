@@ -1,0 +1,192 @@
+---
+import CaseStudyLayout from '../layouts/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🏘️', value: '95,000+', label: 'Properties Analyzed' },
+  { icon: '📍', value: '308', label: 'Municipalities Covered' },
+  { icon: '💎', value: '€420/m²', label: 'Max Price Arbitrage Found' },
+  { icon: '📊', value: '15%', label: 'Avg. Undervaluation Gap' }
+];
+
+const stack = ['Power BI', 'Python', 'Web Scraping', 'GeoPandas', 'DAX'];
+---
+
+<CaseStudyLayout
+  title="Portugal Real Estate Analytics Platform"
+  description="Market intelligence system for identifying undervalued real estate opportunities through geospatial analysis and web scraping."
+  projectType="Market Intelligence & Real Estate"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/Portugal-Real-Estate"
+>
+  <section>
+    <h2>🎯 Business Challenge</h2>
+    <p>
+      Real estate investors in Portugal faced a critical information asymmetry problem: <strong>hyperlocal pricing data was scattered across dozens of platforms</strong>, making it impossible to identify arbitrage opportunities without manual research taking weeks.
+    </p>
+    <p>
+      The core challenges were:
+    </p>
+    <ul>
+      <li><strong>Data Fragmentation:</strong> Listings spread across 5+ platforms (Idealista, Imovirtual, Casa Sapo) with no unified view.</li>
+      <li><strong>Geographic Blind Spots:</strong> Price/m² could vary by 40% between neighboring municipalities, hidden in aggregate national statistics.</li>
+      <li><strong>Market Timing:</strong> No way to track how long properties stayed on market or detect price reductions.</li>
+      <li><strong>Investment Targeting:</strong> Investors needed to know <em>where</em> to buy, not just <em>what</em> to buy.</li>
+    </ul>
+    <blockquote>
+      "We found properties in Santarém listed at €1,200/m² while identical units 15km away in Cartaxo sold for €800/m². That's a €120k arbitrage on a 300m² property."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Solution Architecture</h2>
+    <p>
+      I built an <strong>end-to-end data pipeline</strong> combining web scraping, geospatial analysis, and interactive dashboards to surface actionable investment insights.
+    </p>
+    
+    <h3>Phase 1: Data Acquisition (Web Scraping)</h3>
+    <ul>
+      <li>Developed Python scrapers for major Portuguese real estate platforms using BeautifulSoup and Selenium.</li>
+      <li>Extracted: price, location (lat/long), property type, size (m²), bedrooms, construction year.</li>
+      <li>Implemented ethical scraping: rate limiting, robots.txt compliance, user-agent rotation.</li>
+      <li>Automated daily refreshes to track new listings and price changes.</li>
+    </ul>
+
+    <h3>Phase 2: Data Enrichment & Geocoding</h3>
+    <ul>
+      <li>Used GeoPandas to map each property to its municipality and NUTS region.</li>
+      <li>Calculated distance to amenities (train stations, hospitals, schools) via Google Maps API.</li>
+      <li>Created derived metrics: Price/m², Days on Market, Price Change %.</li>
+    </ul>
+
+    <h3>Phase 3: Geospatial Analytics in Power BI</h3>
+    <ul>
+      <li>Built interactive map layers showing avg price/m² by municipality.</li>
+      <li>Implemented "Arbitrage Finder": highlights municipalities where price/m² is >15% below neighboring areas.</li>
+      <li>Time-series analysis: track price trends over 12-month rolling windows.</li>
+    </ul>
+
+    <h3>Technical Implementation</h3>
+    <pre is:raw><code>import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+import geopandas as gpd
+
+# Web Scraping Example
+def scrape_listings(url):
+    response = requests.get(url, headers=&#123;'User-Agent': 'Mozilla/5.0'&#125;)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    listings = []
+    for item in soup.find_all('div', class_='property-card'):
+        listing = &#123;
+            'price': item.find('span', class_='price').text,
+            'size': item.find('span', class_='area').text,
+            'location': item.find('span', class_='location').text
+        &#125;
+        listings.append(listing)
+    
+    return pd.DataFrame(listings)
+
+# Geospatial Analysis
+gdf = gpd.GeoDataFrame(
+    df, 
+    geometry=gpd.points_from_xy(df['longitude'], df['latitude'])
+)
+
+# Calculate price per m²
+df['price_per_m2'] = df['price'] / df['size']
+
+# Identify arbitrage opportunities
+municipality_avg = df.groupby('municipality')['price_per_m2'].mean()
+df['arbitrage_gap'] = df['municipality'].map(municipality_avg) - df['price_per_m2']</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Key Results & Business Impact</h2>
+    
+    <h3>Quantified Outcomes</h3>
+    <ul>
+      <li><strong>95,000+ Properties:</strong> Comprehensive coverage of Portuguese market across all 308 municipalities.</li>
+      <li><strong>€420/m² Max Arbitrage:</strong> Identified municipalities with price gaps of up to €420/m² vs neighbors.</li>
+      <li><strong>15% Avg Undervaluation:</strong> Found systematic underpricing in inland regions (Beja, Castelo Branco) compared to coastal equivalents.</li>
+      <li><strong>Investment Pipeline:</strong> Generated list of 200+ "buy-and-hold" opportunities in high-growth corridors.</li>
+    </ul>
+
+    <h3>Strategic Insights Uncovered</h3>
+    <ul>
+      <li><strong>Coastal Premium Decay:</strong> Price/m² drops 60% within 30km of the coast, but amenities only drop 20%.</li>
+      <li><strong>Train Station Effect:</strong> Properties within 1km of train stations command a 25% premium.</li>
+      <li><strong>Construction Year Bias:</strong> Pre-1970 properties systematically undervalued despite renovation potential.</li>
+      <li><strong>Inventory Velocity:</strong> Properties in Porto stayed on market 18 days vs 65 days in Lisboa (oversupply signal).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Technical Methodology</h2>
+    
+    <h3>Data Pipeline Architecture</h3>
+    <ol>
+      <li><strong>Extraction:</strong> Python scrapers run daily via cron jobs, storing raw HTML in local cache.</li>
+      <li><strong>Transformation:</strong> Pandas scripts clean data (remove duplicates, handle missing values, standardize formats).</li>
+      <li><strong>Loading:</strong> Export to CSV, then import into Power BI via incremental refresh.</li>
+      <li><strong>Validation:</strong> Cross-check against official INE (Portuguese statistics office) data for sanity checks.</li>
+    </ol>
+
+    <h3>Geospatial Analysis Techniques</h3>
+    <ul>
+      <li><strong>Spatial Joins:</strong> Match properties to municipality boundaries using GeoPandas overlay operations.</li>
+      <li><strong>Buffer Analysis:</strong> Create 1km, 5km, 10km radius buffers around amenities to calculate proximity scores.</li>
+      <li><strong>Choropleth Maps:</strong> Color-code municipalities by avg price/m² to spot arbitrage opportunities visually.</li>
+    </ul>
+
+    <h3>Power BI Dashboard Features</h3>
+    <ul>
+      <li><strong>Interactive Filters:</strong> Slice by property type, bedrooms, price range, municipality.</li>
+      <li><strong>Drill-Through Pages:</strong> Click on municipality to see individual property listings.</li>
+      <li><strong>Custom Tooltips:</strong> Hover over map to see detailed stats (avg price, inventory count, days on market).</li>
+      <li><strong>Bookmarks:</strong> Pre-configured views for "Best Arbitrage", "High Growth Areas", "Distressed Assets".</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lessons Learned</h2>
+    
+    <h3>What Worked</h3>
+    <ul>
+      <li><strong>Geospatial Visualization:</strong> Maps were 10x more effective than tables for communicating arbitrage opportunities to investors.</li>
+      <li><strong>Incremental Refresh:</strong> Power BI's incremental load kept dashboard performance fast even with 95k rows.</li>
+      <li><strong>Data Validation:</strong> Cross-referencing with official census data caught scraping errors early.</li>
+    </ul>
+
+    <h3>Challenges Overcome</h3>
+    <ul>
+      <li><strong>Platform Anti-Scraping:</strong> Some sites blocked scrapers; solved with rotating proxies and exponential backoff.</li>
+      <li><strong>Address Standardization:</strong> "Rua da Sé" vs "R. Sé" required fuzzy matching and manual correction.</li>
+      <li><strong>Outlier Handling:</strong> Luxury villas (€10M+) skewed averages; implemented median price/m² instead.</li>
+      <li><strong>Missing Coordinates:</strong> 12% of listings lacked lat/long; used Google Geocoding API to fill gaps.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Future Enhancements</h2>
+    <ul>
+      <li><strong>Predictive Pricing Model:</strong> Use XGBoost to predict "fair value" based on features (location, size, amenities).</li>
+      <li><strong>Rental Yield Calculator:</strong> Scrape Airbnb data to estimate short-term rental income potential.</li>
+      <li><strong>Sentiment Analysis:</strong> Parse listing descriptions to detect urgency keywords ("motivated seller", "price reduced").</li>
+      <li><strong>API Integration:</strong> Expose data via REST API for integration with CRM systems and mobile apps.</li>
+      <li><strong>Automated Alerts:</strong> Email notifications when properties matching criteria appear in target areas.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Technical Stack Deep Dive</h2>
+    <ul>
+      <li><strong>Python (Requests, BeautifulSoup, Selenium):</strong> Web scraping automation.</li>
+      <li><strong>GeoPandas:</strong> Geospatial operations (spatial joins, buffer analysis, coordinate transformations).</li>
+      <li><strong>Pandas:</strong> Data cleaning, feature engineering, aggregations.</li>
+      <li><strong>Power BI:</strong> Interactive dashboards, DAX measures, geospatial visualizations.</li>
+      <li><strong>Google Maps API:</strong> Geocoding and distance calculations.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

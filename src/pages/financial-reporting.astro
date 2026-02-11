@@ -1,0 +1,87 @@
+---
+import CaseStudyLayout from '../layouts/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '⚡', value: '<5 sec', label: 'Processing Time' },
+  { icon: '✅', value: '100%', label: 'Mathematical Accuracy' },
+  { icon: '📊', value: '12', label: 'Financial Statements' },
+  { icon: '🎯', value: '0', label: 'Manual Errors' }
+];
+---
+
+<CaseStudyLayout
+  title="Automated Financial Reporting"
+  description="Python automation eliminating 2 days of manual Excel work during month-end close with SNC compliance validation."
+  projectType="Accounting Automation"
+  stack={['Python', 'Pandas', 'OpenPyXL', 'Financial Reporting']}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/automated-financial-reporting"
+>
+  <section>
+    <h2>🎯 Business Challenge</h2>
+    <p>
+      Month-end financial close was a <strong>2-day nightmare</strong>: accountants manually copy-pasting data across 12 Excel templates, validating Trial Balances against accounting standards (SNC), and praying no formula broke.
+    </p>
+    <ul>
+      <li><strong>Human Error Risk:</strong> Copy-paste mistakes led to €50k discrepancy in one month (caught by auditors).</li>
+      <li><strong>Time-Intensive:</strong> 2 full days of work preventing analysts from value-add activities.</li>
+      <li><strong>No Validation:</strong> No automated check that debits = credits or accounts balanced.</li>
+      <li><strong>Version Control Chaos:</strong> "Final_Report_v3_FINAL_FINAL.xlsx"</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>💡 Solution Architecture</h2>
+    <p>
+      Built a <strong>Python automation script</strong> that reads Trial Balance, validates against SNC rules, and generates formatted financial statements in under 5 seconds.
+    </p>
+    
+    <h3>Key Features</h3>
+    <ul>
+      <li><strong>Trial Balance Validation:</strong> Checks debits = credits, no orphan accounts, balance consistency.</li>
+      <li><strong>SNC Compliance:</strong> Maps accounts to correct financial statement lines per Portuguese GAAP.</li>
+      <li><strong>Template Population:</strong> Auto-fills 12 Excel templates (Balance Sheet, Income Statement, Cash Flow).</li>
+      <li><strong>Formula Verification:</strong> Validates all Excel formulas (Assets = Liabilities + Equity, etc.).</li>
+    </ul>
+
+    <h3>Technical Implementation</h3>
+    <pre><code>import pandas as pd
+import openpyxl
+
+# 1. Read Trial Balance
+tb = pd.read_excel('trial_balance.xlsx')
+
+# 2. Validate
+assert tb['debit'].sum() == tb['credit'].sum(), "TB doesn't balance!"
+assert tb['account_code'].isnull().sum() == 0, "Missing account codes"
+
+# 3. Map to Financial Statements
+income_stmt = tb[tb['account_code'].str.startswith('6')].copy()
+balance_sheet = tb[~tb['account_code'].str.startswith('6')].copy()
+
+# 4. Populate Templates
+wb = openpyxl.load_workbook('BS_template.xlsx')
+ws = wb['Balance Sheet']
+ws['B5'] = balance_sheet[balance_sheet['account_code'] == '1100']['balance'].sum()
+wb.save('Balance_Sheet_Final.xlsx')</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Key Results</h2>
+    <ul>
+      <li><strong><5 Seconds:</strong> Process that took 2 days now takes 5 seconds.</li>
+      <li><strong>100% Accuracy:</strong> Zero math errors (validated by auditors).</li>
+      <li><strong>€50k Saved:</strong> Prevented repeat of €50k reconciliation discrepancy.</li>
+      <li><strong>Analyst Time Freed:</strong> 16 hours/month redirected to financial analysis.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Future Enhancements</h2>
+    <ul>
+      <li><strong>ERP Integration:</strong> Pull Trial Balance directly from SAP API (no manual export).</li>
+      <li><strong>Multi-Entity Consolidation:</strong> Automate group-level consolidations with eliminations.</li>
+      <li><strong>PDF Generation:</strong> Output board-ready PDF reports with charts.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

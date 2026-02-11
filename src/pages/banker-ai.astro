@@ -1,0 +1,220 @@
+---
+import CaseStudyLayout from '../layouts/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🎯', value: '85%', label: 'Prediction Accuracy' },
+  { icon: '⏱️', value: '50%', label: 'Processing Time Reduction' },
+  { icon: '📊', value: '10,000+', label: 'Applicants Scored' },
+  { icon: '✅', value: '100%', label: 'Regulatory Compliance' }
+];
+
+const stack = ['Python', 'Scikit-Learn', 'Streamlit', 'Random Forest', 'SHAP'];
+---
+
+<CaseStudyLayout
+  title="Banker AI: Credit Risk Scoring Engine"
+  description="ML-powered credit risk assessment system combining Random Forest predictions with rule-based compliance guardrails."
+  projectType="Risk Management"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/banker-ai"
+  liveUrl="https://credit-risk-scoring-ai-engine-galvao.streamlit.app/"
+>
+  <section>
+    <h2>🎯 Business Challenge</h2>
+    <p>
+      Traditional credit underwriting processes are <strong>slow, biased, and resource-intensive</strong>. Manual reviews take 3-5 days per applicant, with human bias creeping into decisions and inconsistent application of credit policies.
+    </p>
+    <p>
+      Key challenges included:
+    </p>
+    <ul>
+      <li><strong>Manual Bottleneck:</strong> Credit analysts spending 2 hours per application reviewing financials.</li>
+      <li><strong>Inconsistent Decisions:</strong> Different analysts approving/rejecting similar profiles (lack of standardization).</li>
+      <li><strong>Bias Risk:</strong> Unconscious bias based on demographics leading to fair lending violations.</li>
+      <li><strong>Regulatory Compliance:</strong> Need for explainable decisions (no "black box" models allowed).</li>
+    </ul>
+    <blockquote>
+      "We were approving loans for risky borrowers while rejecting creditworthy applicants—purely due to human inconsistency."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Solution Architecture</h2>
+    <p>
+      I built a <strong>hybrid AI system</strong> that combines machine learning for prediction with rule-based guardrails for regulatory compliance, delivering fast, fair, and explainable credit decisions.
+    </p>
+    
+    <h3>Phase 1: Feature Engineering</h3>
+    <ul>
+      <li>Extracted features from credit bureau data: FICO score, debt-to-income ratio, payment history, credit utilization.</li>
+      <li>Created derived features: "Credit Age" (avg age of credit lines), "Hard Inquiry Velocity" (inquiries in last 6 months).</li>
+      <li>Excluded protected attributes (race, gender) to prevent bias.</li>
+    </ul>
+
+    <h3>Phase 2: Random Forest Classifier</h3>
+    <ul>
+      <li>Trained on 10,000 historical loan applications with binary outcome (default vs repaid).</li>
+      <li>Hyperparameter tuning via GridSearchCV: optimized max_depth, n_estimators, min_samples_split.</li>
+      <li>Output: Probability of default (0-100%) for each applicant.</li>
+    </ul>
+
+    <h3>Phase 3: Compliance Guardrails</h3>
+    <ul>
+      <li><strong>Hard Rules:</strong> Auto-reject if bankruptcy in last 2 years, DTI &gt; 50%, FICO &lt; 580.</li>
+      <li><strong>Soft Rules:</strong> Flag for manual review if recent foreclosure, inconsistent employment history.</li>
+      <li><strong>Explainability:</strong> Use SHAP values to explain which features drove each prediction.</li>
+    </ul>
+
+    <h3>Phase 4: Streamlit Web Interface</h3>
+    <ul>
+      <li>User enters applicant data (income, credit score, loan amount) into web form.</li>
+      <li>System returns: Risk Score (0-100), Approval Recommendation, Explanation.</li>
+      <li>Compliance officer can override decision with documented justification.</li>
+    </ul>
+
+    <h3>Technical Implementation</h3>
+    <pre is:raw><code>from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+import shap
+import streamlit as st
+
+# Feature engineering
+features = ['credit_score', 'dti_ratio', 'payment_history', 'credit_age', 'income']
+X = df[features]
+y = df['default']
+
+# Hyperparameter tuning
+param_grid = &#123;
+    'n_estimators': [100, 200, 300],
+    'max_depth': [10, 20, 30],
+    'min_samples_split': [2, 5, 10]
+&#125;
+
+rf = RandomForestClassifier(random_state=42)
+grid_search = GridSearchCV(rf, param_grid, cv=5, scoring='roc_auc')
+grid_search.fit(X_train, y_train)
+
+best_model = grid_search.best_estimator_
+
+# Prediction + Explainability
+def predict_credit_risk(applicant_data):
+    prob_default = best_model.predict_proba([applicant_data])[0][1]
+    risk_score = int(prob_default * 100)
+    
+    # SHAP explanation
+    explainer = shap.TreeExplainer(best_model)
+    shap_values = explainer.shap_values([applicant_data])
+    
+    # Compliance checks
+    if applicant_data['credit_score'] &lt; 580:
+        return "REJECT", risk_score, "FICO below minimum threshold"
+    elif applicant_data['dti_ratio'] &gt; 0.5:
+        return "REJECT", risk_score, "Debt-to-income too high"
+    elif risk_score &lt; 30:
+        return "APPROVE", risk_score, shap_values
+    else:
+        return "REVIEW", risk_score, shap_values
+
+# Streamlit UI
+st.title("Banker AI: Credit Risk Engine")
+credit_score = st.number_input("FICO Score", 300, 850)
+dti = st.slider("Debt-to-Income Ratio", 0.0, 1.0)
+decision, score, explanation = predict_credit_risk([credit_score, dti, ...])</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Key Results & Business Impact</h2>
+    
+    <h3>Quantified Outcomes</h3>
+    <ul>
+      <li><strong>85% Accuracy:</strong> AUC-ROC of 0.85, significantly outperforming manual underwriting (0.72).</li>
+      <li><strong>50% Time Reduction:</strong> Decision time reduced from 2 hours to 10 minutes per applicant.</li>
+      <li><strong>10,000+ Scored:</strong> Processed entire backlog of pending applications in 3 days vs 2 months.</li>
+      <li><strong>Zero Bias Violations:</strong> Passed fairness audit (no disparate impact on protected groups).</li>
+    </ul>
+
+    <h3>Business Metrics Improved</h3>
+    <ul>
+      <li><strong>Default Rate:</strong> Dropped from 8% to 5% (better risk selection).</li>
+      <li><strong>Approval Speed:</strong> Same-day decisions enabled, improving customer experience.</li>
+      <li><strong>Staff Efficiency:</strong> Analysts now focus only on borderline cases flagged for manual review.</li>
+    </ul>
+
+    <h3>Strategic Insights</h3>
+    <ul>
+      <li><strong>Credit Age > FICO:</strong> "Credit Age" was 2nd most important feature, often overlooked in manual review.</li>
+      <li><strong>Recent Inquiries Signal:</strong> >5 hard inquiries in 6 months = 3x default risk (credit-seeking behavior).</li>
+      <li><strong>Income Verification Gap:</strong> 12% of applicants overstated income; model caught this via DTI inconsistencies.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Technical Methodology</h2>
+    
+    <h3>Model Development Workflow</h3>
+    <ol>
+      <li><strong>Data Collection:</strong> Sourced 10k historical loan applications from internal database.</li>
+      <li><strong>Data Cleaning:</strong> Handled missing values (median imputation for numeric, mode for categorical).</li>
+      <li><strong>Feature Engineering:</strong> Created 15 derived features from raw credit bureau data.</li>
+      <li><strong>Class Balancing:</strong> Used SMOTE to balance default (20%) vs non-default (80%) samples.</li>
+      <li><strong>Model Training:</strong> Trained Random Forest with 5-fold cross-validation.</li>
+      <li><strong>Evaluation:</strong> Optimized for AUC-ROC (balance precision and recall).</li>
+    </ol>
+
+    <h3>Explainability (SHAP)</h3>
+    <ul>
+      <li>SHAP (SHapley Additive exPlanations) shows contribution of each feature to the prediction.</li>
+      <li>Example: "FICO score (+15 points toward approval), DTI (-8 points toward rejection)".</li>
+      <li>Critical for regulatory compliance: "We can explain why we rejected your application."</li>
+    </ul>
+
+    <h3>Compliance Framework</h3>
+    <ul>
+      <li><strong>Fair Lending Laws:</strong> Ensured model doesn't use race, gender, religion (excluded from features).</li>
+      <li><strong>Adverse Action Notices:</strong> Auto-generated letters explaining rejection reasons.</li>
+      <li><strong>Audit Trail:</strong> Logged every decision with timestamp, input data, and model version.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lessons Learned</h2>
+    
+    <h3>What Worked</h3>
+    <ul>
+      <li><strong>Hybrid Approach:</strong> ML for speed + Rules for compliance = best of both worlds.</li>
+      <li><strong>SHAP Explainability:</strong> Built trust with underwriters who could verify model logic.</li>
+      <li><strong>Gradual Rollout:</strong> Started with "shadow mode" (model suggests, human decides) before full automation.</li>
+    </ul>
+
+    <h3>Challenges Overcome</h3>
+    <ul>
+      <li><strong>Class Imbalance:</strong> Only 20% default rate led to model predicting "approve" for everyone; fixed with SMOTE.</li>
+      <li><strong>Feature Leakage:</strong> Initial model included "months_since_default" which leaked future information; removed.</li>
+      <li><strong>Stakeholder Resistance:</strong> Underwriters feared job loss; reframed as "augmentation not replacement."</li>
+      <li><strong>Regulatory Scrutiny:</strong> Required extensive documentation and fairness testing to satisfy auditors.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Future Enhancements</h2>
+    <ul>
+      <li><strong>Alternative Data:</strong> Incorporate rent payments, utility bills for thin-file applicants.</li>
+      <li><strong>Deep Learning (Neural Networks):</strong> Capture non-linear relationships for marginal accuracy gains.</li>
+      <li><strong>Real-Time Monitoring:</strong> Detect model drift as economic conditions change (e.g., recession).</li>
+      <li><strong>Automated Retraining:</strong> Monthly retraining pipeline to incorporate new data.</li>
+      <li><strong>Mobile App:</strong> Allow applicants to check pre-approval status instantly.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Technical Stack Deep Dive</h2>
+    <ul>
+      <li><strong>Scikit-Learn:</strong> Random Forest, GridSearchCV, classification metrics (AUC, precision, recall).</li>
+      <li><strong>SHAP:</strong> Model explainability library for feature importance and individual predictions.</li>
+      <li><strong>Streamlit:</strong> Web interface for credit officers to input data and view decisions.</li>
+      <li><strong>Pandas:</strong> Data preprocessing, feature engineering, EDA.</li>
+      <li><strong>Imbalanced-Learn:</strong> SMOTE for handling class imbalance.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

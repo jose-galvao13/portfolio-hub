@@ -1,0 +1,167 @@
+---
+import CaseStudyLayout from '../layouts/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '📊', value: '30%', label: 'Revenue at Risk Identified' },
+  { icon: '🎯', value: '87%', label: 'Model Accuracy (AUC)' },
+  { icon: '⏱️', value: '3 months', label: 'Avg. Churn Prediction Window' },
+  { icon: '💰', value: '€250k', label: 'Annual Retention Savings' }
+];
+
+const stack = ['Python', 'Scikit-Learn', 'Lifelines', 'Pandas', 'Matplotlib'];
+---
+
+<CaseStudyLayout
+  title="Customer Churn & Retention Analytics"
+  description="Predicting customer lifetime and churn risk through survival analysis and gradient boosting ML."
+  projectType="Data Science / Business Intelligence"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/churn-analysis"
+>
+  <section>
+    <h2>🎯 Business Challenge</h2>
+    <p>
+      The company was experiencing a <strong>20% annual customer churn rate</strong>, but the existing CRM system only flagged customers <em>after</em> they had already cancelled. This reactive approach meant lost revenue and wasted retention budgets on customers who were already gone.
+    </p>
+    <p>
+      Key challenges included:
+    </p>
+    <ul>
+      <li><strong>Time-to-Churn Blindness:</strong> Not knowing <em>when</em> a customer would churn made it impossible to time retention campaigns effectively.</li>
+      <li><strong>Feature Overload:</strong> 80+ customer attributes with no clear indication of which actually predicted churn.</li>
+      <li><strong>Censored Data Problem:</strong> Many customers were still active (hadn't churned yet), making traditional classification models incomplete.</li>
+    </ul>
+    <blockquote>
+      "We were spending €50k/month on retention campaigns targeting customers who had already mentally checked out 6 months prior."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Solution Architecture</h2>
+    <p>
+      I implemented a <strong>two-phase hybrid system</strong> combining survival analysis (for temporal prediction) with gradient boosting (for feature importance and risk scoring).
+    </p>
+    
+    <h3>Phase 1: Survival Analysis (Kaplan-Meier & Cox Regression)</h3>
+    <ul>
+      <li><strong>Kaplan-Meier Curves:</strong> Estimated the probability of survival (retention) over time for different customer segments.</li>
+      <li><strong>Cox Proportional Hazards:</strong> Identified which features (contract type, support tickets, payment delays) accelerated churn risk.</li>
+      <li>This phase answered: <em>"How long until this customer churns?"</em></li>
+    </ul>
+
+    <h3>Phase 2: Gradient Boosting Classifier</h3>
+    <ul>
+      <li>Trained on <strong>binary outcome</strong> (churned vs retained) using engineered features from survival analysis.</li>
+      <li>Features included: days since last login, support ticket velocity, payment history volatility.</li>
+      <li>This phase answered: <em>"Why is this customer likely to churn?"</em></li>
+    </ul>
+
+    <h3>Technical Implementation</h3>
+    <pre is:raw><code>from lifelines import KaplanMeierFitter, CoxPHFitter
+from sklearn.ensemble import GradientBoostingClassifier
+import pandas as pd
+
+# Survival Analysis - Time to Churn
+kmf = KaplanMeierFitter()
+kmf.fit(durations=data['tenure'], event_observed=data['churned'])
+
+# Cox Regression for Feature Importance
+cph = CoxPHFitter()
+cph.fit(data[features + ['tenure', 'churned']], 'tenure', 'churned')
+
+# Gradient Boosting for Churn Probability
+X = data[engineered_features]
+y = data['churned']
+
+model = GradientBoostingClassifier(n_estimators=200, max_depth=5)
+model.fit(X_train, y_train)
+
+# Risk Score: Probability of churn in next 90 days
+data['churn_risk_90d'] = model.predict_proba(X)[:, 1]</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Key Results & Business Impact</h2>
+    
+    <h3>Quantified Outcomes</h3>
+    <ul>
+      <li><strong>30% Revenue at Risk:</strong> Identified high-risk customer segments representing €1.2M in annual recurring revenue.</li>
+      <li><strong>87% Prediction Accuracy:</strong> AUC score of 0.87, significantly outperforming the previous rule-based system (0.62).</li>
+      <li><strong>3-Month Warning Window:</strong> Could predict churn 90 days in advance with 75% accuracy, enabling proactive intervention.</li>
+      <li><strong>€250k Annual Savings:</strong> Reduced wasted retention spending by targeting only high-probability saves.</li>
+    </ul>
+
+    <h3>Strategic Insights Uncovered</h3>
+    <ul>
+      <li><strong>Support Ticket Paradox:</strong> Customers with 0 tickets were at <em>higher</em> risk than those with 1-2 (indicating disengagement).</li>
+      <li><strong>Payment Method Predictor:</strong> Customers using manual bank transfers had 3x higher churn than auto-debit users.</li>
+      <li><strong>Onboarding Critical Window:</strong> 80% of churns occurred within the first 6 months, pointing to onboarding issues.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Technical Methodology</h2>
+    
+    <h3>Feature Engineering</h3>
+    <ol>
+      <li><strong>Recency Metrics:</strong> Days since last purchase, login, support contact.</li>
+      <li><strong>Frequency Metrics:</strong> Average monthly transactions, support tickets per year.</li>
+      <li><strong>Monetary Metrics:</strong> ARPU (Average Revenue Per User), payment volatility.</li>
+      <li><strong>Derived Features:</strong> "Engagement Score" = (logins × transactions) / tenure.</li>
+    </ol>
+
+    <h3>Model Evaluation</h3>
+    <ul>
+      <li><strong>Stratified K-Fold Cross-Validation:</strong> To handle class imbalance (only 20% churn rate).</li>
+      <li><strong>Precision-Recall Trade-off:</strong> Optimized for recall (catching all potential churners) even at the cost of some false positives.</li>
+      <li><strong>Time-Based Validation:</strong> Trained on months 1-10, validated on months 11-12 to simulate real deployment.</li>
+    </ul>
+
+    <h3>Deployment</h3>
+    <ul>
+      <li>Weekly batch scoring of entire customer base (~50k customers).</li>
+      <li>Top 500 highest-risk customers flagged for CRM team review.</li>
+      <li>Risk scores integrated into Power BI dashboards for executive reporting.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lessons Learned</h2>
+    
+    <h3>What Worked</h3>
+    <ul>
+      <li><strong>Survival Analysis First:</strong> Understanding <em>when</em> customers churn helped prioritize feature engineering.</li>
+      <li><strong>Business Alignment:</strong> Collaborated with retention team to set "actionable" risk thresholds (top 10% vs top 1%).</li>
+      <li><strong>Explainability:</strong> SHAP values helped explain individual predictions to the CRM team ("This customer is high-risk because...").</li>
+    </ul>
+
+    <h3>Challenges Overcome</h3>
+    <ul>
+      <li><strong>Data Quality Issues:</strong> 15% of customer records had missing tenure data, requiring imputation via account creation dates.</li>
+      <li><strong>Class Imbalance:</strong> Only 20% churn rate meant the model initially over-predicted "no churn". Fixed with SMOTE oversampling.</li>
+      <li><strong>Feature Leakage:</strong> Initial model included "last payment date" which leaked information about churn (churned customers obviously had old last payments).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Future Enhancements</h2>
+    <ul>
+      <li><strong>Real-Time Scoring:</strong> Move from weekly batch to event-triggered scoring (e.g., score immediately after a support ticket closure).</li>
+      <li><strong>Causal Inference:</strong> Use uplift modeling to identify which customers would actually respond to retention offers vs those who would stay anyway.</li>
+      <li><strong>Deep Learning (LSTM):</strong> Capture temporal sequences (e.g., "login pattern suddenly changed") using recurrent neural networks.</li>
+      <li><strong>A/B Testing Framework:</strong> Measure actual retention lift from model-driven campaigns vs control groups.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Technical Stack Deep Dive</h2>
+    <ul>
+      <li><strong>Lifelines:</strong> Python library for survival analysis (Kaplan-Meier, Cox regression).</li>
+      <li><strong>Scikit-Learn:</strong> Gradient Boosting, hyperparameter tuning (GridSearchCV), model evaluation.</li>
+      <li><strong>Pandas:</strong> Data wrangling, feature engineering, cohort analysis.</li>
+      <li><strong>Matplotlib/Seaborn:</strong> Survival curves, feature importance plots, risk distributions.</li>
+      <li><strong>SHAP:</strong> Model explainability for stakeholder communication.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

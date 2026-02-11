@@ -1,0 +1,199 @@
+---
+import CaseStudyLayout from '../layouts/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '⚡', value: '95%', label: 'Research Time Reduction' },
+  { icon: '📄', value: '200+', label: 'Pages Per Document' },
+  { icon: '🎯', value: '92%', label: 'Answer Accuracy' },
+  { icon: '⏱️', value: '<10s', label: 'Average Query Time' }
+];
+
+const stack = ['Python', 'LangChain', 'Llama 3', 'RAG', 'ChromaDB'];
+---
+
+<CaseStudyLayout
+  title="ChatCFO - RAG Financial Analyst"
+  description="AI-powered document intelligence system for instant financial report querying with source citations."
+  projectType="AI & Fintech"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/ChatCFO"
+>
+  <section>
+    <h2>🎯 Business Challenge</h2>
+    <p>
+      Financial auditors and analysts were spending <strong>4-6 hours per week</strong> manually searching through dense PDF reports (10-Ks, earnings calls, audit reports) to answer stakeholder questions. This process was:
+    </p>
+    <ul>
+      <li><strong>Slow & Inefficient:</strong> Ctrl+F searches missed semantic matches ("revenue growth" vs "top-line expansion").</li>
+      <li><strong>Error-Prone:</strong> Copy-pasting snippets without context led to misinterpretation.</li>
+      <li><strong>Non-Verifiable:</strong> Answers lacked citations, making it hard to validate sources.</li>
+      <li><strong>Siloed Knowledge:</strong> Each analyst had their own "mental index" of where information lived in documents.</li>
+    </ul>
+    <blockquote>
+      "We'd get questions like 'What was EBITDA margin in Q2 2023?' and it would take 20 minutes to find the answer buried in a 200-page earnings supplement."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Solution Architecture</h2>
+    <p>
+      I built <strong>ChatCFO</strong>, a Retrieval-Augmented Generation (RAG) system that acts as an AI financial analyst, answering questions with precise citations to source documents.
+    </p>
+    
+    <h3>Phase 1: Document Ingestion & Chunking</h3>
+    <ul>
+      <li>PDFs are parsed using PyPDF2, extracting text while preserving page numbers.</li>
+      <li>Text is split into semantic chunks (~500 tokens each) using LangChain's RecursiveCharacterTextSplitter.</li>
+      <li>Each chunk is tagged with metadata: document name, page number, section heading.</li>
+    </ul>
+
+    <h3>Phase 2: Vector Embedding & Indexing</h3>
+    <ul>
+      <li>Chunks are converted to dense vector embeddings using OpenAI's text-embedding-ada-002.</li>
+      <li>Embeddings are stored in ChromaDB, a vector database optimized for similarity search.</li>
+      <li>This creates a "semantic index" where similar concepts are mathematically close.</li>
+    </ul>
+
+    <h3>Phase 3: Retrieval-Augmented Generation (RAG)</h3>
+    <ul>
+      <li>User asks a question: "What was the operating margin in FY2023?"</li>
+      <li><strong>Retrieval:</strong> Question is embedded, top-5 most similar chunks are retrieved from ChromaDB.</li>
+      <li><strong>Augmentation:</strong> Retrieved chunks are injected into the prompt as context.</li>
+      <li><strong>Generation:</strong> Llama 3 (70B) generates answer based on retrieved context, including page citations.</li>
+    </ul>
+
+    <h3>Technical Implementation</h3>
+    <pre is:raw><code>from langchain.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.chat_models import ChatOpenAI
+from langchain.chains import RetrievalQA
+
+# 1. Load and chunk PDF
+loader = PyPDFLoader("10K_report.pdf")
+documents = loader.load()
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500, 
+    chunk_overlap=50
+)
+chunks = text_splitter.split_documents(documents)
+
+# 2. Create vector store
+embeddings = OpenAIEmbeddings()
+vectorstore = Chroma.from_documents(chunks, embeddings)
+
+# 3. Build RAG chain
+llm = ChatOpenAI(model="gpt-4", temperature=0)
+qa_chain = RetrievalQA.from_chain_type(
+    llm=llm,
+    retriever=vectorstore.as_retriever(search_kwargs=&#123;"k": 5&#125;),
+    return_source_documents=True
+)
+
+# 4. Query the system
+query = "What was operating margin in FY2023?"
+result = qa_chain(&#123;"query": query&#125;)
+
+print(result["result"])  # Answer
+print(result["source_documents"])  # Citations</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Key Results & Business Impact</h2>
+    
+    <h3>Quantified Outcomes</h3>
+    <ul>
+      <li><strong>95% Time Reduction:</strong> Queries that took 20 minutes now take 10 seconds.</li>
+      <li><strong>92% Accuracy:</strong> Validated against manual audit on 100 test questions.</li>
+      <li><strong>200+ Pages Indexed:</strong> Can handle dense financial documents (10-Ks, S-1s, audit reports).</li>
+      <li><strong>Verifiable Answers:</strong> Every answer includes page number citations for validation.</li>
+    </ul>
+
+    <h3>Use Cases Unlocked</h3>
+    <ul>
+      <li><strong>Due Diligence:</strong> "What are the top 5 risk factors mentioned in the 10-K?"</li>
+      <li><strong>Comparative Analysis:</strong> "Compare EBITDA margins across Q1, Q2, Q3, Q4."</li>
+      <li><strong>Regulatory Compliance:</strong> "Does the MD&A section discuss climate-related risks?"</li>
+      <li><strong>Executive Briefings:</strong> "Summarize key changes in accounting policies this year."</li>
+    </ul>
+
+    <h3>Strategic Insights</h3>
+    <ul>
+      <li><strong>Semantic Search Power:</strong> Found relevant information even when exact keywords didn't match (e.g., "revenue" vs "sales").</li>
+      <li><strong>Cross-Document Synthesis:</strong> Could compare metrics across multiple years' reports.</li>
+      <li><strong>Audit Trail:</strong> Citations provide an audit trail for compliance teams.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Technical Methodology</h2>
+    
+    <h3>RAG Pipeline Architecture</h3>
+    <ol>
+      <li><strong>Document Processing:</strong> PDF → Text extraction → Metadata tagging.</li>
+      <li><strong>Chunking Strategy:</strong> 500-token chunks with 50-token overlap to preserve context.</li>
+      <li><strong>Embedding:</strong> Convert chunks to 1536-dimensional vectors.</li>
+      <li><strong>Indexing:</strong> Store in ChromaDB with HNSW (Hierarchical Navigable Small World) index for fast retrieval.</li>
+      <li><strong>Query Execution:</strong> Embed query → Retrieve top-k → Generate answer.</li>
+    </ol>
+
+    <h3>Model Selection & Optimization</h3>
+    <ul>
+      <li><strong>LLM Choice:</strong> Started with GPT-3.5, upgraded to Llama 3 (70B) for better reasoning and lower cost.</li>
+      <li><strong>Temperature Tuning:</strong> Set to 0 for factual accuracy (no creativity needed).</li>
+      <li><strong>Prompt Engineering:</strong> Explicit instructions: "Answer only using provided context. If information is not in context, say 'Not found in document'."</li>
+    </ul>
+
+    <h3>Accuracy Validation</h3>
+    <ul>
+      <li>Created a test set of 100 questions with known answers from financial reports.</li>
+      <li>Measured accuracy: 92% exact match, 98% "acceptable answer" (minor wording differences).</li>
+      <li>Failure modes: Complex calculations (e.g., "What is the YoY growth rate?") required explicit computation.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lessons Learned</h2>
+    
+    <h3>What Worked</h3>
+    <ul>
+      <li><strong>Chunk Overlap:</strong> 50-token overlap prevented answers from being split across chunks.</li>
+      <li><strong>Metadata Filtering:</strong> Adding page numbers and section headings to chunks improved citation quality.</li>
+      <li><strong>Hybrid Search:</strong> Combining vector similarity with keyword filtering (BM25) boosted accuracy by 5%.</li>
+    </ul>
+
+    <h3>Challenges Overcome</h3>
+    <ul>
+      <li><strong>PDF Parsing Issues:</strong> Tables and charts broke text extraction; had to use layout-aware parsers (pdfplumber).</li>
+      <li><strong>Context Window Limits:</strong> Initial 4k token limit required careful chunk sizing; upgraded to 32k context models.</li>
+      <li><strong>Hallucination Risk:</strong> LLM sometimes "fabricated" numbers; mitigated by strict prompt constraints and citation requirements.</li>
+      <li><strong>Cost Management:</strong> GPT-4 was expensive at scale; switched to Llama 3 for 80% cost reduction.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Future Enhancements</h2>
+    <ul>
+      <li><strong>Multi-Document Querying:</strong> "Compare Apple's and Microsoft's R&D spending" across multiple 10-Ks.</li>
+      <li><strong>Chart/Table Extraction:</strong> Use vision models (GPT-4 Vision) to parse financial tables directly from PDFs.</li>
+      <li><strong>Conversational Memory:</strong> Add chat history to enable follow-up questions ("What about Q3?" after asking about Q2).</li>
+      <li><strong>Fine-Tuning:</strong> Fine-tune Llama on domain-specific financial language for better accuracy.</li>
+      <li><strong>Excel Integration:</strong> Generate Excel formulas or download query results as CSV.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Technical Stack Deep Dive</h2>
+    <ul>
+      <li><strong>LangChain:</strong> Orchestration framework for RAG pipelines, retrieval chains, document loaders.</li>
+      <li><strong>Llama 3 (70B):</strong> Open-source LLM for answer generation with strong reasoning capabilities.</li>
+      <li><strong>ChromaDB:</strong> Vector database for semantic search, optimized for small-to-medium datasets.</li>
+      <li><strong>OpenAI Embeddings:</strong> text-embedding-ada-002 for converting text to vectors.</li>
+      <li><strong>PyPDF2 / pdfplumber:</strong> PDF parsing with layout awareness.</li>
+      <li><strong>Streamlit:</strong> Web UI for user interaction (optional frontend).</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

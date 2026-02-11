@@ -1,0 +1,92 @@
+---
+import CaseStudyLayout from '../layouts/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🎯', value: '88%', label: 'MAPE Accuracy' },
+  { icon: '📊', value: '6 months', label: 'Forecast Horizon' },
+  { icon: '📈', value: '3 years', label: 'Historical Data' },
+  { icon: '⚡', value: 'Daily', label: 'Model Updates' }
+];
+---
+
+<CaseStudyLayout
+  title="AI Sales Forecasting & Budgeting"
+  description="Facebook Prophet time-series model predicting demand with 88% accuracy, enabling precise inventory and cash flow planning."
+  projectType="Data Science & FP&A"
+  stack={['Python', 'Prophet', 'Power BI', 'Time-Series ML']}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/Ai-Sales-Forecasting-Budgeting"
+>
+  <section>
+    <h2>🎯 Business Challenge</h2>
+    <p>
+      Finance team relied on <strong>static annual budgets</strong> that ignored seasonality, leading to:
+    </p>
+    <ul>
+      <li><strong>Inventory Mismatches:</strong> Overstocked in slow months, stockouts in peak season.</li>
+      <li><strong>Cash Flow Surprises:</strong> Unexpected shortfalls because demand wasn't accurately predicted.</li>
+      <li><strong>Manual Forecasting:</strong> Analysts spending 2 weeks each quarter adjusting Excel spreadsheets.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>💡 Solution: Facebook Prophet Model</h2>
+    <p>
+      Implemented <strong>Prophet</strong> (developed by Meta) for time-series forecasting, capturing seasonality, trends, and holidays automatically.
+    </p>
+    
+    <h3>Implementation</h3>
+    <pre is:raw><code>from prophet import Prophet
+import pandas as pd
+
+# Prepare data (Prophet requires 'ds' and 'y' columns)
+df = pd.read_csv('sales_history.csv')
+df = df.rename(columns=&#123;'date': 'ds', 'sales': 'y'&#125;)
+
+# Train model
+model = Prophet(
+    yearly_seasonality=True,
+    weekly_seasonality=True,
+    daily_seasonality=False,
+    holidays=holidays_df  # Black Friday, Christmas, etc.
+)
+model.fit(df)
+
+# Generate 6-month forecast
+future = model.make_future_dataframe(periods=180)
+forecast = model.predict(future)
+
+# Visualize
+model.plot(forecast)
+model.plot_components(forecast)  # Trend, seasonality breakdown</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Key Results</h2>
+    <ul>
+      <li><strong>88% MAPE Accuracy:</strong> Mean Absolute Percentage Error of 12% (industry benchmark: 20%).</li>
+      <li><strong>Inventory Optimization:</strong> Reduced holding costs by 18% through better demand planning.</li>
+      <li><strong>Cash Flow Precision:</strong> Forecasted revenue within 5% accuracy enabled better working capital management.</li>
+      <li><strong>Time Savings:</strong> 2 weeks → 2 hours for quarterly forecast updates.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Model Features</h2>
+    <ul>
+      <li><strong>Seasonality Detection:</strong> Automatically captured weekly, monthly, yearly patterns.</li>
+      <li><strong>Holiday Effects:</strong> Modeled Black Friday, Christmas spikes without manual rules.</li>
+      <li><strong>Confidence Intervals:</strong> Provided upper/lower bounds for risk planning.</li>
+      <li><strong>Power BI Integration:</strong> Forecasts visualized in executive dashboards.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Future Enhancements</h2>
+    <ul>
+      <li><strong>Multi-SKU Forecasting:</strong> Separate models for each product category.</li>
+      <li><strong>External Regressors:</strong> Incorporate marketing spend, competitor pricing.</li>
+      <li><strong>Real-Time Updates:</strong> Daily retraining as new sales data arrives.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

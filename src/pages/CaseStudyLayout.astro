@@ -1,0 +1,811 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  projectType: string;
+  stack: string[];
+  metrics: {
+    label: string;
+    value: string;
+    icon: string;
+  }[];
+  githubUrl: string;
+  liveUrl?: string;
+}
+
+const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = Astro.props;
+---
+
+<Layout title={`${title} - Case Study | José Galvão`} description={description}>
+  <!-- Top Progress Bar -->
+  <div class="reading-progress"></div>
+
+  <div class="case-study-root">
+    
+    <!-- Background Effects -->
+    <div class="bg-effects">
+      <div class="glow-orb orb-1"></div>
+      <div class="glow-orb orb-2"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    
+    <!-- Ultra Header: Título Massivo -->
+    <br /> <br />  <br /> <br />
+    <header class="ultra-header">
+      <div class="container-wide">
+        <div class="header-split">
+          <div class="title-area">
+            <span class="eyebrow">
+              <span class="eyebrow-dot"></span>
+              {projectType}
+              <span class="eyebrow-line"></span>
+            </span>
+            <h1 class="glitch-title" data-text={title}>
+              {title}
+              <div class="title-underline"></div>
+            </h1>
+          </div>
+          <p class="hero-desc">{description}</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-layout container-wide">
+      
+      <!-- Content Area -->
+      <article class="technical-content">
+        <slot />
+      </article>
+
+      <!-- Sticky Sidebar: O "Fact Sheet" -->
+      <aside class="tech-sidebar">
+        <div class="sidebar-inner">
+          
+          <div class="sidebar-section">
+            <h4 class="section-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+              Key Performance
+            </h4>
+            <div class="metrics-stack">
+              {metrics.map((m, idx) => (
+                <div class="m-item" style={`animation-delay: ${idx * 0.1}s`}>
+                  <div class="metric-bar">
+                    <div class="metric-fill" style={`width: ${Math.min(parseInt(m.value) || 85, 100)}%`}></div>
+                  </div>
+                  <span class="m-val">{m.value}</span>
+                  <span class="m-lab">{m.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h4 class="section-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                <polyline points="2 17 12 22 22 17"/>
+                <polyline points="2 12 12 17 22 12"/>
+              </svg>
+              Core Stack
+            </h4>
+            <div class="stack-cloud">
+              {stack.map((s, idx) => (
+                <span class="s-tag" style={`animation-delay: ${idx * 0.05}s`}>
+                  <span class="tag-shimmer"></span>
+                  {s}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h4 class="section-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
+              External Assets
+            </h4>
+            <div class="link-group">
+              <a href={githubUrl} target="_blank" class="side-btn github">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                <span>View Repository</span>
+                <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
+              {liveUrl && (
+                <a href={liveUrl} target="_blank" class="side-btn live">
+                  <span class="live-indicator"></span>
+                  <span>Live Demo</span>
+                  <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              )}
+            </div>
+          </div>
+
+          <div class="sidebar-footer">
+            <p>Analysis by José Galvão</p>
+            <div class="status-indicator">
+              <span class="pulse"></span> Active Project
+            </div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+</Layout>
+
+<style>
+  :root {
+    --text-pure: #ffffff;
+    --text-dim: #94a3b8;
+    --bg-black: #030303;
+    --accent: #00f2ff;
+    --accent-glow: rgba(0, 242, 255, 0.3);
+    --accent-bright: #00ffff;
+    --border: rgba(255, 255, 255, 0.07);
+    --sidebar-w: 320px;
+  }
+
+  .case-study-root {
+    background: var(--bg-black);
+    color: var(--text-pure);
+    font-family: 'Inter', -apple-system, sans-serif;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .container-wide {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Background Effects */
+  .bg-effects {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.4;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .orb-1 {
+    top: 10%; left: 15%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, var(--accent-glow), transparent);
+  }
+
+  .orb-2 {
+    bottom: 20%; right: 10%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(136, 0, 255, 0.2), transparent);
+    animation-delay: -10s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -60px) scale(1.1); }
+    66% { transform: translate(-30px, 40px) scale(0.9); }
+  }
+
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+    opacity: 0.3;
+  }
+
+  /* Reading Progress Bar */
+  .reading-progress {
+    position: fixed;
+    top: 0; left: 0; width: 0%; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-bright), #00ff88);
+    z-index: 1000;
+    box-shadow: 0 0 20px var(--accent-glow);
+    transition: width 0.1s ease;
+  }
+
+  /* Ultra Header */
+  .ultra-header {
+    padding: 120px 0 80px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .ultra-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at 0% 0%, rgba(0, 242, 255, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .header-split {
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: 60px; align-items: end;
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .eyebrow-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { 
+      box-shadow: 0 0 0 0 var(--accent-glow);
+      transform: scale(1);
+    }
+    50% { 
+      box-shadow: 0 0 0 8px transparent;
+      transform: scale(1.2);
+    }
+  }
+
+  .eyebrow-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    max-width: 80px;
+  }
+
+  .glitch-title {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 0.95;
+    font-weight: 900;
+    letter-spacing: -2px;
+    margin: 0;
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent-bright) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleGlow 3s ease-in-out infinite;
+  }
+
+  @keyframes titleGlow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.2); }
+  }
+
+  .title-underline {
+    position: absolute;
+    bottom: -12px;
+    left: 0;
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    border-radius: 2px;
+    animation: underlineSlide 2s ease-in-out infinite;
+  }
+
+  @keyframes underlineSlide {
+    0%, 100% { width: 120px; }
+    50% { width: 200px; }
+  }
+
+  .hero-desc {
+    font-size: 1.25rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin: 0;
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .hero-desc::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent), transparent);
+  }
+
+  /* Main Layout */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 1fr var(--sidebar-w);
+    gap: 80px;
+    padding-top: 80px;
+  }
+
+  /* Article Content */
+  .technical-content {
+    max-width: 800px;
+    padding-bottom: 100px;
+  }
+
+  .technical-content :global(h2) {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 60px 0 30px;
+    background: linear-gradient(to right, #fff, var(--accent-bright));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    padding-bottom: 16px;
+  }
+
+  .technical-content :global(h2::after) {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .technical-content :global(p) {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--text-dim);
+    margin-bottom: 30px;
+  }
+
+  .technical-content :global(blockquote) {
+    margin: 50px 0;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 4px solid var(--accent);
+    font-style: italic;
+    font-size: 1.3rem;
+    border-radius: 0 16px 16px 0;
+    position: relative;
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+  }
+
+  .technical-content :global(pre) {
+    background: #080808 !important;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin: 40px 0;
+    font-size: 14px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .technical-content :global(pre::before) {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  /* Sidebar */
+  .tech-sidebar {
+    position: relative;
+  }
+
+  .sidebar-inner {
+    position: sticky;
+    top: 120px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    padding: 30px;
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .sidebar-inner:hover {
+    border-color: rgba(0, 242, 255, 0.3);
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.3),
+      0 0 40px rgba(0, 242, 255, 0.1);
+  }
+
+  .section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title svg {
+    stroke: var(--accent);
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+  }
+
+  .sidebar-section {
+    margin-bottom: 0;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .sidebar-section + .sidebar-section {
+    padding-top: 32px;
+  }
+
+  .metrics-stack {
+    display: grid;
+    gap: 24px;
+  }
+
+  .m-item {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 18px;
+    position: relative;
+    animation: fadeInUp 0.6s ease-out backwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .metric-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .metric-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+    border-radius: 2px;
+    animation: fillBar 1.5s ease-out;
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  @keyframes fillBar {
+    from { width: 0%; }
+  }
+
+  .m-val {
+    display: block;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent);
+    text-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  .m-lab {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .stack-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .s-tag {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: tagFadeIn 0.5s ease-out backwards;
+  }
+
+  @keyframes tagFadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .tag-shimmer {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+  }
+
+  .s-tag:hover {
+    background: rgba(0, 242, 255, 0.1);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 242, 255, 0.2);
+  }
+
+  .link-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .side-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .side-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .side-btn:hover::before {
+    opacity: 1;
+  }
+
+  .github {
+    background: #fff;
+    color: #000;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+  }
+
+  .github:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+  }
+
+  .live {
+    background: rgba(0, 242, 255, 0.1);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+
+  .live:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px var(--accent-glow);
+    background: rgba(0, 242, 255, 0.15);
+  }
+
+  .live-indicator {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse-glow 2s infinite;
+  }
+
+  .side-btn .arrow {
+    transition: transform 0.3s;
+  }
+
+  .side-btn:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  .sidebar-footer {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  .status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    color: #00ff88;
+    font-weight: 700;
+    padding: 8px 16px;
+    background: rgba(0, 255, 136, 0.05);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+  }
+
+  .pulse {
+    width: 8px;
+    height: 8px;
+    background: #00ff88;
+    border-radius: 50%;
+    animation: pulse-glow 2s infinite;
+  }
+
+  @keyframes pulse-glow {
+    0% {
+      box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .header-split,
+    .main-layout {
+      grid-template-columns: 1fr;
+    }
+    .tech-sidebar {
+      order: -1;
+    }
+    .main-layout {
+      gap: 40px;
+    }
+    .sidebar-inner {
+      position: relative;
+      top: 0;
+    }
+  }
+</style>
+
+<script>
+  // Reading Progress Bar logic with smooth animation
+  let ticking = false;
+  
+  function updateProgress() {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    const bar = document.querySelector(".reading-progress");
+    if (bar) (bar as HTMLElement).style.width = scrolled + "%";
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(updateProgress);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Fix navigation links to redirect to homepage sections
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get all navigation links including "Let's Talk" button
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"], .nav-cta-glow[href^="#"]');
+    
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const hash = link.getAttribute('href');
+        const currentPath = window.location.pathname;
+        
+        // Detect base path from current location
+        // If path includes /portfolio-hub, use it; otherwise use /
+        const basePath = currentPath.includes('/portfolio-hub') ? '/portfolio-hub/' : '/';
+        
+        // Check if we're on homepage
+        const isHomepage = 
+          currentPath === basePath || 
+          currentPath === basePath + 'index.html' ||
+          currentPath.endsWith('/portfolio-hub') ||
+          currentPath === '/' ||
+          currentPath === '/index.html';
+        
+        if (isHomepage) {
+          // If on homepage, smooth scroll to section
+          const target = document.querySelector(hash);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } else {
+          // If on case study page, redirect to homepage with hash
+          window.location.href = basePath + hash;
+        }
+      });
+    });
+
+    // Handle logo click to return to homepage
+    const logoLink = document.querySelector('.nav-logo');
+    if (logoLink) {
+      logoLink.addEventListener('click', (e) => {
+        const currentPath = window.location.pathname;
+        const basePath = currentPath.includes('/portfolio-hub') ? '/portfolio-hub/' : '/';
+        
+        const isHomepage = 
+          currentPath === basePath || 
+          currentPath === basePath + 'index.html' ||
+          currentPath.endsWith('/portfolio-hub') ||
+          currentPath === '/' ||
+          currentPath === '/index.html';
+        
+        if (!isHomepage) {
+          e.preventDefault();
+          window.location.href = basePath;
+        }
+      });
+    }
+  });
+</script>

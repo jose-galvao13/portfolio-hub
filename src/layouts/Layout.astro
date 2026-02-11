@@ -1,0 +1,279 @@
+---
+import '../styles/global.css';
+import { Image } from 'astro:assets';
+import logoImg from '../assets/images/logo.png';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { 
+  title, 
+  description = "Business Data Analyst specializing in Python automation, ML, and financial data engineering. 200h+ manual work eliminated through AI-powered solutions." 
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalvao.com');
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  
+  <!-- Preconnect to critical domains -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  
+  <!-- Primary Meta Tags -->
+  <title>{title}</title>
+  <meta name="title" content={title}>
+  <meta name="description" content={description}>
+  <meta name="author" content="José Galvão">
+  <meta name="keywords" content="business data analyst, python automation, machine learning engineer, financial modeling, ETL pipelines, power bi consultant, data engineering, AI solutions">
+  <meta name="theme-color" content="#0EA5E9">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href={canonicalURL}>
+
+  <!-- Favicon & App Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href={logoImg.src}>
+  <link rel="apple-touch-icon" sizes="180x180" href={logoImg.src}>
+  <link rel="mask-icon" href={logoImg.src} color="#0EA5E9">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content={canonicalURL}>
+  <meta property="og:title" content="José Galvão | Business Data Analyst & Automation Specialist">
+  <meta property="og:description" content="Eliminating 200h+ of manual work through Python automation, ML models, and financial data engineering. Proven ROI in fraud detection, churn analysis, and ETL pipelines.">
+  <meta property="og:image" content={new URL('/og-image.png', Astro.site || 'https://josegalvao.com')}>
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="José Galvão Portfolio">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content={canonicalURL}>
+  <meta name="twitter:title" content="José Galvão | Business Data Analyst">
+  <meta name="twitter:description" content="Python automation & ML specialist. 11 projects, 500k+ data processed, 90% avg accuracy.">
+  <meta name="twitter:image" content={new URL('/og-image.png', Astro.site || 'https://josegalvao.com')}>
+  
+  <!-- Structured Data - Enhanced Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "José Galvão",
+    "jobTitle": "Business Data Analyst",
+    "description": "Python automation specialist and ML engineer with expertise in financial data engineering",
+    "url": "https://josegalvao.com",
+    "image": "https://josegalvao.com/profile.png",
+    "sameAs": [
+      "https://linkedin.com/in/jose-galvão",
+      "https://github.com/jose-galvao13"
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Coimbra",
+      "addressCountry": "PT"
+    },
+    "alumniOf": {
+      "@type": "EducationalOrganization",
+      "name": "Coimbra Business School (ISCAC)"
+    },
+    "knowsAbout": [
+      "Python Programming",
+      "Machine Learning",
+      "Data Engineering",
+      "Financial Modeling",
+      "Business Intelligence",
+      "ETL Pipelines",
+      "Power BI",
+      "SQL"
+    ]
+  }
+  </script>
+
+  <!-- CSS Import with display=swap for font loading -->
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
+  <!-- Critical CSS inline (if needed) -->
+  <style>
+    /* Prevent FOUC */
+    html { visibility: visible; opacity: 1; }
+  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZVWG09RGY6"></script>
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZVWG09RGY6', {
+      page_path: window.location.pathname,
+      anonymize_ip: true,
+      cookie_flags: 'SameSite=None;Secure'
+    });
+  </script>
+</head>
+<body>
+
+  <nav id="main-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <div class="nav-content">
+        
+        <!-- LOGO -->
+        <a href="#about" class="nav-logo" aria-label="José Galvão - Home">
+          <div class="logo-hexagon-wrapper">
+            <Image 
+              src={logoImg} 
+              alt="JG Logo"
+              class="logo-image"
+              width={80}
+              height={80}
+              quality={90}
+              format="webp"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        </a>
+        
+        <!-- Desktop Menu -->
+        <div class="nav-menu" id="nav-menu">
+          <ul class="nav-links" role="list">
+            <li><a href="#portfolio">Projects</a></li>
+            <li><a href="#timeline">Experience</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#recommendations">Recommendations</a></li>
+            <li><a href="#efficiency">ROI Impact</a></li>
+          </ul>
+        </div>
+
+        <!-- CTA -->
+        <div class="nav-actions">
+          <a href="#contact" class="nav-cta-glow">Let's Talk</a>
+          <button 
+            class="mobile-menu-btn" 
+            id="mobile-menu-btn"
+            aria-label="Toggle mobile menu"
+            aria-expanded="false"
+            aria-controls="nav-menu"
+          >
+            <span class="bar" aria-hidden="true"></span>
+            <span class="bar" aria-hidden="true"></span>
+            <span class="bar" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <slot />
+  </main>
+
+
+  <script>
+    // ============================================
+    // PERFORMANCE-OPTIMIZED SCRIPTS
+    // ============================================
+    
+    // Navbar Scroll Effect (throttled)
+    const nav = document.getElementById('main-nav');
+    let ticking = false;
+    
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (window.scrollY > 30) {
+            nav?.classList.add('scrolled');
+          } else {
+            nav?.classList.remove('scrolled');
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // Mobile Menu Toggle (accessible)
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('nav-menu');
+    
+    btn?.addEventListener('click', () => {
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isExpanded));
+      btn.classList.toggle('active');
+      menu?.classList.toggle('active');
+      
+      // Trap focus in mobile menu
+      if (!isExpanded) {
+        const firstLink = menu?.querySelector('a');
+        firstLink?.focus();
+      }
+    });
+
+    // Close mobile menu on ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menu?.classList.contains('active')) {
+        btn?.click();
+      }
+    });
+
+    // Smooth Scroll (optimized)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href && href !== '#') {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ 
+              behavior: 'smooth',
+              block: 'start'
+            });
+            
+            // Update URL without reload
+            history.pushState(null, '', href);
+            
+            // Close mobile menu if open
+            if (menu?.classList.contains('active')) {
+              btn?.click();
+            }
+          }
+        }
+      });
+    });
+
+    // Prefetch critical resources on hover (desktop only)
+    if (window.matchMedia('(hover: hover)').matches) {
+      document.querySelectorAll('a[href^="http"]').forEach(link => {
+        link.addEventListener('mouseenter', () => {
+          const url = link.getAttribute('href');
+          if (url && !document.querySelector(`link[rel="prefetch"][href="${url}"]`)) {
+            const prefetch = document.createElement('link');
+            prefetch.rel = 'prefetch';
+            prefetch.href = url;
+            document.head.appendChild(prefetch);
+          }
+        }, { once: true });
+      });
+    }
+  </script>
+
+  <!-- Service Worker Registration (optional for PWA) -->
+  <script is:inline>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {
+          // Silent fail if no SW
+        });
+      });
+    }
+  </script>
+</body>
+</html>

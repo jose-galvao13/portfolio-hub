@@ -1,0 +1,1276 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import profileImage from '../assets/images/profile.png';
+import CaseStudyLayout from '../layouts/CaseStudyLayout.astro';
+const currentYear = new Date().getFullYear();
+
+const projects = [
+  {
+    title: "Customer Churn & Retention Analytics",
+    type: "Data Science / Business Intelligence",
+    desc: "<b>🔴 Problem:</b> Static churn reports only react after the customer has already left.<br><b>🟢 Solution:</b> Developed a full-cycle system integrating Survival Analysis (Kaplan-Meier) and ML (Gradient Boosting) to predict the 'when' and 'why' of churn.<br><b>🚀 Impact:</b> Identified high-risk segments representing 30% of revenue at risk, enabling proactive retention campaigns.",
+    stack: ["Python", "Machine Learning", "Lifelines", "Pandas"],
+    linkRepo: "https://github.com/jose-galvao13/churn-analysis",
+    linkDemo: "#",
+    caseStudy: `${import.meta.env.BASE_URL}/churn-analysis`,
+    images: [
+        "/src/assets/images/Churn-Analysis.png", 
+        "/src/assets/images/Churn-Analysis2.png", 
+        "/src/assets/images/Churn-Analysis3.png",
+        "/src/assets/images/Churn-Analysis4.png",
+        "/src/assets/images/Churn-Analysis5.png",
+        "/src/assets/images/Churn-Analysis6.png",
+        "/src/assets/images/Churn-Analysis7.png"
+    ],
+    complexity: "advanced",
+    businessImpact: "high"
+  },
+  {
+    title: "Unsupervised Fraud Detection System",
+    type: "Machine Learning / Data Security",
+    desc: "<b>🔴 Problem:</b> Traditional rules miss 40% of zero-day fraud attacks.<br><b>🟢 Solution:</b> Built an unsupervised ensemble (Isolation Forest & PCA) to detect anomalies without labels.<br><b>🚀 Impact:</b> Detected patterns in 0.17% of transactions that bypassed standard filters.",
+    stack: ["Python", "Machine Learning", "Scikit-Learn", "Matplotlib"],
+    linkRepo: "https://github.com/jose-galvao13/fraud-detection-system",
+    linkDemo: "#",
+    caseStudy: `${import.meta.env.BASE_URL}/fraud-detection`,
+    images: [
+      "/src/assets/images/fraud-detection-system.png",
+      "/src/assets/images/fraud-detection-system2.png",
+      "/src/assets/images/fraud-detection-system3.png",
+      "/src/assets/images/fraud-detection-system4.png"
+    ],
+    complexity: "advanced",
+    businessImpact: "high"
+  },
+  {
+    title: "Portugal Real Estate Analytics",
+    type: "Market Intelligence & Real Estate",
+    desc: "<b>🔴 Problem:</b> Investors lack granular data to find undervalued assets.<br><b>🟢 Solution:</b> Scraped & analyzed 95k+ listings with geo-spatial mapping.<br><b>🚀 Impact:</b> Identifies arbitrage opportunities by comparing price/m² across neighboring municipalities.",
+    stack: ["Power BI", "Python", "Data Modeling", "Web Scraping"],
+    linkRepo: "https://github.com/jose-galvao13/Portugal-Real-Estate",
+    linkDemo: "#",
+    caseStudy: `${import.meta.env.BASE_URL}/real-estate`,
+    images: ["/src/assets/images/real_estate.png"],
+    complexity: "intermediate",
+    businessImpact: "medium"
+  },
+  {
+    title: "ChatCFO - RAG Financial Analyst",
+    type: "AI & Fintech",
+    desc: "<b>🔴 Problem:</b> Auditors spend hours digging through 200+ page PDFs.<br><b>🟢 Solution:</b> AI Assistant (RAG + Llama 3) that queries docs with citations.<br><b>🚀 Impact:</b> Reduces research time by 95%, delivering verifiable answers in seconds.",
+    stack: ["Python", "Machine Learning", "LangChain", "RAG"],
+    linkRepo: "https://github.com/jose-galvao13/ChatCFO",
+    linkDemo: "#",
+    caseStudy: `${import.meta.env.BASE_URL}/chatcfo`,
+    images: [
+      "/src/assets/images/chatcfo.png",
+      "/src/assets/images/chatcfo2.png",
+      "/src/assets/images/chatcfo3.png"
+    ],
+    complexity: "advanced",
+    businessImpact: "high"
+  },
+  {
+    title: "Macro Portfolio Analyzer",
+    type: "Investment Analysis",
+    desc: "<b>🔴 Problem:</b> Static Excel sheets fail to capture real-time volatility.<br><b>🟢 Solution:</b> Live dashboard tracking S&P 500, BTC & Gold via API.<br><b>🚀 Impact:</b> Automates risk metrics (Sharpe, Drawdown), enabling instant rebalancing decisions.",
+    stack: ["Python", "Streamlit", "Plotly", "API"],
+    linkRepo: "https://github.com/jose-galvao13/portfolio-macro-analyzer",
+    linkDemo: "https://portfolio-macro-analyzer-galvao.streamlit.app/",
+    caseStudy: `${import.meta.env.BASE_URL}/macro-portfolio`,
+    images: ["/src/assets/images/macro.png"],
+    complexity: "intermediate",
+    businessImpact: "medium"
+  },
+  {
+    title: "Equity Research - Auto DCF",
+    type: "Corporate Finance",
+    desc: "<b>🔴 Problem:</b> Manual DCF valuation is prone to error and slow.<br><b>🟢 Solution:</b> Auto-Valuation tool fetching live financials to calculate WACC & FCF.<br><b>🚀 Impact:</b> Generates equity research reports in 2 minutes vs. 4 hours manually.",
+    stack: ["Python", "API", "Financial Modeling", "Valuation"],
+    linkRepo: "https://github.com/jose-galvao13/Equity-Research-Agent-AI",
+    linkDemo: "#",
+    caseStudy: `${import.meta.env.BASE_URL}/equity-research`,
+    images: [
+      "/src/assets/images/equity_research.png",
+      "/src/assets/images/equity_research2.png"
+    ],
+    complexity: "intermediate",
+    businessImpact: "high"
+  },
+  {
+    title: "Banker AI: Credit Risk Engine",
+    type: "Risk Management",
+    desc: "<b>🔴 Problem:</b> Manual credit reviews are slow and biased.<br><b>🟢 Solution:</b> ML model (Random Forest) protected by dynamic compliance rules.<br><b>🚀 Impact:</b> 85% prediction accuracy and 50% reduction in processing time per applicant.",
+    stack: ["Python", "Machine Learning", "Streamlit", "Scikit-Learn"],
+    linkRepo: "https://github.com/jose-galvao13/banker-ai",
+    linkDemo: "https://credit-risk-scoring-ai-engine-galvao.streamlit.app/",
+    caseStudy: `${import.meta.env.BASE_URL}/banker-ai`,
+    images: ["/src/assets/images/banker_ai.png"],
+    complexity: "advanced",
+    businessImpact: "high"
+  },
+  {
+    title: "Financial Data Warehouse (ETL)",
+    type: "Data Engineering",
+    desc: "<b>🔴 Problem:</b> Decentralized CSV files lead to data inconsistency.<br><b>🟢 Solution:</b> Enterprise ETL pipeline transforming raw ERP data into a Star Schema.<br><b>🚀 Impact:</b> Reduced query time by 70% and enabled single-source-of-truth reporting.",
+    stack: ["SQL", "Python", "Power BI", "Data Architecture"],
+    linkRepo: "https://github.com/jose-galvao13/financial-warehouse",
+    linkDemo: "#",
+    caseStudy: `${import.meta.env.BASE_URL}/financial-warehouse`,
+    images: ["/src/assets/images/warehouse.png"],
+    complexity: "advanced",
+    businessImpact: "high"
+  },
+  {
+    title: "Automated Financial Reporting",
+    type: "Accounting Automation",
+    desc: "<b>🔴 Problem:</b> Month-end close takes 2 days of manual Excel work.<br><b>🟢 Solution:</b> Python script that validates Trial Balances vs. SNC rules.<br><b>🚀 Impact:</b> Process cut to <5 seconds with 100% mathematical integrity guaranteed.",
+    stack: ["Python", "Excel Automation", "Financial Reporting"],
+    linkRepo: "https://github.com/jose-galvao13/automated-financial-reporting",
+    linkDemo: "#",
+    caseStudy: `${import.meta.env.BASE_URL}/financial-reporting`,
+    images: ["/src/assets/images/reporting.png"],
+    complexity: "intermediate",
+    businessImpact: "medium"
+  },
+  {
+    title: "E-Commerce Analytics Dashboard",
+    type: "Business Intelligence",
+    desc: "<b>🔴 Problem:</b> High churn rate hidden in aggregate sales data.<br><b>🟢 Solution:</b> RFM Segmentation model on 100k+ transactions.<br><b>🚀 Impact:</b> Identified €96k revenue at risk and a €42k cross-sell opportunity.",
+    stack: ["Power BI", "SQL", "DAX", "RFM Analysis"],
+    linkRepo: "https://github.com/jose-galvao13/ecommerce-analytics",
+    linkDemo: "#",
+    caseStudy: `${import.meta.env.BASE_URL}/ecommerce-analytics`,
+    images: [
+      "/src/assets/images/ecommerce.png",
+      "/src/assets/images/ecommerce2.png",
+      "/src/assets/images/ecommerce3.png",
+      "/src/assets/images/ecommerce4.png"
+    ],
+    complexity: "intermediate",
+    businessImpact: "medium"
+  },
+  {
+    title: "AI Sales Forecasting",
+    type: "Data Science & FP&A",
+    desc: "<b>🔴 Problem:</b> Static budgeting fails to capture seasonality.<br><b>🟢 Solution:</b> Facebook Prophet model forecasting 6-month demand.<br><b>🚀 Impact:</b> 88% MAPE accuracy, enabling precise inventory planning and cash flow forecasts.",
+    stack: ["Python", "Power BI", "Machine Learning", "Time-Series"],
+    linkRepo: "https://github.com/jose-galvao13/Ai-Sales-Forecasting-Budgeting",
+    linkDemo: "#",
+    caseStudy: `${import.meta.env.BASE_URL}/sales-forecasting`,
+    images: ["/src/assets/images/forecast.png"],
+    complexity: "intermediate",
+    businessImpact: "medium"
+  }
+];
+
+// ✅ SEPARAÇÃO: Featured (Top 4) vs Other Projects
+const featuredProjects = projects.filter(p => 
+  ['Customer Churn & Retention Analytics', 'ChatCFO - RAG Financial Analyst', 
+   'Portugal Real Estate Analytics', 'Unsupervised Fraud Detection System'].includes(p.title)
+);
+
+const otherProjects = projects.filter(p => 
+  !['Customer Churn & Retention Analytics', 'ChatCFO - RAG Financial Analyst', 
+    'Portugal Real Estate Analytics', 'Unsupervised Fraud Detection System'].includes(p.title)
+);
+---
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZVWG09RGY6"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ZVWG09RGY6');
+</script>
+
+<Layout title="José Galvão | Portfolio">
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+  
+  <br>
+  
+  <!-- HERO SECTION -->
+  <section id="about" class="hero">
+    <div class="container">
+      <div class="profile-pic-wrapper">
+        <img src={profileImage.src} alt="José Galvão" class="profile-pic hero-reveal">
+      </div>
+      <h1 class="reveal">José Galvão</h1>
+      <h3 class="reveal">Business Data Analyst</h3>
+      <div class="hero-description reveal">
+        I automate financial workflows that eliminate hundreds of manual hours. From data pipelines to credit risk engines — <b>building systems that scale</b>.
+      </div>
+      
+      <div class="skill-pills">
+        <span class="skill-pill" data-tooltip="Advanced proficiency">Python</span>
+        <span class="skill-pill" data-tooltip="Query optimization">SQL</span>
+        <span class="skill-pill" data-tooltip="DAX & visualization">Power BI</span>
+        <span class="skill-pill" data-tooltip="Scikit-learn & TensorFlow">Machine Learning</span>
+        <span class="skill-pill" data-tooltip="DCF & forecasting">Financial Modeling</span>
+      </div>
+
+      <div class="hero-buttons">
+        <a href="https://linkedin.com/in/jose-galvão" target="_blank" rel="noopener noreferrer" class="custom-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
+          </svg>
+          LinkedIn
+        </a>
+        <a href="https://github.com/jose-galvao13" target="_blank" rel="noopener noreferrer" class="custom-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+        <a href={`${import.meta.env.BASE_URL}/Jose_Galvao_CV_EN.pdf`} download class="custom-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+            <polyline points="13 2 13 9 20 9"></polyline>
+          </svg>
+          Resume
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+ <!-- STATS SECTION WITH ANIMATED COUNTERS -->
+  <section class="stats-section">
+    <div class="container">
+      <h3>Performance <span class="gradient-text">Metrics</span></h3>
+      <div class="stats-grid">
+        <div class="stat-card reveal-stagger">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <div class="stat-value" data-target={projects.length}>0</div>
+          <div class="stat-desc">Completed Projects</div>
+        </div>
+        <div class="stat-card reveal-stagger">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+            </svg>
+          </div>
+          <div class="stat-value" data-target="500" data-suffix="k+">0</div>
+          <div class="stat-desc">Data Processed</div>
+        </div>
+        <div class="stat-card reveal-stagger">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="m9 12 2 2 4-4"></path>
+            </svg>
+          </div>
+          <div class="stat-value" data-target="90" data-suffix="%">0</div>
+          <div class="stat-desc">Avg Accuracy</div>
+        </div>
+        <div class="stat-card reveal-stagger">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="stat-value" data-target="200" data-suffix="h+">0</div>
+          <div class="stat-desc">Manual Work Automated</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ✅ FEATURED PROJECTS SECTION -->
+  <section id="portfolio" class="projects-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="gradient-text reveal">⭐ Featured Projects</h2>
+        <p class="section-subtitle">Showcasing my most impactful and technically complex work</p>
+      </div>
+      
+      <div class="filter-container">
+        <span class="filter-label">🔍 FILTER BY SKILLS</span>
+        <div class="custom-select-wrapper">
+          <select class="filter-select" id="skillFilter" aria-label="Filter projects by skill">
+            <option value="all">All Projects</option>
+            <option value="Python">Python</option>
+            <option value="SQL">SQL</option>
+            <option value="Power BI">Power BI</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Streamlit">Streamlit</option>
+          </select>
+          <span class="custom-arrow" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="projects-grid" id="featuredGrid">
+        {featuredProjects.map((project, index) => (
+          <ProjectCard 
+            title={project.title}
+            type={project.type}
+            desc={project.desc}
+            stack={project.stack}
+            linkRepo={project.linkRepo}
+            linkDemo={project.linkDemo}
+            caseStudy={project.caseStudy}
+            images={project.images}
+            id={`featured-${index}`}
+            complexity={project.complexity}
+            businessImpact={project.businessImpact}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ OTHER PROJECTS (COLLAPSIBLE) -->
+  <section class="other-projects-section">
+    <div class="container">
+      <button class="expand-projects-btn" id="expandBtn">
+        <span class="btn-text">Show More Projects</span>
+        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+
+      <div class="collapsible-projects" id="otherProjectsContainer">
+        <div class="projects-grid" id="otherGrid">
+          {otherProjects.map((project, index) => (
+            <ProjectCard 
+              title={project.title}
+              type={project.type}
+              desc={project.desc}
+              stack={project.stack}
+              linkRepo={project.linkRepo}
+              linkDemo={project.linkDemo}
+              caseStudy={project.caseStudy}
+              images={project.images}
+              id={`other-${index}`}
+              complexity={project.complexity}
+              businessImpact={project.businessImpact}
+            />
+          ))}
+        </div>
+        <button class="expand-projects-btn active" id="collapseBtn" style="margin-top: 40px;">
+          <span class="btn-text">Show Less Projects</span>
+          <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform: rotate(180deg);">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+  
+  <div class="divider"></div>
+
+  <!-- TIMELINE SECTION -->
+  <section id="timeline" class="timeline-section">
+    <div class="container">
+      <h2 class="gradient-text">Experience & Education</h2>
+      <div class="timeline-grid">
+        <div class="timeline-column">
+          <h3>🎓 Education</h3>
+          <div class="timeline-item">
+            <div class="timeline-date">2024 - Present</div>
+            <div class="timeline-title">BSc in Business Management</div>
+            <div class="timeline-company">Coimbra Business School (ISCAC)</div>
+            <div class="timeline-desc">
+              Focus: Financial Control, Data Analytics.
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2021 - 2024</div>
+            <div class="timeline-title">Management Informatics</div>
+            <div class="timeline-company">Escola Secundária Avelar Brotero</div>
+            <div class="timeline-desc">
+              Specialized High School Diploma covering Programming Logic, Databases, and Business Admin.
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-column">
+          <h3>💼 Experience</h3>
+          <div class="timeline-item">
+            <div class="timeline-date">Sept 2025 - Present</div>
+            <div class="timeline-title">Business Data Analyst & Automation Consultant</div>
+            <div class="timeline-company">Freelance / Independent Projects</div>
+            <ul class="timeline-list">
+              <li>Specialized in architecting <b>financial workflow automation</b> and robust data structures to eliminate operational bottlenecks.</li>
+              <li>Engineering end-to-end <b>ETL pipelines</b> to centralize fragmented data from ERP systems and decentralized legacy files.</li>
+              <li>Deploying <b>AI & Machine Learning models</b> for predictive analytics, focusing on risk mitigation and high-accuracy demand forecasting.</li>
+              <li><b>Strategic Power BI Consultancy</b>, delivering executive-level dashboards focused on ROI, profitability, and data-driven decision making.</li>
+            </ul>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">Mar 2024 - Aug 2024</div>
+            <div class="timeline-title">Junior Operations Associate (Trainee)</div>
+            <div class="timeline-company">Liquilentes | Coimbra</div>
+            <ul class="timeline-list">
+              <li><b>Optimized inventory accuracy</b> by supporting daily administrative controls and logistics tracking.</li>
+              <li>Enhanced <b>supplier reconciliation processes</b> through rigorous data verification and auditing.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- LANGUAGES SECTION -->
+  <section id="languages" class="languages-section">
+    <div class="container">
+      <h2 class="gradient-text reveal">Languages</h2>
+      <div class="lang-container">
+        <div class="lang-card reveal-stagger">
+          <img src="https://flagcdn.com/w160/pt.png" class="lang-flag-img" alt="Portugal">
+          <div class="lang-name">Portuguese</div>
+          <div class="lang-level">Native Speaker</div>
+          <div class="lang-bar-bg">
+            <div class="lang-bar-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+        <div class="lang-card reveal-stagger">
+          <img src="https://flagcdn.com/w160/gb.png" class="lang-flag-img" alt="UK">
+          <div class="lang-name">English</div>
+          <div class="lang-level">Advanced</div>
+          <div class="lang-bar-bg">
+            <div class="lang-bar-fill" style="width: 90%;"></div>
+          </div>
+        </div>
+        <div class="lang-card reveal-stagger">
+          <img src="https://flagcdn.com/w160/es.png" class="lang-flag-img" alt="Spain">
+          <div class="lang-name">Spanish</div>
+          <div class="lang-level">Intermediate</div>
+          <div class="lang-bar-bg">
+            <div class="lang-bar-fill" style="width: 50%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- EXPERTISE & PROFICIENCY SECTION -->
+  <section id="skills" class="skills-section">
+    <div class="container">
+      <h2 class="gradient-text" style="text-align: center; margin-bottom: 50px;">Technical Expertise & Proficiency</h2>
+      
+      <div class="combined-skills-grid">
+        
+        <!-- CATEGORIA: PROGRAMMING & AUTOMATION -->
+        <div class="skill-group-card">
+          <h3 class="skill-group-title"><span class="icon">🐍</span> Programming</h3>
+          <div class="skill-items-container">
+            <div class="compact-skill-item" data-tooltip="Pandas, NumPy, Scikit-learn">
+              <div class="skill-top">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python">
+                <span class="skill-name">Python</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="Desktop apps & automation">
+              <div class="skill-top">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/csharp/csharp-original.svg" alt="C#">
+                <span class="skill-name">C# / .NET</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 75%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="React, Node.js basics">
+              <div class="skill-top">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="JS">
+                <span class="skill-name">JavaScript</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 55%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="Responsive design">
+              <div class="skill-top">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg" alt="HTML/CSS">
+                <span class="skill-name">HTML & CSS</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORIA: DATA ENGINE & BI -->
+        <div class="skill-group-card">
+          <h3 class="skill-group-title"><span class="icon">📊</span> Data Engine & BI</h3>
+          <div class="skill-items-container">
+            <div class="compact-skill-item" data-tooltip="Advanced DAX & data modeling">
+              <div class="skill-top">
+                <img src="https://github.com/microsoft/PowerBI-Icons/raw/main/PNG/Power-BI.png" alt="Power BI">
+                <span class="skill-name">Power BI (DAX)</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="Complex joins & optimization">
+              <div class="skill-top">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original.svg" alt="SQL">
+                <span class="skill-name">SQL (ETL)</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 65%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="VBA macros & formulas">
+              <div class="skill-top">
+                <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/microsoft-excel-icon.png" alt="Excel">
+                <span class="skill-name">Excel (VBA)</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="Star schema & warehousing">
+              <div class="skill-top">
+                <span class="icon" style="font-size: 14px;">🏗️</span>
+                <span class="skill-name">Data Architecture</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 70%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORIA: DATA SCIENCE & AI -->
+        <div class="skill-group-card">
+          <h3 class="skill-group-title"><span class="icon">🤖</span> AI & Data Science</h3>
+          <div class="skill-items-container">
+            <div class="compact-skill-item" data-tooltip="Scikit-learn, Random Forest">
+              <div class="skill-top">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="ML" style="background:white; border-radius:4px; padding:2px;">
+                <span class="skill-name">Machine Learning</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 60%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="Vector databases & agents">
+              <div class="skill-top">
+                <img src="https://avatars.githubusercontent.com/u/126733545?s=200&v=4" alt="LangChain">
+                <span class="skill-name">LangChain / RAG</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 65%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="Interactive dashboards">
+              <div class="skill-top">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/streamlit/streamlit-original.svg" alt="Streamlit">
+                <span class="skill-name">Streamlit Apps</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="Data manipulation & analysis">
+              <div class="skill-top">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Pandas_logo.svg" alt="Pandas" style="background:white; border-radius:2px; padding:1px;">
+                <span class="skill-name">Pandas & NumPy</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORIA: FINANCE & MANAGEMENT -->
+        <div class="skill-group-card">
+          <h3 class="skill-group-title"><span class="icon">💰</span> Finance & Ops</h3>
+          <div class="skill-items-container">
+            <div class="compact-skill-item" data-tooltip="Forecasting & scenarios">
+              <div class="skill-top">
+                <span class="icon" style="font-size: 14px;">📈</span>
+                <span class="skill-name">Financial Modeling</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="DCF & WACC calculation">
+              <div class="skill-top">
+                <span class="icon" style="font-size: 14px;">⚖️</span>
+                <span class="skill-name">Valuation (DCF)</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 70%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="Portuguese accounting standards">
+              <div class="skill-top">
+                <span class="icon" style="font-size: 14px;">📓</span>
+                <span class="skill-name">SNC Accounting</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="Credit scoring & fraud detection">
+              <div class="skill-top">
+                <span class="icon" style="font-size: 14px;">🛡️</span>
+                <span class="skill-name">Risk Management</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 75%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SOFT SKILLS SECTION -->
+  <section class="skills-section">
+    <div class="container">
+      <h2 class="gradient-text">Professional Soft Skills</h2>
+      <div class="skills-grid">
+        <div class="soft-skill-card">
+          <div class="soft-skill-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <div class="soft-skill-title">Problem Solving</div>
+          <div class="soft-skill-desc">Analytical approach to complex financial bottlenecks.</div>
+        </div>
+        <div class="soft-skill-card">
+          <div class="soft-skill-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="soft-skill-title">Communication</div>
+          <div class="soft-skill-desc">Bridging the gap between data and business stakeholders.</div>
+        </div>
+        <div class="soft-skill-card">
+          <div class="soft-skill-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="soft-skill-title">Efficiency</div>
+          <div class="soft-skill-desc">Focus on automation to maximize output and accuracy.</div>
+        </div>
+        <div class="soft-skill-card">
+          <div class="soft-skill-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          </div>
+          <div class="soft-skill-title">Continuous Learning</div>
+          <div class="soft-skill-desc">Always up-to-date with latest AI and Data tools.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- RECOMMENDATION SECTION -->
+  <section id="recommendations" class="recommendation-section">
+    <div class="container">
+      <h2 class="gradient-text reveal" style="text-align: center; margin-bottom: 40px;">Professional Endorsement</h2>
+      
+      <div class="endorsement-card reveal">
+        <div class="quote-mark">"</div>
+        
+        <p class="endorsement-text">
+          "His ability to <b>learn and apply acquired knowledge</b> in new situations truly impressed me, predicting a promising professional career. José will surely be an <b>asset to any company</b>."
+        </p>
+
+        <div class="endorsement-footer">
+          <div class="author-box">
+            <div class="company-logo">
+              <img src="/src/assets/images/liquilentes.png" alt="Liquilentes Logo" />
+            </div>
+            
+            <div class="author-info">
+              <span class="author-name">Henrique Manuel Jorge</span>
+              <span class="author-role">Manager @ Liquilentes, Lda. <small style="opacity: 0.6; font-weight: 400;">(Portugal)</small></span>
+            </div>
+          </div>
+        </div>
+        <br>  
+          <a href={`${import.meta.env.BASE_URL}/Jose_Galvao_Recommendation.pdf`} target="_blank" class="letter-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            Original Letter (PT)
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+  <br>
+
+  <!-- EFFICIENCY CALCULATOR SECTION -->
+<section id="efficiency" class="efficiency-section reveal">
+  <div class="container">
+    <h2>Business <span class="gradient-text">Efficiency Impact</span></h2>
+    <p class="efficiency-subtitle">Financial modeling of automated workflow returns</p>
+    
+    <div class="calculator-grid">
+      <!-- COLUNA DA ESQUERDA: INPUTS -->
+      <div class="calc-inputs">
+        <div class="calc-input-group">
+          <label class="calc-label">📑 Manual Processes</label>
+          <input type="number" class="calc-input" id="processes" value="8" min="1" max="50">
+          <span class="calc-error" id="error-processes" style="display: none;">Value between 1 and 50</span>
+        </div>
+
+        <div class="calc-input-group">
+          <label class="calc-label">⏱️ Hours per Process / Week</label>
+          <input type="number" class="calc-input" id="hours" value="12" min="1" max="40">
+          <span class="calc-error" id="error-hours" style="display: none;">Value between 1 and 40</span>
+        </div>
+
+        <div class="calc-input-group">
+          <label class="calc-label" id="rateLabel">💳 Analyst Hourly Rate (€)</label>
+          <input type="number" class="calc-input" id="rate" value="40">
+          <span class="calc-error" id="error-rate" style="display: none;">Value between 5 and 500</span>
+        </div>
+
+        <div class="calc-input-group">
+          <label class="calc-label">💰 Select Currency</label>
+          <div class="custom-select-wrapper">
+            <select id="currencySelector" class="calc-input">
+              <option value="EUR" data-symbol="€" data-min="15" data-max="150" selected>EUR (€) - Europa</option>
+              <option value="USD" data-symbol="$" data-min="20" data-max="250">USD ($) - USA</option>
+              <option value="GBP" data-symbol="£" data-min="18" data-max="180">GBP (£) - UK</option>
+              <option value="BRL" data-symbol="R$" data-min="40" data-max="400">BRL (R$) - Brazil</option>
+            </select>
+            <span class="custom-arrow"></span>
+          </div>
+        </div>
+      </div> <!-- FIM DA COLUNA DE INPUTS -->
+
+      <!-- COLUNA DA DIREITA: RESULTADOS -->
+      <div class="result-card">
+        <div class="result-label">🚀 Annual Financial Recovery</div>
+        <div class="result-value" id="savingsValue">€168,960</div>
+        <div class="result-desc" id="descValue">
+          Automation optimizes <span id="hoursValue">4,992</span> hours yearly.<br>
+          Equivalent to <b><span id="fteValue">2.4</span> full-time</b> strategic roles.
+        </div>
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="m-label">Monthly</span>
+            <span class="m-value" id="monthlyValue">€14,080</span>
+          </div>
+          <div class="metric-item">
+            <span class="m-label">Daily Recovery</span>
+            <span class="m-value" id="dailyValue">17.0h</span>
+          </div>
+          <div class="metric-item">
+            <span class="m-label">Efficiency Increase</span>
+            <span class="m-value">+85%</span>
+          </div>
+        </div>
+      </div> <!-- FIM DO RESULT CARD -->
+    </div>
+  </div>
+</section>
+
+  <br>
+  <div class="divider"></div>
+  <br>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="contact-section reveal">
+    <div class="container">
+      <div class="availability-badge">
+        <span class="pulse-dot">●</span> AVAILABLE FOR OPPORTUNITIES
+      </div>
+      <h2>Let's <span class="gradient-text">Connect</span></h2>
+      <p class="contact-description">
+        I'm always open to discussing data-driven projects, automation workflows, or potential roles in Finance & Tech.
+      </p>
+      <a href="mailto:josepedrogalvao13@gmail.com" class="cta-button">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        Send a Message
+      </a>
+      <div class="contact-footer">
+        <span>📍 Coimbra, Portugal</span>
+        <span>•</span>
+        <span>🌍 Remote / Worldwide</span>
+        <span>•</span>
+        <span>⚡ Response time: ~ 12h</span>
+      </div>
+    </div>
+  </section>
+
+ <!-- LIGHTBOX MODAL -->
+<div id="lightbox" class="lightbox">
+  <div class="lightbox-overlay"></div>
+  
+  <button class="lightbox-close" id="closeLightbox" aria-label="Close lightbox">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+  
+  <button class="lightbox-nav prev" id="prevLightbox">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+  
+  <img src="" alt="Project screenshot" id="lightboxImg" class="lightbox-img">
+  
+  <button class="lightbox-nav next" id="nextLightbox">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+</div>
+
+  <footer role="contentinfo">
+    <p>&copy; {currentYear} JOSÉ GALVÃO &bull; BUSINESS DATA ANALYST</p>
+  </footer>
+
+</Layout>
+
+<script>
+
+// ============================================
+// SCROLL PROGRESS BAR
+// ============================================
+const scrollProgress = document.getElementById('scrollProgress');
+
+window.addEventListener('scroll', () => {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  if (scrollProgress) {
+    scrollProgress.style.width = scrolled + '%';
+  }
+}, { passive: true });
+
+// ============================================
+// ANIMATED COUNTER FOR STATS
+// ============================================
+function animateCounter(element, target, suffix = '', duration = 2000) {
+  let current = 0;
+  const increment = target / (duration / 16);
+  const isDecimal = target % 1 !== 0;
+  
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+    }
+    
+    const displayValue = isDecimal ? current.toFixed(1) : Math.floor(current);
+    element.textContent = displayValue + suffix;
+  }, 16);
+}
+
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const statValues = entry.target.querySelectorAll('.stat-value');
+      statValues.forEach((stat) => {
+        const target = parseInt(stat.dataset.target || '0');
+        const suffix = stat.dataset.suffix || '';
+        animateCounter(stat, target, suffix);
+      });
+      statsObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+const statsSection = document.querySelector('.stats-section');
+if (statsSection) {
+  statsObserver.observe(statsSection);
+}
+
+// ============================================
+// EXPAND/COLLAPSE OTHER PROJECTS (TOP & BOTTOM)
+// ============================================
+const expandBtn = document.getElementById('expandBtn');
+const collapseBtn = document.getElementById('collapseBtn');
+const otherProjectsContainer = document.getElementById('otherProjectsContainer');
+
+if (expandBtn && collapseBtn && otherProjectsContainer) {
+  // FUNÇÃO PARA ABRIR
+  expandBtn.addEventListener('click', () => {
+    otherProjectsContainer.classList.add('expanded');
+    expandBtn.classList.add('hidden'); // Esconde o botão de abrir
+    
+    // Opcional: scroll suave para o início dos novos projetos
+    setTimeout(() => {
+      otherProjectsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 300);
+  });
+
+  // FUNÇÃO PARA FECHAR
+  collapseBtn.addEventListener('click', () => {
+    otherProjectsContainer.classList.remove('expanded');
+    expandBtn.classList.remove('hidden'); // Mostra o botão de abrir novamente
+    
+    // SCROLL PARA CIMA: Volta para o topo da secção de portfólio
+    const portfolioSection = document.getElementById('portfolio');
+    if (portfolioSection) {
+      portfolioSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+}
+
+// ============================================
+// ADICIONAR DIVIDER A CADA 2 PROJETOS VISÍVEIS
+// ============================================
+function addProjectDividersToVisible() {
+  const featuredGrid = document.getElementById('featuredGrid');
+  const otherGrid = document.getElementById('otherGrid');
+  
+  [featuredGrid, otherGrid].forEach(grid => {
+    if (!grid) return;
+    
+    // Remover dividers antigos
+    grid.querySelectorAll('.divider').forEach(div => div.remove());
+    
+    // Pegar apenas os projetos VISÍVEIS
+    const visibleProjects = Array.from(grid.querySelectorAll('.glass-project-card'))
+      .filter(card => card.style.display !== 'none' && !card.classList.contains('hidden'));
+    
+    visibleProjects.forEach((project, index) => {
+      // Adiciona divider após cada 2 projetos VISÍVEIS
+      if ((index + 1) % 2 === 0 && index !== visibleProjects.length - 1) {
+        const divider = document.createElement('div');
+        divider.className = 'divider';
+        divider.style.gridColumn = '1 / -1';
+        
+        // Insere o divider após o projeto atual
+        project.parentNode.insertBefore(divider, project.nextSibling);
+      }
+    });
+  });
+}
+
+// ============================================
+// PROJECT FILTERING
+// ============================================
+const filterSelect = document.getElementById('skillFilter');
+const featuredGrid = document.getElementById('featuredGrid');
+const otherGrid = document.getElementById('otherGrid');
+
+function updateProjects() {
+  if (!filterSelect) return;
+
+  const selectedSkill = filterSelect.value;
+  
+  [featuredGrid, otherGrid].forEach(grid => {
+    if (!grid) return;
+    
+    // Remover todos os dividers antes de filtrar
+    grid.querySelectorAll('.divider').forEach(div => div.remove());
+    
+    const allCards = Array.from(grid.querySelectorAll('.glass-project-card'));
+    
+    allCards.forEach((card) => {
+      const skills = Array.from(card.querySelectorAll('.tech-tag')).map(
+        pill => pill.textContent?.trim() || ''
+      );
+      
+      const shouldShow = selectedSkill === 'all' || skills.includes(selectedSkill);
+      
+      if (shouldShow) {
+        card.style.display = 'block';
+        card.offsetHeight; 
+        card.classList.remove('hidden');
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1) translateY(0)';
+      } else {
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9) translateY(20px)';
+        
+        const once = () => {
+          card.removeEventListener('transitionend', once);
+          if (card.style.opacity === '0') {
+            card.classList.add('hidden');
+            card.style.display = 'none';
+          }
+        };
+        card.addEventListener('transitionend', once);
+      }
+    });
+  });
+  
+  // Esperar a transição terminar e re-adicionar dividers
+  setTimeout(() => {
+    addProjectDividersToVisible();
+  }, 400);
+}
+
+if (filterSelect) {
+  // Adicionar dividers iniciais
+  addProjectDividersToVisible();
+  
+  // Re-executar ao filtrar
+  filterSelect.addEventListener('change', updateProjects);
+}
+
+// Scroll reveal
+const observerOptions = {
+  threshold: 0.15,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+    }
+  });
+}, observerOptions);
+
+const revealElements = document.querySelectorAll('.reveal, .reveal-stagger, .hero-reveal');
+revealElements.forEach(el => observer.observe(el));
+
+// Glassmorphism glow
+function addGlowEffect(selector) {
+  const cards = document.querySelectorAll(selector);
+  
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width * 100;
+      const y = (e.clientY - rect.top) / rect.height * 100;
+      
+      card.style.setProperty('--mouse-x', `${x}%`);
+      card.style.setProperty('--mouse-y', `${y}%`);
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      card.style.removeProperty('--mouse-x');
+      card.style.removeProperty('--mouse-y');
+    });
+  });
+}
+
+addGlowEffect('.stat-card');
+addGlowEffect('.glass-project-card');
+addGlowEffect('.skill-group-card');
+addGlowEffect('.soft-skill-card');
+addGlowEffect('.lang-card');
+
+// Parallax profile picture
+const profilePic = document.querySelector('.profile-pic');
+
+if (profilePic) {
+  let ticking = false;
+  
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const scrolled = window.scrollY;
+        const parallaxSpeed = 0.3;
+        const yPos = -(scrolled * parallaxSpeed);
+        
+        profilePic.style.setProperty('--parallax-y', `${yPos}px`);
+        profilePic.classList.add('parallax-active');
+        
+        ticking = false;
+      });
+      
+      ticking = true;
+    }
+  });
+}
+
+// ============================================
+// DYNAMIC EFFICIENCY CALCULATOR (INTERNATIONAL)
+// ============================================
+const processesInput = document.getElementById('processes');
+const hoursInput = document.getElementById('hours');
+const rateInput = document.getElementById('rate');
+const rateLabel = document.getElementById('rateLabel');
+const currencySelector = document.getElementById('currencySelector');
+
+let lastSavings = 0;
+
+function getCurrencyConfig() {
+  const option = currencySelector.options[currencySelector.selectedIndex];
+  return {
+    symbol: option.getAttribute('data-symbol') || '€',
+    min: parseInt(option.getAttribute('data-min')) || 5,
+    max: parseInt(option.getAttribute('data-max')) || 500,
+    rate: parseFloat(option.getAttribute('data-rate') || '1')
+  };
+}
+
+function validateInput(input, min, max) {
+  const val = parseInt(input.value);
+  const errorSpan = document.getElementById(`error-${input.id}`);
+  const isValid = !isNaN(val) && val >= min && val <= max;
+  
+  input.classList.toggle('invalid', !isValid);
+  
+  if (errorSpan) {
+    errorSpan.textContent = `Value between ${min} and ${max}`;
+    errorSpan.style.display = isValid ? 'none' : 'block';
+  }
+  
+  return isValid;
+}
+
+function formatValue(value, symbol) {
+  const locale = symbol === 'R$' ? 'pt-BR' : 'en-US';
+  return `${symbol}${Math.floor(value).toLocaleString(locale)}`;
+}
+
+function animateROIValue(elementId, start, end, symbol) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+
+  const duration = 500;
+  let startTime = null;
+
+  function step(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const progress = Math.min((timestamp - startTime) / duration, 1);
+    const current = Math.floor(progress * (end - start) + start);
+    
+    el.textContent = formatValue(current, symbol);
+    
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  }
+  window.requestAnimationFrame(step);
+}
+
+function calculateEfficiency() {
+  const config = getCurrencyConfig();
+
+  const isProcessesValid = validateInput(processesInput, 1, 50);
+  const isHoursValid = validateInput(hoursInput, 1, 40);
+  const isRateValid = validateInput(rateInput, config.min, config.max);
+
+  if (rateLabel) {
+    rateLabel.textContent = `💳 Analyst Hourly Rate (${config.symbol})`;
+  }
+
+  if (!isProcessesValid || !isHoursValid || !isRateValid) return;
+
+  const processes = parseInt(processesInput.value);
+  const hours = parseInt(hoursInput.value);
+  const rateBase = parseInt(rateInput.value);
+
+  const annualHours = processes * hours * 52;
+  const annualSavings = annualHours * rateBase;
+
+  animateROIValue('savingsValue', lastSavings, annualSavings, config.symbol);
+  
+  const hoursValEl = document.getElementById('hoursValue');
+  const fteValEl = document.getElementById('fteValue');
+  const monthlyValEl = document.getElementById('monthlyValue');
+  const dailyValEl = document.getElementById('dailyValue');
+
+  if (hoursValEl) hoursValEl.textContent = annualHours.toLocaleString();
+  if (fteValEl) fteValEl.textContent = (annualHours / 2080).toFixed(1);
+  if (monthlyValEl) monthlyValEl.textContent = formatValue(annualSavings / 12, config.symbol);
+  if (dailyValEl) dailyValEl.textContent = ((processes * hours) / 5).toFixed(1) + 'h';
+
+  lastSavings = annualSavings;
+}
+
+[processesInput, hoursInput, rateInput].forEach(el => {
+  el?.addEventListener('input', calculateEfficiency);
+});
+
+currencySelector?.addEventListener('change', () => {
+  const config = getCurrencyConfig();
+  
+  const currentRate = parseInt(rateInput.value);
+  if (currentRate < config.min) rateInput.value = config.min;
+  if (currentRate > config.max) rateInput.value = config.max;
+
+  calculateEfficiency();
+});
+
+calculateEfficiency();
+
+// ============================================
+// LIGHTBOX LOGIC
+// ============================================
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const closeLightbox = document.getElementById('closeLightbox');
+const prevLightbox = document.getElementById('prevLightbox');
+const nextLightbox = document.getElementById('nextLightbox');
+const lightboxOverlay = document.querySelector('.lightbox-overlay');
+
+let currentImages = [];
+let currentIndex = 0;
+
+if (lightbox && lightboxImg && closeLightbox && prevLightbox && nextLightbox && lightboxOverlay) {
+  document.querySelectorAll('.carousel-img').forEach((img) => {
+    img.addEventListener('click', () => {
+      const card = img.closest('.glass-project-card');
+      if (!card) return;
+
+      const allImgsInCard = Array.from(card.querySelectorAll('.carousel-img'));
+      currentImages = allImgsInCard.map((i) => i.src);
+      
+      let visibleIndex = 0;
+      allImgsInCard.forEach((imgElement, idx) => {
+        const style = window.getComputedStyle(imgElement);
+        if (style.display !== 'none' && parseFloat(style.opacity) > 0.5) {
+          visibleIndex = idx;
+        }
+      });
+      
+      currentIndex = visibleIndex;
+
+      updateLightbox();
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function updateLightbox() {
+    if (currentImages.length > 0 && currentIndex >= 0 && currentIndex < currentImages.length) {
+      lightboxImg.src = currentImages[currentIndex];
+    }
+  }
+
+  nextLightbox.addEventListener('click', (e) => {
+    e.stopPropagation();
+    currentIndex = (currentIndex + 1) % currentImages.length;
+    updateLightbox();
+  });
+
+  prevLightbox.addEventListener('click', (e) => {
+    e.stopPropagation();
+    currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+    updateLightbox();
+  });
+
+  const close = () => {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  };
+
+  closeLightbox.addEventListener('click', close);
+  lightboxOverlay.addEventListener('click', close);
+
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowRight') nextLightbox.click();
+    if (e.key === 'ArrowLeft') prevLightbox.click();
+  });
+}
+
+</script>

@@ -1,0 +1,95 @@
+---
+import CaseStudyLayout from '../layouts/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '💰', value: '€96k', label: 'Revenue at Risk Identified' },
+  { icon: '🎯', value: '€42k', label: 'Cross-Sell Opportunity' },
+  { icon: '📊', value: '100k+', label: 'Transactions Analyzed' },
+  { icon: '📈', value: '5', label: 'Customer Segments' }
+];
+---
+
+<CaseStudyLayout
+  title="E-Commerce Analytics Dashboard"
+  description="RFM segmentation and cohort analysis revealing hidden churn patterns and cross-sell opportunities in transactional data."
+  projectType="Business Intelligence"
+  stack={['Power BI', 'SQL', 'DAX', 'RFM Analysis']}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/ecommerce-analytics"
+>
+  <section>
+    <h2>🎯 Business Challenge</h2>
+    <p>
+      E-commerce business saw <strong>flat revenue</strong> despite growing traffic, hiding a dangerous reality: high-value customers were churning silently while low-value bargain hunters inflated transaction counts.
+    </p>
+    <ul>
+      <li><strong>Aggregate Blindness:</strong> Total revenue looked stable, masking 15% churn in top customers.</li>
+      <li><strong>No Customer Segmentation:</strong> Treating €5 buyer same as €500 buyer (inefficient marketing spend).</li>
+      <li><strong>Missed Cross-Sell:</strong> No visibility into product affinity (what products are bought together?).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>💡 Solution: RFM Analysis & Cohort Tracking</h2>
+    <p>
+      Built <strong>Power BI dashboard</strong> using RFM (Recency, Frequency, Monetary) segmentation to identify at-risk customers and cross-sell opportunities.
+    </p>
+    
+    <h3>RFM Segmentation Model</h3>
+    <ul>
+      <li><strong>Recency:</strong> Days since last purchase (1=recent, 5=dormant).</li>
+      <li><strong>Frequency:</strong> # orders in last 12 months (1=one-time, 5=loyal).</li>
+      <li><strong>Monetary:</strong> Total spend (1=low-value, 5=VIP).</li>
+      <li><strong>Segments:</strong> Champions (555), At-Risk (511), Lost (155), etc.</li>
+    </ul>
+
+    <h3>Implementation</h3>
+    <pre><code>-- SQL: Calculate RFM Scores
+WITH rfm_base AS (
+  SELECT 
+    customer_id,
+    DATEDIFF(day, MAX(order_date), GETDATE()) as recency,
+    COUNT(order_id) as frequency,
+    SUM(order_value) as monetary
+  FROM orders
+  WHERE order_date >= DATEADD(year, -1, GETDATE())
+  GROUP BY customer_id
+)
+SELECT 
+  customer_id,
+  NTILE(5) OVER (ORDER BY recency DESC) as R_score,
+  NTILE(5) OVER (ORDER BY frequency ASC) as F_score,
+  NTILE(5) OVER (ORDER BY monetary ASC) as M_score,
+  CONCAT(R_score, F_score, M_score) as RFM_segment
+FROM rfm_base</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Key Results</h2>
+    <ul>
+      <li><strong>€96k at Risk:</strong> Identified 200 "Champions" customers (RFM=555) who hadn't purchased in 60+ days.</li>
+      <li><strong>€42k Cross-Sell:</strong> Found customers buying Product A but never Product B (high affinity pairing).</li>
+      <li><strong>Cohort Retention Tracking:</strong> Discovered Month-1 retention was only 15% (onboarding problem).</li>
+      <li><strong>Marketing ROI:</strong> Re-engagement campaign targeting "At-Risk" segment achieved 3:1 ROI.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Dashboard Features</h2>
+    <ul>
+      <li><strong>RFM Heatmap:</strong> Visual grid showing customer distribution across segments.</li>
+      <li><strong>Cohort Tables:</strong> Month-over-month retention curves by acquisition cohort.</li>
+      <li><strong>Product Affinity Matrix:</strong> Which products are frequently bought together?</li>
+      <li><strong>Customer Lifetime Value:</strong> Predicted LTV based on RFM segment + purchase history.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Future Enhancements</h2>
+    <ul>
+      <li><strong>Predictive Churn Model:</strong> ML model predicting 30-day churn probability.</li>
+      <li><strong>Automated Campaigns:</strong> Trigger emails to "At-Risk" customers automatically.</li>
+      <li><strong>Real-Time RFM:</strong> Update scores daily (currently weekly batch).</li>
+    </ul>
+  </section>
+</CaseStudyLayout>
