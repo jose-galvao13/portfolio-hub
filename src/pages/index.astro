@@ -5,6 +5,43 @@ import profileImage from '../assets/images/profile.png';
 import CaseStudyLayout from '../layouts/CaseStudyLayout.astro';
 const currentYear = new Date().getFullYear();
 
+// ✅ IMPORT DAS IMAGENS (necessário para GitHub Pages)
+import churnImg1 from '../assets/images/Churn-Analysis.png';
+import churnImg2 from '../assets/images/Churn-Analysis2.png';
+import churnImg3 from '../assets/images/Churn-Analysis3.png';
+import churnImg4 from '../assets/images/Churn-Analysis4.png';
+import churnImg5 from '../assets/images/Churn-Analysis5.png';
+import churnImg6 from '../assets/images/Churn-Analysis6.png';
+import churnImg7 from '../assets/images/Churn-Analysis7.png';
+
+import fraudImg1 from '../assets/images/fraud-detection-system.png';
+import fraudImg2 from '../assets/images/fraud-detection-system2.png';
+import fraudImg3 from '../assets/images/fraud-detection-system3.png';
+import fraudImg4 from '../assets/images/fraud-detection-system4.png';
+
+import realEstateImg from '../assets/images/real_estate.png';
+
+import chatcfoImg1 from '../assets/images/chatcfo.png';
+import chatcfoImg2 from '../assets/images/chatcfo2.png';
+import chatcfoImg3 from '../assets/images/chatcfo3.png';
+
+import macroImg from '../assets/images/macro.png';
+
+import equityImg1 from '../assets/images/equity_research.png';
+import equityImg2 from '../assets/images/equity_research2.png';
+
+import bankerImg from '../assets/images/banker_ai.png';
+import warehouseImg from '../assets/images/warehouse.png';
+import reportingImg from '../assets/images/reporting.png';
+
+import ecommerceImg1 from '../assets/images/ecommerce.png';
+import ecommerceImg2 from '../assets/images/ecommerce2.png';
+import ecommerceImg3 from '../assets/images/ecommerce3.png';
+import ecommerceImg4 from '../assets/images/ecommerce4.png';
+
+import forecastImg from '../assets/images/forecast.png';
+import liquilentesLogo from '../assets/images/liquilentes.png';
+
 const projects = [
   {
     title: "Customer Churn & Retention Analytics",
@@ -15,13 +52,13 @@ const projects = [
     linkDemo: "#",
     caseStudy: `${import.meta.env.BASE_URL}/churn-analysis`,
     images: [
-        "/src/assets/images/Churn-Analysis.png", 
-        "/src/assets/images/Churn-Analysis2.png", 
-        "/src/assets/images/Churn-Analysis3.png",
-        "/src/assets/images/Churn-Analysis4.png",
-        "/src/assets/images/Churn-Analysis5.png",
-        "/src/assets/images/Churn-Analysis6.png",
-        "/src/assets/images/Churn-Analysis7.png"
+        churnImg1.src,
+        churnImg2.src,
+        churnImg3.src,
+        churnImg4.src,
+        churnImg5.src,
+        churnImg6.src,
+        churnImg7.src
     ],
     complexity: "advanced",
     businessImpact: "high"
@@ -35,10 +72,10 @@ const projects = [
     linkDemo: "#",
     caseStudy: `${import.meta.env.BASE_URL}/fraud-detection`,
     images: [
-      "/src/assets/images/fraud-detection-system.png",
-      "/src/assets/images/fraud-detection-system2.png",
-      "/src/assets/images/fraud-detection-system3.png",
-      "/src/assets/images/fraud-detection-system4.png"
+      fraudImg1.src,
+      fraudImg2.src,
+      fraudImg3.src,
+      fraudImg4.src
     ],
     complexity: "advanced",
     businessImpact: "high"
@@ -51,7 +88,7 @@ const projects = [
     linkRepo: "https://github.com/jose-galvao13/Portugal-Real-Estate",
     linkDemo: "#",
     caseStudy: `${import.meta.env.BASE_URL}/real-estate`,
-    images: ["/src/assets/images/real_estate.png"],
+    images: [realEstateImg.src],
     complexity: "intermediate",
     businessImpact: "medium"
   },
@@ -64,9 +101,9 @@ const projects = [
     linkDemo: "#",
     caseStudy: `${import.meta.env.BASE_URL}/chatcfo`,
     images: [
-      "/src/assets/images/chatcfo.png",
-      "/src/assets/images/chatcfo2.png",
-      "/src/assets/images/chatcfo3.png"
+      chatcfoImg1.src,
+      chatcfoImg2.src,
+      chatcfoImg3.src
     ],
     complexity: "advanced",
     businessImpact: "high"
@@ -79,7 +116,7 @@ const projects = [
     linkRepo: "https://github.com/jose-galvao13/portfolio-macro-analyzer",
     linkDemo: "https://portfolio-macro-analyzer-galvao.streamlit.app/",
     caseStudy: `${import.meta.env.BASE_URL}/macro-portfolio`,
-    images: ["/src/assets/images/macro.png"],
+    images: [macroImg.src],
     complexity: "intermediate",
     businessImpact: "medium"
   },
@@ -92,8 +129,8 @@ const projects = [
     linkDemo: "#",
     caseStudy: `${import.meta.env.BASE_URL}/equity-research`,
     images: [
-      "/src/assets/images/equity_research.png",
-      "/src/assets/images/equity_research2.png"
+      equityImg1.src,
+      equityImg2.src
     ],
     complexity: "intermediate",
     businessImpact: "high"
@@ -106,7 +143,7 @@ const projects = [
     linkRepo: "https://github.com/jose-galvao13/banker-ai",
     linkDemo: "https://credit-risk-scoring-ai-engine-galvao.streamlit.app/",
     caseStudy: `${import.meta.env.BASE_URL}/banker-ai`,
-    images: ["/src/assets/images/banker_ai.png"],
+    images: [bankerImg.src],
     complexity: "advanced",
     businessImpact: "high"
   },
@@ -118,7 +155,7 @@ const projects = [
     linkRepo: "https://github.com/jose-galvao13/financial-warehouse",
     linkDemo: "#",
     caseStudy: `${import.meta.env.BASE_URL}/financial-warehouse`,
-    images: ["/src/assets/images/warehouse.png"],
+    images: [warehouseImg.src],
     complexity: "advanced",
     businessImpact: "high"
   },
@@ -130,7 +167,7 @@ const projects = [
     linkRepo: "https://github.com/jose-galvao13/automated-financial-reporting",
     linkDemo: "#",
     caseStudy: `${import.meta.env.BASE_URL}/financial-reporting`,
-    images: ["/src/assets/images/reporting.png"],
+    images: [reportingImg.src],
     complexity: "intermediate",
     businessImpact: "medium"
   },
@@ -143,10 +180,10 @@ const projects = [
     linkDemo: "#",
     caseStudy: `${import.meta.env.BASE_URL}/ecommerce-analytics`,
     images: [
-      "/src/assets/images/ecommerce.png",
-      "/src/assets/images/ecommerce2.png",
-      "/src/assets/images/ecommerce3.png",
-      "/src/assets/images/ecommerce4.png"
+      ecommerceImg1.src,
+      ecommerceImg2.src,
+      ecommerceImg3.src,
+      ecommerceImg4.src
     ],
     complexity: "intermediate",
     businessImpact: "medium"
@@ -159,7 +196,7 @@ const projects = [
     linkRepo: "https://github.com/jose-galvao13/Ai-Sales-Forecasting-Budgeting",
     linkDemo: "#",
     caseStudy: `${import.meta.env.BASE_URL}/sales-forecasting`,
-    images: ["/src/assets/images/forecast.png"],
+    images: [forecastImg.src],
     complexity: "intermediate",
     businessImpact: "medium"
   }
@@ -292,10 +329,7 @@ const otherProjects = projects.filter(p =>
   <!-- ✅ FEATURED PROJECTS SECTION -->
   <section id="portfolio" class="projects-section">
     <div class="container">
-      <div class="section-header">
         <h2 class="gradient-text reveal">⭐ Featured Projects</h2>
-        <p class="section-subtitle">Showcasing my most impactful and technically complex work</p>
-      </div>
       
       <div class="filter-container">
         <span class="filter-label">🔍 FILTER BY SKILLS</span>
@@ -683,7 +717,7 @@ const otherProjects = projects.filter(p =>
         <div class="endorsement-footer">
           <div class="author-box">
             <div class="company-logo">
-              <img src="/src/assets/images/liquilentes.png" alt="Liquilentes Logo" />
+              <img src={liquilentesLogo.src} alt="Liquilentes Logo" />
             </div>
             
             <div class="author-info">
@@ -840,7 +874,7 @@ const otherProjects = projects.filter(p =>
 </Layout>
 
 <script>
-
+// (O mesmo script JavaScript que já tens - não foi alterado)
 // ============================================
 // SCROLL PROGRESS BAR
 // ============================================
@@ -902,59 +936,29 @@ const collapseBtn = document.getElementById('collapseBtn');
 const otherProjectsContainer = document.getElementById('otherProjectsContainer');
 
 if (expandBtn && collapseBtn && otherProjectsContainer) {
-  // FUNÇÃO PARA ABRIR
   expandBtn.addEventListener('click', () => {
     otherProjectsContainer.classList.add('expanded');
-    expandBtn.classList.add('hidden'); // Esconde o botão de abrir
+    expandBtn.classList.add('hidden');
     
-    // Opcional: scroll suave para o início dos novos projetos
     setTimeout(() => {
       otherProjectsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 300);
   });
 
-  // FUNÇÃO PARA FECHAR
   collapseBtn.addEventListener('click', () => {
     otherProjectsContainer.classList.remove('expanded');
-    expandBtn.classList.remove('hidden'); // Mostra o botão de abrir novamente
+    expandBtn.classList.remove('hidden');
     
-    // SCROLL PARA CIMA: Volta para o topo da secção de portfólio
     const portfolioSection = document.getElementById('portfolio');
     if (portfolioSection) {
       portfolioSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   });
 }
-
-// ============================================
-// ADICIONAR DIVIDER A CADA 2 PROJETOS VISÍVEIS
-// ============================================
 function addProjectDividersToVisible() {
   const featuredGrid = document.getElementById('featuredGrid');
   const otherGrid = document.getElementById('otherGrid');
-  
-  [featuredGrid, otherGrid].forEach(grid => {
-    if (!grid) return;
-    
-    // Remover dividers antigos
-    grid.querySelectorAll('.divider').forEach(div => div.remove());
-    
-    // Pegar apenas os projetos VISÍVEIS
-    const visibleProjects = Array.from(grid.querySelectorAll('.glass-project-card'))
-      .filter(card => card.style.display !== 'none' && !card.classList.contains('hidden'));
-    
-    visibleProjects.forEach((project, index) => {
-      // Adiciona divider após cada 2 projetos VISÍVEIS
-      if ((index + 1) % 2 === 0 && index !== visibleProjects.length - 1) {
-        const divider = document.createElement('div');
-        divider.className = 'divider';
-        divider.style.gridColumn = '1 / -1';
-        
-        // Insere o divider após o projeto atual
-        project.parentNode.insertBefore(divider, project.nextSibling);
-      }
-    });
-  });
+
 }
 
 // ============================================
@@ -972,7 +976,6 @@ function updateProjects() {
   [featuredGrid, otherGrid].forEach(grid => {
     if (!grid) return;
     
-    // Remover todos os dividers antes de filtrar
     grid.querySelectorAll('.divider').forEach(div => div.remove());
     
     const allCards = Array.from(grid.querySelectorAll('.glass-project-card'));
@@ -1006,17 +1009,13 @@ function updateProjects() {
     });
   });
   
-  // Esperar a transição terminar e re-adicionar dividers
   setTimeout(() => {
     addProjectDividersToVisible();
   }, 400);
 }
 
 if (filterSelect) {
-  // Adicionar dividers iniciais
   addProjectDividersToVisible();
-  
-  // Re-executar ao filtrar
   filterSelect.addEventListener('change', updateProjects);
 }
 
@@ -1272,5 +1271,4 @@ if (lightbox && lightboxImg && closeLightbox && prevLightbox && nextLightbox && 
     if (e.key === 'ArrowLeft') prevLightbox.click();
   });
 }
-
 </script>

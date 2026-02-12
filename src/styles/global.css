@@ -2431,21 +2431,6 @@ footer {
 
 
 /* ============================================
-   FEATURED PROJECTS SECTION STYLING
-   ============================================ */
-.section-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.section-subtitle {
-  color: var(--text-secondary);
-  font-size: clamp(0.9rem, 1.8vw, 1rem);
-  margin-top: -10px;
-  font-weight: 400;
-}
-
-/* ============================================
    OTHER PROJECTS (COLLAPSIBLE) STYLING
    ============================================ */
 .other-projects-section {
