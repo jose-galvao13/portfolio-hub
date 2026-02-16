@@ -299,27 +299,34 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     max-width: 80px;
   }
 
-  .glitch-title {
-    font-size: clamp(2rem, 5vw, 4.5rem);
-    line-height: 0.95;
-    font-weight: 900;
-    letter-spacing: -2px;
-    margin: 0;
-    position: relative;
-    display: inline-block;
-    background: linear-gradient(135deg, #ffffff 0%, var(--accent-bright) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: titleGlow 3s ease-in-out infinite;
-    max-width: 100%;
-    word-wrap: break-word;
-  }
+.glitch-title {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 0.95;
+  font-weight: 900;
+  letter-spacing: -3px;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+  
+  /* Cores extraídas do botão: Azul Cyan para Teal */
+  background: linear-gradient(
+    90deg, 
+    #00a2ff 0%,   /* Azul Cyan da esquerda */
+    #00bfa5 100%  /* Teal/Verde-água da direita */
+  );
+  
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  /* Brilho extremamente subtil apenas para dar nitidez */
+  filter: drop-shadow(0 2px 8px rgba(0, 162, 255, 0.12));
+  
+  /* Sem animações de brilho para manter a sobriedade */
+  max-width: 100%;
+  word-wrap: break-word;
+}
 
-  @keyframes titleGlow {
-    0%, 100% { filter: brightness(1); }
-    50% { filter: brightness(1.2); }
-  }
 
   .title-underline {
     position: absolute;
@@ -883,18 +890,30 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     text-align: center;
   }
 
-  .status-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 12px;
-    color: #00ff88;
-    font-weight: 700;
-    padding: 8px 16px;
-    background: rgba(0, 255, 136, 0.05);
-    border-radius: 20px;
-    border: 1px solid rgba(0, 255, 136, 0.2);
-  }
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: #00ff88;
+  font-weight: 700;
+  padding: 8px 16px;
+  background: rgba(0, 255, 136, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+}
+
+.status-indicator:hover {
+  background: rgba(0, 255, 136, 0.12);
+  border-color: rgba(0, 255, 136, 0.6); 
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+  filter: brightness(1.1);
+} 
 
   .pulse {
     width: 8px;

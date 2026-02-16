@@ -626,7 +626,10 @@ section {
   padding: 0 10px;
 }
 
-.skill-pill {
+.tech-tag, .skill-pill {
+  user-select: none;          
+  -webkit-user-select: none;  
+  -ms-user-select: none;
   display: inline-block;
   padding: clamp(6px, 1vw, 7px) clamp(12px, 2vw, 16px);
   background: rgba(14, 165, 233, 0.15);
@@ -639,7 +642,6 @@ section {
   transition: all 0.3s ease;
   letter-spacing: 0.3px;
   position: relative;
-  cursor: pointer;
 }
 
 .skill-pill::before {
@@ -663,7 +665,7 @@ section {
   opacity: 1;
 }
 
-.skill-pill:hover {
+.tech-tag:hover, .skill-pill:hover {
   background: rgba(14, 165, 233, 0.25);
   border-color: var(--accent-cyan);
   transform: translateY(-2px) scale(1.05);
@@ -824,6 +826,9 @@ section {
 }
 
 .stat-value {
+  user-select: none;          
+  -webkit-user-select: none;  
+  -ms-user-select: none;
   font-size: clamp(1.75rem, 5vw, 2.5rem);
   font-weight: 800;
   background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
@@ -836,6 +841,9 @@ section {
 }
 
 .stat-desc {
+  user-select: none;          
+  -webkit-user-select: none;  
+  -ms-user-select: none;
   color: var(--text-secondary);
   font-size: clamp(0.75rem, 1.5vw, 0.85rem);
   font-weight: 600;
@@ -1424,6 +1432,9 @@ section {
 }
 
 .lang-card {
+  user-select: none;          
+  -webkit-user-select: none;  
+  -ms-user-select: none;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(0, 201, 255, 0.2);
   border-radius: 15px;
@@ -1532,6 +1543,9 @@ section {
 }
 
 .skill-group-card {
+  user-select: none;          
+  -webkit-user-select: none;  
+  -ms-user-select: none;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 20px;
@@ -1667,13 +1681,16 @@ section {
   width: 100%;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 600px) { 
   .skills-section .skills-grid {
     grid-template-columns: 1fr;
   }
 }
 
 .soft-skill-card {
+  user-select: none;          
+  -webkit-user-select: none;  
+  -ms-user-select: none;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 15px;
@@ -2101,6 +2118,7 @@ select.calc-input option {
     }
   }
 
+  
 .letter-btn {
   display: inline-flex;
   align-items: center;
