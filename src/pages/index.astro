@@ -874,19 +874,28 @@ const otherProjects = projects.filter(p =>
 </Layout>
 
 <script>
-// (O mesmo script JavaScript que já tens - não foi alterado)
+// ============================================
+// 1. DECLARAÇÃO GLOBAL DE VARIÁVEIS (Apenas uma vez)
+// ============================================
+const scrollProgress = document.getElementById('scrollProgress');
+const featuredGrid = document.getElementById('featuredGrid');
+const otherGrid = document.getElementById('otherGrid');
+const otherProjectsContainer = document.getElementById('otherProjectsContainer');
+const expandBtn = document.getElementById('expandBtn');
+const collapseBtn = document.getElementById('collapseBtn');
+const filterSelect = document.getElementById('skillFilter');
+
+// Guardamos os elementos originais da grelha "Other" para a lógica de fusão
+const originalOtherProjects = otherGrid ? Array.from(otherGrid.querySelectorAll('.glass-project-card')) : [];
+
 // ============================================
 // SCROLL PROGRESS BAR
 // ============================================
-const scrollProgress = document.getElementById('scrollProgress');
-
 window.addEventListener('scroll', () => {
   const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
   const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
   const scrolled = (winScroll / height) * 100;
-  if (scrollProgress) {
-    scrollProgress.style.width = scrolled + '%';
-  }
+  if (scrollProgress) scrollProgress.style.width = scrolled + '%';
 }, { passive: true });
 
 // ============================================
@@ -896,14 +905,13 @@ function animateCounter(element, target, suffix = '', duration = 2000) {
   let current = 0;
   const increment = target / (duration / 16);
   const isDecimal = target % 1 !== 0;
-  
+
   const timer = setInterval(() => {
     current += increment;
     if (current >= target) {
       current = target;
       clearInterval(timer);
     }
-    
     const displayValue = isDecimal ? current.toFixed(1) : Math.floor(current);
     element.textContent = displayValue + suffix;
   }, 16);
@@ -912,11 +920,8 @@ function animateCounter(element, target, suffix = '', duration = 2000) {
 const statsObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      const statValues = entry.target.querySelectorAll('.stat-value');
-      statValues.forEach((stat) => {
-        const target = parseInt(stat.dataset.target || '0');
-        const suffix = stat.dataset.suffix || '';
-        animateCounter(stat, target, suffix);
+      entry.target.querySelectorAll('.stat-value').forEach((stat) => {
+        animateCounter(stat, parseInt(stat.dataset.target || '0'), stat.dataset.suffix || '');
       });
       statsObserver.unobserve(entry.target);
     }
@@ -924,132 +929,124 @@ const statsObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.3 });
 
 const statsSection = document.querySelector('.stats-section');
-if (statsSection) {
-  statsObserver.observe(statsSection);
+if (statsSection) statsObserver.observe(statsSection);
+
+// ============================================
+// LÓGICA DE FILTRAGEM E FUSÃO (RESOLVE BURACOS NO GRID)
+// ============================================
+function updateProjects() {
+  if (!filterSelect || !featuredGrid || !otherGrid) return;
+
+  const selectedSkill = filterSelect.value;
+  const isFiltering = selectedSkill !== 'all';
+
+  if (isFiltering) {
+    // MODO FILTRO: Mover projetos de "Other" para a grelha principal
+    originalOtherProjects.forEach(card => featuredGrid.appendChild(card));
+    if (otherProjectsContainer) otherProjectsContainer.style.display = 'none';
+    if (expandBtn) expandBtn.style.display = 'none';
+
+    const allCards = featuredGrid.querySelectorAll('.glass-project-card');
+    allCards.forEach(card => {
+      const skills = Array.from(card.querySelectorAll('.tech-tag')).map(t => t.textContent.trim());
+      const isMatch = skills.includes(selectedSkill);
+
+      if (isMatch) {
+        card.style.display = 'block';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'scale(1)';
+        }, 10);
+      } else {
+        card.style.display = 'none';
+        card.style.opacity = '0';
+      }
+    });
+  } else {
+    // MODO NORMAL: Devolver projetos para as suas secções originais
+    originalOtherProjects.forEach(card => otherGrid.appendChild(card));
+    if (otherProjectsContainer) otherProjectsContainer.style.display = 'block';
+    if (expandBtn) expandBtn.style.display = 'flex';
+
+    const allCards = document.querySelectorAll('.glass-project-card');
+    allCards.forEach(card => {
+      card.style.display = 'block';
+      card.style.opacity = '1';
+      card.style.transform = 'scale(1)';
+    });
+  }
 }
 
 // ============================================
-// EXPAND/COLLAPSE OTHER PROJECTS (TOP & BOTTOM)
+// EVENT LISTENERS (EXPAND / COLLAPSE / FILTER)
 // ============================================
-const expandBtn = document.getElementById('expandBtn');
-const collapseBtn = document.getElementById('collapseBtn');
-const otherProjectsContainer = document.getElementById('otherProjectsContainer');
 
-if (expandBtn && collapseBtn && otherProjectsContainer) {
-  expandBtn.addEventListener('click', () => {
+// Função centralizada para gerir o estado dos botões de expand/collapse
+function setExpandState(expanded) {
+  if (!otherProjectsContainer || !expandBtn || !collapseBtn) return;
+
+  if (expanded) {
     otherProjectsContainer.classList.add('expanded');
-    expandBtn.classList.add('hidden');
-    
+    expandBtn.style.display = 'none';
+    collapseBtn.style.display = 'flex';
+  } else {
+    otherProjectsContainer.classList.remove('expanded');
+    expandBtn.style.display = 'flex';
+    collapseBtn.style.display = 'none';
+  }
+}
+
+// Garantir estado inicial correto ao carregar a página
+setExpandState(false);
+
+if (expandBtn) {
+  expandBtn.addEventListener('click', () => {
+    setExpandState(true);
     setTimeout(() => {
       otherProjectsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 300);
   });
+}
 
+if (collapseBtn) {
   collapseBtn.addEventListener('click', () => {
-    otherProjectsContainer.classList.remove('expanded');
-    expandBtn.classList.remove('hidden');
-    
+    setExpandState(false);
     const portfolioSection = document.getElementById('portfolio');
-    if (portfolioSection) {
-      portfolioSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    if (portfolioSection) portfolioSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-}
-function addProjectDividersToVisible() {
-  const featuredGrid = document.getElementById('featuredGrid');
-  const otherGrid = document.getElementById('otherGrid');
-
-}
-
-// ============================================
-// PROJECT FILTERING
-// ============================================
-const filterSelect = document.getElementById('skillFilter');
-const featuredGrid = document.getElementById('featuredGrid');
-const otherGrid = document.getElementById('otherGrid');
-
-function updateProjects() {
-  if (!filterSelect) return;
-
-  const selectedSkill = filterSelect.value;
-  
-  [featuredGrid, otherGrid].forEach(grid => {
-    if (!grid) return;
-    
-    grid.querySelectorAll('.divider').forEach(div => div.remove());
-    
-    const allCards = Array.from(grid.querySelectorAll('.glass-project-card'));
-    
-    allCards.forEach((card) => {
-      const skills = Array.from(card.querySelectorAll('.tech-tag')).map(
-        pill => pill.textContent?.trim() || ''
-      );
-      
-      const shouldShow = selectedSkill === 'all' || skills.includes(selectedSkill);
-      
-      if (shouldShow) {
-        card.style.display = 'block';
-        card.offsetHeight; 
-        card.classList.remove('hidden');
-        card.style.opacity = '1';
-        card.style.transform = 'scale(1) translateY(0)';
-      } else {
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.9) translateY(20px)';
-        
-        const once = () => {
-          card.removeEventListener('transitionend', once);
-          if (card.style.opacity === '0') {
-            card.classList.add('hidden');
-            card.style.display = 'none';
-          }
-        };
-        card.addEventListener('transitionend', once);
-      }
-    });
-  });
-  
-  setTimeout(() => {
-    addProjectDividersToVisible();
-  }, 400);
 }
 
 if (filterSelect) {
-  addProjectDividersToVisible();
   filterSelect.addEventListener('change', updateProjects);
 }
 
-// Scroll reveal
-const observerOptions = {
+// ============================================
+// SCROLL REVEAL
+// ============================================
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('active');
+  });
+}, {
   threshold: 0.15,
   rootMargin: '0px 0px -50px 0px'
-};
+});
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('active');
-    }
-  });
-}, observerOptions);
+document.querySelectorAll('.reveal, .reveal-stagger, .hero-reveal').forEach(el => revealObserver.observe(el));
 
-const revealElements = document.querySelectorAll('.reveal, .reveal-stagger, .hero-reveal');
-revealElements.forEach(el => observer.observe(el));
-
-// Glassmorphism glow
+// ============================================
+// GLASSMORPHISM GLOW ON HOVER
+// ============================================
 function addGlowEffect(selector) {
-  const cards = document.querySelectorAll(selector);
-  
-  cards.forEach(card => {
+  document.querySelectorAll(selector).forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width * 100;
       const y = (e.clientY - rect.top) / rect.height * 100;
-      
       card.style.setProperty('--mouse-x', `${x}%`);
       card.style.setProperty('--mouse-y', `${y}%`);
     });
-    
+
     card.addEventListener('mouseleave', () => {
       card.style.removeProperty('--mouse-x');
       card.style.removeProperty('--mouse-y');
@@ -1063,25 +1060,23 @@ addGlowEffect('.skill-group-card');
 addGlowEffect('.soft-skill-card');
 addGlowEffect('.lang-card');
 
-// Parallax profile picture
+// ============================================
+// PARALLAX PROFILE PICTURE
+// ============================================
 const profilePic = document.querySelector('.profile-pic');
 
 if (profilePic) {
   let ticking = false;
-  
+
   window.addEventListener('scroll', () => {
     if (!ticking) {
       window.requestAnimationFrame(() => {
         const scrolled = window.scrollY;
-        const parallaxSpeed = 0.3;
-        const yPos = -(scrolled * parallaxSpeed);
-        
+        const yPos = -(scrolled * 0.3);
         profilePic.style.setProperty('--parallax-y', `${yPos}px`);
         profilePic.classList.add('parallax-active');
-        
         ticking = false;
       });
-      
       ticking = true;
     }
   });
@@ -1099,6 +1094,7 @@ const currencySelector = document.getElementById('currencySelector');
 let lastSavings = 0;
 
 function getCurrencyConfig() {
+  if (!currencySelector) return { symbol: '€', min: 5, max: 500, rate: 1 };
   const option = currencySelector.options[currencySelector.selectedIndex];
   return {
     symbol: option.getAttribute('data-symbol') || '€',
@@ -1112,14 +1108,14 @@ function validateInput(input, min, max) {
   const val = parseInt(input.value);
   const errorSpan = document.getElementById(`error-${input.id}`);
   const isValid = !isNaN(val) && val >= min && val <= max;
-  
+
   input.classList.toggle('invalid', !isValid);
-  
+
   if (errorSpan) {
     errorSpan.textContent = `Value between ${min} and ${max}`;
     errorSpan.style.display = isValid ? 'none' : 'block';
   }
-  
+
   return isValid;
 }
 
@@ -1139,17 +1135,15 @@ function animateROIValue(elementId, start, end, symbol) {
     if (!startTime) startTime = timestamp;
     const progress = Math.min((timestamp - startTime) / duration, 1);
     const current = Math.floor(progress * (end - start) + start);
-    
     el.textContent = formatValue(current, symbol);
-    
-    if (progress < 1) {
-      window.requestAnimationFrame(step);
-    }
+    if (progress < 1) window.requestAnimationFrame(step);
   }
   window.requestAnimationFrame(step);
 }
 
 function calculateEfficiency() {
+  if (!processesInput || !hoursInput || !rateInput) return;
+
   const config = getCurrencyConfig();
 
   const isProcessesValid = validateInput(processesInput, 1, 50);
@@ -1170,7 +1164,7 @@ function calculateEfficiency() {
   const annualSavings = annualHours * rateBase;
 
   animateROIValue('savingsValue', lastSavings, annualSavings, config.symbol);
-  
+
   const hoursValEl = document.getElementById('hoursValue');
   const fteValEl = document.getElementById('fteValue');
   const monthlyValEl = document.getElementById('monthlyValue');
@@ -1190,18 +1184,16 @@ function calculateEfficiency() {
 
 currencySelector?.addEventListener('change', () => {
   const config = getCurrencyConfig();
-  
   const currentRate = parseInt(rateInput.value);
   if (currentRate < config.min) rateInput.value = config.min;
   if (currentRate > config.max) rateInput.value = config.max;
-
   calculateEfficiency();
 });
 
 calculateEfficiency();
 
 // ============================================
-// LIGHTBOX LOGIC
+// LIGHTBOX LOGIC (com navegação entre imagens do carrossel)
 // ============================================
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
@@ -1221,7 +1213,7 @@ if (lightbox && lightboxImg && closeLightbox && prevLightbox && nextLightbox && 
 
       const allImgsInCard = Array.from(card.querySelectorAll('.carousel-img'));
       currentImages = allImgsInCard.map((i) => i.src);
-      
+
       let visibleIndex = 0;
       allImgsInCard.forEach((imgElement, idx) => {
         const style = window.getComputedStyle(imgElement);
@@ -1229,9 +1221,8 @@ if (lightbox && lightboxImg && closeLightbox && prevLightbox && nextLightbox && 
           visibleIndex = idx;
         }
       });
-      
-      currentIndex = visibleIndex;
 
+      currentIndex = visibleIndex;
       updateLightbox();
       lightbox.classList.add('active');
       document.body.style.overflow = 'hidden';

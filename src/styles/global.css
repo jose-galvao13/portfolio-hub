@@ -967,10 +967,13 @@ section {
 
 /* Projects Grid */
 .projects-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(25px, 4vw, 40px);
-  position: relative;
+   display: grid;
+  /* O auto-fill permite que os itens se movam para cima mal haja espaço */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+  gap: 2rem;
+  width: 100%;
+  /* Remove alturas fixas que possam causar espaços */
+  height: auto; 
 }
 
 @media (min-width: 769px) {
