@@ -2727,8 +2727,6 @@ footer {
   align-items: center;
   gap: 5px;
   cursor: pointer;
-   display: flex;
-  align-items: center;
   height: 100%; /* Garante que todos ocupem a mesma altura */
   line-height: 1;
 }
