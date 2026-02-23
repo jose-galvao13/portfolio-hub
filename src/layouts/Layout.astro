@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { Image } from 'astro:assets';
 import logoImg from '../assets/images/logo.png';
+import { getProjects } from '../data/projects';
 
 interface Props {
   title: string;
@@ -14,6 +15,40 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalvao.com');
+const base = (import.meta.env.BASE_URL ?? '/').replace(/\/?$/, '/');
+
+// ── DADOS 100% DINÂMICOS de projects.ts ──────────────────────────────────────
+const skillFilters = ['Python', 'SQL', 'Power BI', 'Machine Learning', 'Streamlit'] as const;
+type Skill = typeof skillFilters[number];
+
+const allProjectsData = getProjects(import.meta.env.BASE_URL);
+
+// Agrupa todos os projetos reais por skill (sem hardcoding)
+const megaMenuProjects: Record<Skill, { name: string; type: string; url: string }[]> = {
+  'Python':           [],
+  'SQL':              [],
+  'Power BI':         [],
+  'Machine Learning': [],
+  'Streamlit':        [],
+};
+
+for (const project of allProjectsData) {
+  for (const skill of skillFilters) {
+    if (project.stack.some(s => s === skill || s.toLowerCase().includes(skill.toLowerCase()))) {
+      megaMenuProjects[skill].push({
+        name: project.title,
+        type: project.type,
+        url:  project.caseStudy ?? project.linkRepo,
+      });
+    }
+  }
+}
+
+// Counts reais (igual ao tamanho do array dinâmico)
+const skillCounts: Record<string, number> = {};
+for (const skill of skillFilters) {
+  skillCounts[skill] = megaMenuProjects[skill].length;
+}
 ---
 
 <!DOCTYPE html>
@@ -22,12 +57,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalv
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   
-  <!-- Preconnect to critical domains -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.googletagmanager.com">
   
-  <!-- Primary Meta Tags -->
   <title>{title}</title>
   <meta name="title" content={title}>
   <meta name="description" content={description}>
@@ -35,33 +68,27 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalv
   <meta name="keywords" content="business data analyst, python automation, machine learning engineer, financial modeling, ETL pipelines, power bi consultant, data engineering, AI solutions">
   <meta name="theme-color" content="#0EA5E9">
   
-  <!-- Canonical URL -->
   <link rel="canonical" href={canonicalURL}>
-
-  <!-- Favicon & App Icons -->
   <link rel="icon" type="image/png" sizes="32x32" href={logoImg.src}>
   <link rel="apple-touch-icon" sizes="180x180" href={logoImg.src}>
   <link rel="mask-icon" href={logoImg.src} color="#0EA5E9">
   
-  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content={canonicalURL}>
   <meta property="og:title" content="José Galvão | Business Data Analyst & Automation Specialist">
-  <meta property="og:description" content="Eliminating 200h+ of manual work through Python automation, ML models, and financial data engineering. Proven ROI in fraud detection, churn analysis, and ETL pipelines.">
+  <meta property="og:description" content="Eliminating 200h+ of manual work through Python automation, ML models, and financial data engineering.">
   <meta property="og:image" content={new URL('/og-image.png', Astro.site || 'https://josegalvao.com')}>
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="José Galvão Portfolio">
   <meta property="og:locale" content="en_US">
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content={canonicalURL}>
   <meta name="twitter:title" content="José Galvão | Business Data Analyst">
   <meta name="twitter:description" content="Python automation & ML specialist. 11 projects, 500k+ data processed, 90% avg accuracy.">
   <meta name="twitter:image" content={new URL('/og-image.png', Astro.site || 'https://josegalvao.com')}>
   
-  <!-- Structured Data - Enhanced Schema.org -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -70,53 +97,25 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalv
     "jobTitle": "Business Data Analyst",
     "description": "Python automation specialist and ML engineer with expertise in financial data engineering",
     "url": "https://josegalvao.com",
-    "image": "https://josegalvao.com/profile.png",
-    "sameAs": [
-      "https://linkedin.com/in/jose-galvão",
-      "https://github.com/jose-galvao13"
-    ],
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Coimbra",
-      "addressCountry": "PT"
-    },
-    "alumniOf": {
-      "@type": "EducationalOrganization",
-      "name": "Coimbra Business School (ISCAC)"
-    },
-    "knowsAbout": [
-      "Python Programming",
-      "Machine Learning",
-      "Data Engineering",
-      "Financial Modeling",
-      "Business Intelligence",
-      "ETL Pipelines",
-      "Power BI",
-      "SQL"
-    ]
+    "sameAs": ["https://linkedin.com/in/jose-galvão","https://github.com/jose-galvao13"],
+    "address": { "@type": "PostalAddress", "addressLocality": "Coimbra", "addressCountry": "PT" },
+    "alumniOf": { "@type": "EducationalOrganization", "name": "Coimbra Business School (ISCAC)" },
+    "knowsAbout": ["Python Programming","Machine Learning","Data Engineering","Financial Modeling","Business Intelligence","ETL Pipelines","Power BI","SQL"]
   }
   </script>
 
-  <!-- CSS Import with display=swap for font loading -->
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
   
-  <!-- Critical CSS inline (if needed) -->
   <style>
-    /* Prevent FOUC */
     html { visibility: visible; opacity: 1; }
   </style>
 
-  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZVWG09RGY6"></script>
   <script is:inline>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-ZVWG09RGY6', {
-      page_path: window.location.pathname,
-      anonymize_ip: true,
-      cookie_flags: 'SameSite=None;Secure'
-    });
+    gtag('config', 'G-ZVWG09RGY6', { page_path: window.location.pathname, anonymize_ip: true, cookie_flags: 'SameSite=None;Secure' });
   </script>
 </head>
 <body>
@@ -145,7 +144,92 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalv
         <!-- Desktop Menu -->
         <div class="nav-menu" id="nav-menu">
           <ul class="nav-links" role="list">
-            <li><a href="#portfolio">Projects</a></li>
+
+            <!-- PROJECTS with Mega Menu -->
+            <li class="nav-item-mega" id="nav-projects-item">
+              <a href="#portfolio" class="nav-link-mega" id="nav-projects-trigger" aria-haspopup="true" aria-expanded="false">
+                Projects
+                <svg class="mega-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </a>
+
+              <!-- MEGA MENU PANEL -->
+              <div class="mega-menu" id="mega-menu-panel" role="region" aria-label="Projects by skill">
+                <div class="mega-menu-inner">
+
+                  <!-- LEFT: Skill filters -->
+                  <div class="mega-left">
+                    <p class="mega-section-label">Filter by Skill</p>
+                    <ul class="mega-skill-list" role="list">
+                      {skillFilters.map((skill, idx) => (
+                        <li>
+                          <button
+                            class={`mega-skill-btn${idx === 0 ? ' active' : ''}`}
+                            data-skill={skill}
+                            type="button"
+                            aria-pressed={idx === 0 ? 'true' : 'false'}
+                          >
+                            <span class="mega-skill-dot" aria-hidden="true"></span>
+                            {skill}
+                            <span class="mega-skill-count">{skillCounts[skill]}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                    <a href="#portfolio" class="mega-view-all">
+                      View all projects
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </a>
+                  </div>
+
+                  <!-- DIVIDER -->
+                  <div class="mega-divider" aria-hidden="true"></div>
+
+                  <!-- RIGHT: Project list per skill (scrollable) -->
+                  <div class="mega-right">
+                    <p class="mega-section-label mega-right-label" id="mega-right-label">Python Projects</p>
+                    <div class="mega-project-scroll" id="mega-project-scroll">
+                      <ul class="mega-project-list" id="mega-project-list" role="list">
+                        {skillFilters.map((skill) => (
+                          megaMenuProjects[skill].map((p, idx) => (
+                            <li
+                              class={`mega-project-item${skill === skillFilters[0] ? ' animating visible' : ''}`}
+                              data-skill={skill}
+                              style={`--item-i: ${idx}`}
+                            >
+                              <a href={p.url} class="mega-project-link">
+                                <span class="mega-proj-icon" aria-hidden="true">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="16 18 22 12 16 6"></polyline>
+                                    <polyline points="8 6 2 12 8 18"></polyline>
+                                  </svg>
+                                </span>
+                                <span class="mega-proj-info">
+                                  <span class="mega-proj-name">{p.name}</span>
+                                  <span class="mega-proj-type">{p.type}</span>
+                                </span>
+                                <svg class="mega-proj-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                              </a>
+                            </li>
+                          ))
+                        ))}
+                      </ul>
+                    </div>
+                    <!-- Fade indicator when more items below -->
+                    <div class="mega-scroll-fade" id="mega-scroll-fade" aria-hidden="true"></div>
+                  </div>
+
+                </div>
+              </div>
+              <!-- End Mega Menu Panel -->
+            </li>
+
             <li><a href="#timeline">Experience</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#recommendations">Recommendations</a></li>
@@ -179,28 +263,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalv
 
   <script>
     // ============================================
-    // PERFORMANCE-OPTIMIZED SCRIPTS
+    // NAVBAR SCROLL EFFECT
     // ============================================
-    
-    // Navbar Scroll Effect (throttled)
     const nav = document.getElementById('main-nav');
     let ticking = false;
     
     window.addEventListener('scroll', () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          if (window.scrollY > 30) {
-            nav?.classList.add('scrolled');
-          } else {
-            nav?.classList.remove('scrolled');
-          }
+          nav?.classList.toggle('scrolled', window.scrollY > 30);
           ticking = false;
         });
         ticking = true;
       }
     }, { passive: true });
 
-    // Mobile Menu Toggle (accessible)
+    // ============================================
+    // MOBILE MENU TOGGLE
+    // ============================================
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('nav-menu');
     
@@ -209,47 +289,163 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalv
       btn.setAttribute('aria-expanded', String(!isExpanded));
       btn.classList.toggle('active');
       menu?.classList.toggle('active');
-      
-      // Trap focus in mobile menu
-      if (!isExpanded) {
-        const firstLink = menu?.querySelector('a');
-        firstLink?.focus();
-      }
+      if (!isExpanded) menu?.querySelector('a')?.focus();
     });
 
-    // Close mobile menu on ESC
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && menu?.classList.contains('active')) {
-        btn?.click();
-      }
+      if (e.key === 'Escape' && menu?.classList.contains('active')) btn?.click();
     });
 
-    // Smooth Scroll (optimized)
+    // ============================================
+    // MEGA MENU — hover / focus logic
+    // ============================================
+    const megaItem    = document.getElementById('nav-projects-item');
+    const megaPanel   = document.getElementById('mega-menu-panel');
+    const megaTrigger = document.getElementById('nav-projects-trigger');
+    const skillBtns   = document.querySelectorAll<HTMLButtonElement>('.mega-skill-btn');
+    const projectItems= document.querySelectorAll<HTMLLIElement>('.mega-project-item');
+    const rightLabel  = document.getElementById('mega-right-label');
+
+    if (megaItem && megaPanel && megaTrigger) {
+
+      // Open / close on hover (desktop)
+      let closeTimer: ReturnType<typeof setTimeout>;
+
+      const openMega = () => {
+        clearTimeout(closeTimer);
+        megaPanel.classList.add('open');
+        megaTrigger.setAttribute('aria-expanded', 'true');
+      };
+
+      const closeMega = () => {
+        closeTimer = setTimeout(() => {
+          megaPanel.classList.remove('open');
+          megaTrigger.setAttribute('aria-expanded', 'false');
+        }, 150);
+      };
+
+      megaTrigger.addEventListener('mouseenter', openMega);
+      megaItem.addEventListener('mouseleave', (e) => {
+  // Só fecha se o cursor saiu do li inteiro (incluindo o painel)
+      if (!megaItem.contains(e.relatedTarget)) closeMega();
+      });
+      megaPanel.addEventListener('mouseenter', openMega);
+      megaPanel.addEventListener('mouseleave', (e) => {
+        if (!megaItem.contains(e.relatedTarget)) closeMega();
+      });
+
+      // Also toggle on click (touch / keyboard)
+      megaTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = megaPanel.classList.contains('open');
+        isOpen ? closeMega() : openMega();
+      });
+
+      // Close when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!megaItem.contains(e.target as Node)) {
+          megaPanel.classList.remove('open');
+          megaTrigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Close on ESC
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          megaPanel.classList.remove('open');
+          megaTrigger.setAttribute('aria-expanded', 'false');
+          megaTrigger.focus();
+        }
+      });
+
+      // ---- Skill filter switching ----
+      const scrollContainer = document.getElementById('mega-project-scroll');
+      const scrollFade      = document.getElementById('mega-scroll-fade');
+
+      function updateFade() {
+        if (!scrollContainer || !scrollFade) return;
+        const atBottom = scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight - 8;
+        scrollFade.classList.toggle('visible', !atBottom && scrollContainer.scrollHeight > scrollContainer.clientHeight);
+      }
+
+      scrollContainer?.addEventListener('scroll', updateFade, { passive: true });
+
+      function switchSkill(skill: string) {
+        // Update buttons
+        skillBtns.forEach(b => {
+          const active = b.dataset.skill === skill;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', String(active));
+        });
+
+        // Update right panel label
+        if (rightLabel) rightLabel.textContent = skill + ' Projects';
+
+        // Remove all items immediately (no animation out)
+        projectItems.forEach(item => {
+          item.classList.remove('visible', 'animating');
+        });
+
+        // Staggered fade+slide in for incoming items
+        const incoming = Array.from(projectItems).filter(
+          item => (item as HTMLElement).dataset.skill === skill
+        );
+        incoming.forEach((item, i) => {
+          (item as HTMLElement).style.setProperty('--item-i', String(i));
+          item.classList.add('animating');
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              item.classList.add('visible');
+            });
+          });
+        });
+
+        // Reset scroll to top and re-check fade
+        if (scrollContainer) {
+          scrollContainer.scrollTop = 0;
+          requestAnimationFrame(updateFade);
+        }
+      }
+
+      // Initial fade check after panel opens
+      megaItem.addEventListener('mouseenter', () => requestAnimationFrame(updateFade));
+
+      skillBtns.forEach(btn => {
+        btn.addEventListener('mouseenter', () => switchSkill(btn.dataset.skill!));
+        btn.addEventListener('focus',      () => switchSkill(btn.dataset.skill!));
+        btn.addEventListener('click',      () => switchSkill(btn.dataset.skill!));
+      });
+
+      // Mega menu project links — close panel on click
+      megaPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          megaPanel.classList.remove('open');
+          megaTrigger.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+
+    // ============================================
+    // SMOOTH SCROLL
+    // ============================================
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+      anchor.addEventListener('click', function (this: HTMLAnchorElement, e) {
         const href = this.getAttribute('href');
         if (href && href !== '#') {
           e.preventDefault();
           const target = document.querySelector(href);
           if (target) {
-            target.scrollIntoView({ 
-              behavior: 'smooth',
-              block: 'start'
-            });
-            
-            // Update URL without reload
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             history.pushState(null, '', href);
-            
-            // Close mobile menu if open
-            if (menu?.classList.contains('active')) {
-              btn?.click();
-            }
+            if (menu?.classList.contains('active')) btn?.click();
           }
         }
       });
     });
 
-    // Prefetch critical resources on hover (desktop only)
+    // ============================================
+    // PREFETCH ON HOVER (desktop)
+    // ============================================
     if (window.matchMedia('(hover: hover)').matches) {
       document.querySelectorAll('a[href^="http"]').forEach(link => {
         link.addEventListener('mouseenter', () => {
@@ -265,15 +461,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalv
     }
   </script>
 
-  <!-- Service Worker Registration (optional for PWA) -->
   <script is:inline>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {
-          // Silent fail if no SW
-        });
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
       });
     }
   </script>
-</body>
-</html>

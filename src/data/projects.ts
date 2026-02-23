@@ -1,0 +1,246 @@
+// src/data/projects.ts
+// Ficheiro de dados centralizado — separado da lógica de apresentação.
+// Os imports de imagens ficam aqui uma única vez em vez de estarem
+// espalhados pelo frontmatter do index.astro.
+//
+// COMO ADICIONAR UM PROJETO:
+//   1. Adiciona os imports das imagens no topo deste ficheiro.
+//   2. Adiciona uma nova entrada no array dentro de getProjects().
+//   3. Define featured: true para aparecer em destaque, false caso contrário.
+
+import _churn1   from '../assets/images/Churn-Analysis.png';
+import _churn2   from '../assets/images/Churn-Analysis2.png';
+import _churn3   from '../assets/images/Churn-Analysis3.png';
+import _churn4   from '../assets/images/Churn-Analysis4.png';
+import _churn5   from '../assets/images/Churn-Analysis5.png';
+import _churn6   from '../assets/images/Churn-Analysis6.png';
+import _churn7   from '../assets/images/Churn-Analysis7.png';
+import _fraud1   from '../assets/images/fraud-detection-system.png';
+import _fraud2   from '../assets/images/fraud-detection-system2.png';
+import _fraud3   from '../assets/images/fraud-detection-system3.png';
+import _fraud4   from '../assets/images/fraud-detection-system4.png';
+import _realEstate from '../assets/images/real_estate.png';
+import _chatcfo1 from '../assets/images/chatcfo.png';
+import _chatcfo2 from '../assets/images/chatcfo2.png';
+import _chatcfo3 from '../assets/images/chatcfo3.png';
+import _macro    from '../assets/images/macro.png';
+import _equity1  from '../assets/images/equity_research.png';
+import _equity2  from '../assets/images/equity_research2.png';
+import _banker   from '../assets/images/banker_ai.png';
+import _warehouse  from '../assets/images/warehouse.png';
+import _reporting  from '../assets/images/reporting.png';
+import _ecom1    from '../assets/images/ecommerce.png';
+import _ecom2    from '../assets/images/ecommerce2.png';
+import _ecom3    from '../assets/images/ecommerce3.png';
+import _ecom4    from '../assets/images/ecommerce4.png';
+import _forecast from '../assets/images/forecast.png';
+
+export interface Project {
+  title:         string;
+  type:          string;
+  desc:          string;
+  stack:         string[];
+  linkRepo:      string;
+  linkDemo:      string;
+  caseStudy:     string;
+  images:        string[];
+  imageAlts:     string[];
+  complexity:    'intermediate' | 'advanced';
+  businessImpact:'medium' | 'high';
+  /** true  → aparece na secção "Featured Projects"
+   *  false → aparece na secção colapsável "Show More" */
+  featured:      boolean;
+}
+
+/**
+ * Retorna a lista completa de projetos.
+ * @param baseUrl - Valor de import.meta.env.BASE_URL passado a partir da página.
+ *                  Necessário porque este ficheiro pode ser usado tanto em SSR
+ *                  como em build estático.
+ */
+export function getProjects(baseUrl: string): Project[] {
+  return [
+    // ── FEATURED ───────────────────────────────────────────────────────────
+    {
+      title: "Customer Churn & Retention Analytics",
+      type:  "Data Science / Business Intelligence",
+      desc:  "<b>🔴 Problem:</b> Static churn reports only react after the customer has already left.<br><b>🟢 Solution:</b> Developed a full-cycle system integrating Survival Analysis (Kaplan-Meier) and ML (Gradient Boosting) to predict the 'when' and 'why' of churn.<br><b>🚀 Impact:</b> Identified high-risk segments representing 30% of revenue at risk, enabling proactive retention campaigns.",
+      stack: ["Python", "Machine Learning", "Lifelines", "Pandas"],
+      linkRepo:  "https://github.com/jose-galvao13/churn-analysis",
+      linkDemo:  "#",
+      caseStudy: `${baseUrl}/churn-analysis`,
+      images: [_churn1.src, _churn2.src, _churn3.src, _churn4.src, _churn5.src, _churn6.src, _churn7.src],
+      imageAlts: [
+        "Kaplan-Meier survival curve showing customer churn probability over 12 months",
+        "Gradient Boosting model feature importance chart for churn prediction",
+        "Customer segmentation matrix by churn risk and revenue value",
+        "Cohort retention heatmap showing monthly churn patterns",
+        "Churn prediction dashboard with high-risk customer list",
+        "ROC curve showing 0.91 AUC for churn classification model",
+        "Survival analysis results by customer segment and contract type",
+      ],
+      complexity:     "advanced",
+      businessImpact: "high",
+      featured: true,
+    },
+    {
+      title: "Unsupervised Fraud Detection System",
+      type:  "Machine Learning / Data Security",
+      desc:  "<b>🔴 Problem:</b> Traditional rules miss 40% of zero-day fraud attacks.<br><b>🟢 Solution:</b> Built an unsupervised ensemble (Isolation Forest & PCA) to detect anomalies without labels.<br><b>🚀 Impact:</b> Detected patterns in 0.17% of transactions that bypassed standard filters.",
+      stack: ["Python", "Machine Learning", "Scikit-Learn", "Matplotlib"],
+      linkRepo:  "https://github.com/jose-galvao13/fraud-detection-system",
+      linkDemo:  "#",
+      caseStudy: `${baseUrl}/fraud-detection`,
+      images: [_fraud1.src, _fraud2.src, _fraud3.src, _fraud4.src],
+      imageAlts: [
+        "PCA scatter plot isolating anomalous transactions in 2D space",
+        "Isolation Forest anomaly scores distribution histogram",
+        "Fraud detection pipeline architecture diagram",
+        "Transaction network graph highlighting flagged fraudulent clusters",
+      ],
+      complexity:     "advanced",
+      businessImpact: "high",
+      featured: true,
+    },
+    {
+      title: "Portugal Real Estate Analytics",
+      type:  "Market Intelligence & Real Estate",
+      desc:  "<b>🔴 Problem:</b> Investors lack granular data to find undervalued assets.<br><b>🟢 Solution:</b> Scraped & analyzed 95k+ listings with geo-spatial mapping.<br><b>🚀 Impact:</b> Identifies arbitrage opportunities by comparing price/m² across neighboring municipalities.",
+      stack: ["Power BI", "Python", "Data Modeling", "Web Scraping"],
+      linkRepo:  "https://github.com/jose-galvao13/Portugal-Real-Estate",
+      linkDemo:  "#",
+      caseStudy: `${baseUrl}/real-estate`,
+      images:    [_realEstate.src],
+      imageAlts: ["Power BI dashboard showing price per m² across Portuguese municipalities with geo-spatial map"],
+      complexity:     "intermediate",
+      businessImpact: "medium",
+      featured: true,
+    },
+    {
+      title: "ChatCFO - RAG Financial Analyst",
+      type:  "AI & Fintech",
+      desc:  "<b>🔴 Problem:</b> Auditors spend hours digging through 200+ page PDFs.<br><b>🟢 Solution:</b> AI Assistant (RAG + Llama 3) that queries docs with citations.<br><b>🚀 Impact:</b> Reduces research time by 95%, delivering verifiable answers in seconds.",
+      stack: ["Python", "Machine Learning", "LangChain", "RAG"],
+      linkRepo:  "https://github.com/jose-galvao13/ChatCFO",
+      linkDemo:  "#",
+      caseStudy: `${baseUrl}/chatcfo`,
+      images: [_chatcfo1.src, _chatcfo2.src, _chatcfo3.src],
+      imageAlts: [
+        "ChatCFO interface showing AI-powered query on a 200-page financial PDF",
+        "RAG pipeline architecture: document ingestion, embedding, and retrieval flow",
+        "ChatCFO citation panel showing source page references for each answer",
+      ],
+      complexity:     "advanced",
+      businessImpact: "high",
+      featured: true,
+    },
+
+    // ── OTHER (Show More) ───────────────────────────────────────────────────
+    {
+      title: "Macro Portfolio Analyzer",
+      type:  "Investment Analysis",
+      desc:  "<b>🔴 Problem:</b> Static Excel sheets fail to capture real-time volatility.<br><b>🟢 Solution:</b> Live dashboard tracking S&P 500, BTC & Gold via API.<br><b>🚀 Impact:</b> Automates risk metrics (Sharpe, Drawdown), enabling instant rebalancing decisions.",
+      stack: ["Python", "Streamlit", "Plotly", "API"],
+      linkRepo:  "https://github.com/jose-galvao13/portfolio-macro-analyzer",
+      linkDemo:  "https://portfolio-macro-analyzer-galvao.streamlit.app/",
+      caseStudy: `${baseUrl}/macro-portfolio`,
+      images:    [_macro.src],
+      imageAlts: ["Live portfolio dashboard tracking S&P 500, BTC and Gold with Sharpe Ratio and Max Drawdown metrics"],
+      complexity:     "intermediate",
+      businessImpact: "medium",
+      featured: false,
+    },
+    {
+      title: "Equity Research - Auto DCF",
+      type:  "Corporate Finance",
+      desc:  "<b>🔴 Problem:</b> Manual DCF valuation is prone to error and slow.<br><b>🟢 Solution:</b> Auto-Valuation tool fetching live financials to calculate WACC & FCF.<br><b>🚀 Impact:</b> Generates equity research reports in 2 minutes vs. 4 hours manually.",
+      stack: ["Python", "API", "Financial Modeling", "Valuation"],
+      linkRepo:  "https://github.com/jose-galvao13/Equity-Research-Agent-AI",
+      linkDemo:  "#",
+      caseStudy: `${baseUrl}/equity-research`,
+      images: [_equity1.src, _equity2.src],
+      imageAlts: [
+        "Auto DCF valuation output showing WACC calculation and free cash flow projections",
+        "Equity research report generated in 2 minutes with sensitivity analysis table",
+      ],
+      complexity:     "intermediate",
+      businessImpact: "high",
+      featured: false,
+    },
+    {
+      title: "Banker AI: Credit Risk Engine",
+      type:  "Risk Management",
+      desc:  "<b>🔴 Problem:</b> Manual credit reviews are slow and biased.<br><b>🟢 Solution:</b> ML model (Random Forest) protected by dynamic compliance rules.<br><b>🚀 Impact:</b> 85% prediction accuracy and 50% reduction in processing time per applicant.",
+      stack: ["Python", "Machine Learning", "Streamlit", "Scikit-Learn"],
+      linkRepo:  "https://github.com/jose-galvao13/banker-ai",
+      linkDemo:  "https://credit-risk-scoring-ai-engine-galvao.streamlit.app/",
+      caseStudy: `${baseUrl}/banker-ai`,
+      images:    [_banker.src],
+      imageAlts: ["Banker AI credit scoring interface showing applicant risk score and decision explanation"],
+      complexity:     "advanced",
+      businessImpact: "high",
+      featured: false,
+    },
+    {
+      title: "Financial Data Warehouse (ETL)",
+      type:  "Data Engineering",
+      desc:  "<b>🔴 Problem:</b> Decentralized CSV files lead to data inconsistency.<br><b>🟢 Solution:</b> Enterprise ETL pipeline transforming raw ERP data into a Star Schema.<br><b>🚀 Impact:</b> Reduced query time by 70% and enabled single-source-of-truth reporting.",
+      stack: ["SQL", "Python", "Power BI", "Data Architecture"],
+      linkRepo:  "https://github.com/jose-galvao13/financial-warehouse",
+      linkDemo:  "#",
+      caseStudy: `${baseUrl}/financial-warehouse`,
+      images:    [_warehouse.src],
+      imageAlts: ["Star schema data architecture diagram for financial data warehouse with fact and dimension tables"],
+      complexity:     "advanced",
+      businessImpact: "high",
+      featured: false,
+    },
+    {
+      title: "Automated Financial Reporting",
+      type:  "Accounting Automation",
+      desc:  "<b>🔴 Problem:</b> Month-end close takes 2 days of manual Excel work.<br><b>🟢 Solution:</b> Python script that validates Trial Balances vs. SNC rules.<br><b>🚀 Impact:</b> Process cut to <5 seconds with 100% mathematical integrity guaranteed.",
+      stack: ["Python", "Excel Automation", "Financial Reporting"],
+      linkRepo:  "https://github.com/jose-galvao13/automated-financial-reporting",
+      linkDemo:  "#",
+      caseStudy: `${baseUrl}/financial-reporting`,
+      images:    [_reporting.src],
+      imageAlts: ["Python automation output: Trial Balance validation report against SNC accounting rules"],
+      complexity:     "intermediate",
+      businessImpact: "medium",
+      featured: false,
+    },
+    {
+      title: "E-Commerce Analytics Dashboard",
+      type:  "Business Intelligence",
+      desc:  "<b>🔴 Problem:</b> High churn rate hidden in aggregate sales data.<br><b>🟢 Solution:</b> RFM Segmentation model on 100k+ transactions.<br><b>🚀 Impact:</b> Identified €96k revenue at risk and a €42k cross-sell opportunity.",
+      stack: ["Power BI", "SQL", "DAX", "RFM Analysis"],
+      linkRepo:  "https://github.com/jose-galvao13/ecommerce-analytics",
+      linkDemo:  "#",
+      caseStudy: `${baseUrl}/ecommerce-analytics`,
+      images: [_ecom1.src, _ecom2.src, _ecom3.src, _ecom4.src],
+      imageAlts: [
+        "Power BI RFM segmentation dashboard showing customer clusters and revenue at risk",
+        "Customer lifetime value chart segmented by RFM quintiles",
+        "Cross-sell opportunity map showing €42k revenue potential by product category",
+        "Churn cohort analysis with month-over-month retention trends",
+      ],
+      complexity:     "intermediate",
+      businessImpact: "medium",
+      featured: false,
+    },
+    {
+      title: "AI Sales Forecasting",
+      type:  "Data Science & FP&A",
+      desc:  "<b>🔴 Problem:</b> Static budgeting fails to capture seasonality.<br><b>🟢 Solution:</b> Facebook Prophet model forecasting 6-month demand.<br><b>🚀 Impact:</b> 88% MAPE accuracy, enabling precise inventory planning and cash flow forecasts.",
+      stack: ["Python", "Power BI", "Machine Learning", "Time-Series"],
+      linkRepo:  "https://github.com/jose-galvao13/Ai-Sales-Forecasting-Budgeting",
+      linkDemo:  "#",
+      caseStudy: `${baseUrl}/sales-forecasting`,
+      images:    [_forecast.src],
+      imageAlts: ["Facebook Prophet 6-month sales forecast with confidence intervals and seasonality decomposition"],
+      complexity:     "intermediate",
+      businessImpact: "medium",
+      featured: false,
+    },
+  ];
+}

@@ -20,31 +20,30 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
 <Layout title={`${title} - Case Study | José Galvão`} description={description}>
   <!-- Top Progress Bar -->
-  <div class="reading-progress"></div>
+  <div class="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 
   <div class="case-study-root">
     
     <!-- Background Effects -->
-    <div class="bg-effects">
+    <div class="bg-effects" aria-hidden="true">
       <div class="glow-orb orb-1"></div>
       <div class="glow-orb orb-2"></div>
       <div class="grid-overlay"></div>
     </div>
     
-    <!-- Ultra Header: Título Massivo -->
     <br /> <br />  <br /> <br />
     <header class="ultra-header">
       <div class="container-wide">
         <div class="header-split">
           <div class="title-area">
             <span class="eyebrow">
-              <span class="eyebrow-dot"></span>
+              <span class="eyebrow-dot" aria-hidden="true"></span>
               {projectType}
-              <span class="eyebrow-line"></span>
+              <span class="eyebrow-line" aria-hidden="true"></span>
             </span>
-            <h1 class="glitch-title" data-text={title}>
+            <h1 class="elegant-title">
               {title}
-              <div class="title-underline"></div>
+              <div class="title-underline" aria-hidden="true"></div>
             </h1>
           </div>
           <p class="hero-desc">{description}</p>
@@ -55,24 +54,24 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     <div class="main-layout container-wide">
       
       <!-- Content Area -->
-      <article class="technical-content">
+      <article class="technical-content" id="case-study-content">
         <slot />
       </article>
 
-      <!-- Sticky Sidebar: O "Fact Sheet" -->
-      <aside class="tech-sidebar">
+      <!-- Sticky Sidebar -->
+      <aside class="tech-sidebar" aria-label="Project details">
         <div class="sidebar-inner">
           
           <div class="sidebar-section">
             <h4 class="section-title">
-              <span class="title-emoji">📊</span>
+              <span class="title-emoji" aria-hidden="true">📊</span>
               Key Performance
             </h4>
             <div class="metrics-stack">
               {metrics.map((m, idx) => (
                 <div class="m-item" style={`animation-delay: ${idx * 0.1}s`}>
                   <div class="m-content">
-                    <div class="metric-bar">
+                    <div class="metric-bar" role="progressbar" aria-label={m.label} aria-valuenow={Math.min(parseInt(m.value) || 85, 100)} aria-valuemin="0" aria-valuemax="100">
                       <div class="metric-fill" style={`width: ${Math.min(parseInt(m.value) || 85, 100)}%`}></div>
                     </div>
                     <span class="m-val">{m.value}</span>
@@ -85,13 +84,13 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
           <div class="sidebar-section">
             <h4 class="section-title">
-              <span class="title-emoji">⚙️</span>
+              <span class="title-emoji" aria-hidden="true">⚙️</span>
               Core Stack
             </h4>
             <div class="stack-cloud">
               {stack.map((s, idx) => (
                 <span class="s-tag" style={`animation-delay: ${idx * 0.05}s`}>
-                  <span class="tag-shimmer"></span>
+                  <span class="tag-shimmer" aria-hidden="true"></span>
                   {s}
                 </span>
               ))}
@@ -100,24 +99,24 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
           <div class="sidebar-section">
             <h4 class="section-title">
-              <span class="title-emoji">🔗</span>
+              <span class="title-emoji" aria-hidden="true">🔗</span>
               External Assets
             </h4>
             <div class="link-group">
-              <a href={githubUrl} target="_blank" class="side-btn github">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <a href={githubUrl} target="_blank" rel="noopener noreferrer" class="side-btn github" aria-label={`View ${title} source code on GitHub (opens in new tab)`}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                 </svg>
                 <span>View Repository</span>
-                <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
               </a>
               {liveUrl && (
-                <a href={liveUrl} target="_blank" class="side-btn live">
-                  <span class="live-indicator"></span>
+                <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="side-btn live" aria-label={`View live demo of ${title} (opens in new tab)`}>
+                  <span class="live-indicator" aria-hidden="true"></span>
                   <span>Live Demo</span>
-                  <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                   </svg>
                 </a>
@@ -127,8 +126,8 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
           <div class="sidebar-footer">
             <p>Analysis by José Galvão</p>
-            <div class="status-indicator">
-              <span class="pulse"></span> Active Project
+            <div class="status-indicator" aria-label="Active project">
+              <span class="pulse" aria-hidden="true"></span> Active Project
             </div>
           </div>
         </div>
@@ -139,6 +138,70 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
 </Layout>
 
+<!--
+  is:global — needed because .copy-code-btn is injected at runtime by JS.
+  Astro's scoped <style> only applies to elements present at build time.
+  The button is inserted directly inside <pre> so position:relative on pre anchors it.
+-->
+<style is:global>
+  pre {
+    position: relative !important;
+  }
+
+  pre:hover .copy-code-btn {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .copy-code-btn {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    z-index: 10 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 4px 10px 4px 8px !important;
+    background: rgba(8, 8, 8, 0.9) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 6px !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.3px !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease, background 0.2s ease !important;
+  }
+
+  .copy-code-btn:hover {
+    color: #ffffff !important;
+    border-color: rgba(0, 242, 255, 0.5) !important;
+    background: rgba(0, 242, 255, 0.08) !important;
+  }
+
+  .copy-code-btn.copied {
+    color: #00ff88 !important;
+    border-color: rgba(0, 255, 136, 0.4) !important;
+    background: rgba(0, 255, 136, 0.06) !important;
+    opacity: 1 !important;
+    pointer-events: none !important;
+  }
+
+  .copy-code-btn svg {
+    width: 12px !important;
+    height: 12px !important;
+    flex-shrink: 0 !important;
+    pointer-events: none !important;
+    display: block !important;
+  }
+</style>
+
 <style>
   :root {
     --text-pure: #ffffff;
@@ -148,14 +211,11 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     --accent-glow: rgba(0, 242, 255, 0.3);
     --accent-bright: #00ffff;
     --border: rgba(255, 255, 255, 0.07);
-    --sidebar-w: 320px;
     --highlight-bg: rgba(0, 242, 255, 0.05);
     --code-inline-bg: rgba(255, 255, 255, 0.05);
   }
 
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   .case-study-root {
     background: var(--bg-black);
@@ -176,7 +236,6 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     width: 100%;
   }
 
-  /* Background Effects */
   .bg-effects {
     position: fixed;
     top: 0; left: 0;
@@ -224,7 +283,6 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     opacity: 0.3;
   }
 
-  /* Reading Progress Bar */
   .reading-progress {
     position: fixed;
     top: 0; left: 0; width: 0%; height: 3px;
@@ -234,7 +292,6 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     transition: width 0.1s ease;
   }
 
-  /* Ultra Header */
   .ultra-header {
     padding: 120px 0 80px;
     border-bottom: 1px solid var(--border);
@@ -269,12 +326,10 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     font-weight: 800;
     letter-spacing: 4px;
     margin-bottom: 24px;
-    position: relative;
   }
 
   .eyebrow-dot {
-    width: 8px;
-    height: 8px;
+    width: 8px; height: 8px;
     background: var(--accent);
     border-radius: 50%;
     animation: pulse-dot 2s ease-in-out infinite;
@@ -282,14 +337,8 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   }
 
   @keyframes pulse-dot {
-    0%, 100% { 
-      box-shadow: 0 0 0 0 var(--accent-glow);
-      transform: scale(1);
-    }
-    50% { 
-      box-shadow: 0 0 0 8px transparent;
-      transform: scale(1.2);
-    }
+    0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); transform: scale(1); }
+    50% { box-shadow: 0 0 0 8px transparent; transform: scale(1.2); }
   }
 
   .eyebrow-line {
@@ -299,41 +348,32 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     max-width: 80px;
   }
 
-.glitch-title {
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  line-height: 0.95;
-  font-weight: 900;
-  letter-spacing: -3px;
-  margin: 0;
-  position: relative;
-  display: inline-block;
-  
-  /* Cores extraídas do botão: Azul Cyan para Teal */
-  background: linear-gradient(
-    90deg, 
-    #00a2ff 0%,   /* Azul Cyan da esquerda */
-    #00bfa5 100%  /* Teal/Verde-água da direita */
-  );
-  
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  
-  /* Brilho extremamente subtil apenas para dar nitidez */
-  filter: drop-shadow(0 2px 8px rgba(0, 162, 255, 0.12));
-  
-  /* Sem animações de brilho para manter a sobriedade */
-  max-width: 100%;
-  word-wrap: break-word;
-}
+  .elegant-title {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 0.95;
+    font-weight: 900;
+    letter-spacing: -3px;
+    margin: 0;
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(135deg, #ffffff 0%, #a8d8ea 40%, #00bfa5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: elegantReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    max-width: 100%;
+    word-wrap: break-word;
+  }
 
+  @keyframes elegantReveal {
+    from { opacity: 0; transform: translateY(24px); filter: blur(8px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
 
   .title-underline {
     position: absolute;
-    bottom: -12px;
-    left: 0;
-    width: 120px;
-    height: 4px;
+    bottom: -12px; left: 0;
+    width: 120px; height: 4px;
     background: linear-gradient(90deg, var(--accent), transparent);
     border-radius: 2px;
     animation: underlineSlide 2s ease-in-out infinite;
@@ -351,19 +391,17 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     margin: 0;
     position: relative;
     padding-left: 24px;
+    animation: elegantReveal 0.9s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .hero-desc::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 3px;
-    height: 100%;
+    left: 0; top: 0;
+    width: 3px; height: 100%;
     background: linear-gradient(180deg, var(--accent), transparent);
   }
 
-  /* Main Layout */
   .main-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
@@ -374,7 +412,6 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     position: relative;
   }
 
-  /* Article Content */
   .technical-content {
     min-width: 0;
     width: 100%;
@@ -393,18 +430,13 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     flex-wrap: wrap;
   }
 
-  .technical-content :global(h2:first-of-type) {
-    margin-top: -10px;
-    padding-top: 0;
-  }
+  .technical-content :global(h2:first-of-type) { margin-top: -10px; padding-top: 0; }
 
   .technical-content :global(h2::after) {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    height: 3px;
+    bottom: 0; left: 0;
+    width: 60px; height: 3px;
     background: var(--accent);
     border-radius: 2px;
   }
@@ -432,7 +464,6 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     word-wrap: break-word;
   }
 
-  /* Styling for bold text within paragraphs and lists */
   .technical-content :global(strong),
   .technical-content :global(b) {
     color: var(--text-pure);
@@ -443,7 +474,6 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     background-clip: text;
   }
 
-  /* Inline code styling */
   .technical-content :global(p code),
   .technical-content :global(li code),
   .technical-content :global(td code) {
@@ -473,22 +503,10 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     position: relative;
   }
 
-  .technical-content :global(ul > li::marker) {
-    color: var(--accent);
-    font-size: 1.2em;
-  }
-
-  .technical-content :global(ol > li::marker) {
-    color: var(--accent);
-    font-weight: 700;
-  }
-
-  /* Nested lists */
+  .technical-content :global(ul > li::marker) { color: var(--accent); font-size: 1.2em; }
+  .technical-content :global(ol > li::marker) { color: var(--accent); font-weight: 700; }
   .technical-content :global(li > ul),
-  .technical-content :global(li > ol) {
-    margin-top: 12px;
-    margin-bottom: 12px;
-  }
+  .technical-content :global(li > ol) { margin-top: 12px; margin-bottom: 12px; }
 
   .technical-content :global(blockquote) {
     margin: 50px 0;
@@ -503,21 +521,17 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     word-wrap: break-word;
   }
 
-  .technical-content :global(blockquote p) {
-    margin-bottom: 0;
-    color: var(--text-pure);
-  }
+  .technical-content :global(blockquote p) { margin-bottom: 0; color: var(--text-pure); }
 
-  /* Code blocks */
   .technical-content :global(pre) {
     background: #080808 !important;
-    padding: 30px;
+    /* Extra top padding leaves space for the button */
+    padding: 44px 30px 30px !important;
     border-radius: 12px;
     border: 1px solid var(--border);
     margin: 40px 0;
     font-size: clamp(12px, 1.5vw, 14px);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    position: relative;
     overflow-x: auto;
     max-width: 100%;
   }
@@ -525,9 +539,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   .technical-content :global(pre::before) {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
   }
@@ -542,7 +554,6 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     font-family: 'Fira Code', 'Courier New', monospace;
   }
 
-  /* Tables */
   .technical-content :global(table) {
     width: 100%;
     border-collapse: collapse;
@@ -553,9 +564,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     border: 1px solid var(--border);
   }
 
-  .technical-content :global(thead) {
-    background: rgba(0, 242, 255, 0.1);
-  }
+  .technical-content :global(thead) { background: rgba(0, 242, 255, 0.1); }
 
   .technical-content :global(th) {
     padding: 16px;
@@ -573,15 +582,9 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     font-size: clamp(0.9rem, 1.5vw, 1rem);
   }
 
-  .technical-content :global(tr:last-child td) {
-    border-bottom: none;
-  }
+  .technical-content :global(tr:last-child td) { border-bottom: none; }
+  .technical-content :global(tbody tr:hover) { background: rgba(0, 242, 255, 0.05); }
 
-  .technical-content :global(tbody tr:hover) {
-    background: rgba(0, 242, 255, 0.05);
-  }
-
-  /* Highlight boxes */
   .technical-content :global(.highlight-box),
   .technical-content :global(.info-box),
   .technical-content :global(.warning-box) {
@@ -600,11 +603,8 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
   .technical-content :global(.highlight-box p),
   .technical-content :global(.info-box p),
-  .technical-content :global(.warning-box p) {
-    margin-bottom: 0;
-  }
+  .technical-content :global(.warning-box p) { margin-bottom: 0; }
 
-  /* Images */
   .technical-content :global(img) {
     max-width: 100%;
     height: auto;
@@ -614,7 +614,6 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   }
 
-  /* Horizontal rule */
   .technical-content :global(hr) {
     border: none;
     height: 1px;
@@ -622,33 +621,24 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     margin: 60px 0;
   }
 
-  /* Sidebar - Sticky até 80%, depois desce */
-  .tech-sidebar {
-    min-width: 0;
-    height: fit-content;
-  }
+  .tech-sidebar { min-width: 0; height: fit-content; }
 
   .sidebar-inner {
     position: sticky;
     top: 40px;
-    
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border);
     padding: 30px;
     border-radius: 24px;
     backdrop-filter: blur(20px);
-    box-shadow: 
-      0 20px 60px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     transition: all 0.3s ease;
     width: 100%;
   }
 
   .sidebar-inner:hover {
     border-color: rgba(0, 242, 255, 0.3);
-    box-shadow: 
-      0 20px 60px rgba(0, 0, 0, 0.3),
-      0 0 40px rgba(0, 242, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 242, 255, 0.1);
   }
 
   .section-title {
@@ -663,10 +653,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     gap: 8px;
   }
 
-  .title-emoji {
-    font-size: 16px;
-    line-height: 1;
-  }
+  .title-emoji { font-size: 16px; line-height: 1; }
 
   .sidebar-section {
     margin-bottom: 0;
@@ -674,19 +661,10 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     border-bottom: 1px solid var(--border);
   }
 
-  .sidebar-section:last-of-type {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
+  .sidebar-section:last-of-type { border-bottom: none; padding-bottom: 0; }
+  .sidebar-section + .sidebar-section { padding-top: 32px; }
 
-  .sidebar-section + .sidebar-section {
-    padding-top: 32px;
-  }
-
-  .metrics-stack {
-    display: grid;
-    gap: 24px;
-  }
+  .metrics-stack { display: grid; gap: 24px; }
 
   .m-item {
     border-bottom: 1px solid var(--border);
@@ -695,21 +673,11 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     animation: fadeInUp 0.6s ease-out backwards;
   }
 
-  .m-content {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
+  .m-content { display: flex; flex-direction: column; min-width: 0; }
 
   @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .metric-bar {
@@ -729,9 +697,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     box-shadow: 0 0 10px var(--accent-glow);
   }
 
-  @keyframes fillBar {
-    from { width: 0%; }
-  }
+  @keyframes fillBar { from { width: 0%; } }
 
   .m-val {
     display: block;
@@ -750,11 +716,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     word-wrap: break-word;
   }
 
-  .stack-cloud {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+  .stack-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
 
   .s-tag {
     background: rgba(255, 255, 255, 0.05);
@@ -770,28 +732,15 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   }
 
   @keyframes tagFadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
   }
 
   .tag-shimmer {
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-      45deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     transform: rotate(45deg);
     animation: shimmer 3s infinite;
   }
@@ -808,11 +757,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     box-shadow: 0 5px 15px rgba(0, 242, 255, 0.2);
   }
 
-  .link-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+  .link-group { display: flex; flex-direction: column; gap: 12px; }
 
   .side-btn {
     display: flex;
@@ -838,48 +783,24 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     transition: opacity 0.3s;
   }
 
-  .side-btn:hover::before {
-    opacity: 1;
-  }
+  .side-btn:hover::before { opacity: 1; }
+  .side-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  .github {
-    background: #fff;
-    color: #000;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
-  }
+  .github { background: #fff; color: #000; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1); }
+  .github:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2); }
 
-  .github:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
-  }
-
-  .live {
-    background: rgba(0, 242, 255, 0.1);
-    color: var(--accent);
-    border: 1px solid var(--accent);
-  }
-
-  .live:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px var(--accent-glow);
-    background: rgba(0, 242, 255, 0.15);
-  }
+  .live { background: rgba(0, 242, 255, 0.1); color: var(--accent); border: 1px solid var(--accent); }
+  .live:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--accent-glow); background: rgba(0, 242, 255, 0.15); }
 
   .live-indicator {
-    width: 8px;
-    height: 8px;
+    width: 8px; height: 8px;
     background: var(--accent);
     border-radius: 50%;
     animation: pulse-glow 2s infinite;
   }
 
-  .side-btn .arrow {
-    transition: transform 0.3s;
-  }
-
-  .side-btn:hover .arrow {
-    transform: translateX(4px);
-  }
+  .side-btn .arrow { transition: transform 0.3s; }
+  .side-btn:hover .arrow { transform: translateX(4px); }
 
   .sidebar-footer {
     margin-top: 40px;
@@ -890,258 +811,183 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     text-align: center;
   }
 
-.status-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  color: #00ff88;
-  font-weight: 700;
-  padding: 8px 16px;
-  background: rgba(0, 255, 136, 0.05);
-  border-radius: 20px;
-  border: 1px solid rgba(0, 255, 136, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: default;
-}
-
-.status-indicator:hover {
-  background: rgba(0, 255, 136, 0.12);
-  border-color: rgba(0, 255, 136, 0.6); 
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
-  filter: brightness(1.1);
-} 
+  .status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    color: #00ff88;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #00ff88;
+    font-size: 0.75rem;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: default;
+  }
 
   .pulse {
-    width: 8px;
-    height: 8px;
-    background: #00ff88;
+    position: relative;
+    width: 8px; height: 8px;
     border-radius: 50%;
-    animation: pulse-glow 2s infinite;
+    background: #00ff88;
+    flex-shrink: 0;
   }
 
-  @keyframes pulse-glow {
-    0% {
-      box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
-    }
+  .pulse::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #00ff88;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+    animation: pulse-ring 2s ease-out infinite;
   }
 
-  /* RESPONSIVE BREAKPOINTS */
+  @keyframes pulse-ring {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0; }
+  }
+
+  /* RESPONSIVE */
   @media (max-width: 1024px) {
-    .header-split {
-      grid-template-columns: 1fr;
-    }
-    
-    .main-layout {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    
-    .sidebar-inner {
-      position: static;
-    }
+    .header-split { grid-template-columns: 1fr; }
+    .main-layout { grid-template-columns: 1fr; gap: 40px; }
+    .sidebar-inner { position: static; }
   }
 
   @media (max-width: 768px) {
-    .container-wide {
-      padding: 0 20px;
-    }
-
-    .ultra-header {
-      padding: 80px 0 60px;
-    }
-
-    .header-split {
-      gap: 30px;
-    }
-
-    .hero-desc {
-      padding-left: 16px;
-    }
-
-    .main-layout {
-      gap: 30px;
-      padding-top: 40px;
-    }
-
-    .sidebar-inner {
-      padding: 20px;
-    }
-
-    .technical-content :global(blockquote) {
-      padding: 24px;
-    }
-
-    .technical-content :global(pre) {
-      padding: 20px;
-    }
-
+    .container-wide { padding: 0 20px; }
+    .ultra-header { padding: 80px 0 60px; }
+    .header-split { gap: 30px; }
+    .hero-desc { padding-left: 16px; }
+    .main-layout { gap: 30px; padding-top: 40px; }
+    .sidebar-inner { padding: 20px; }
+    .technical-content :global(blockquote) { padding: 24px; }
+    .technical-content :global(pre) { padding: 44px 20px 20px !important; }
     .technical-content :global(ul),
-    .technical-content :global(ol) {
-      padding-left: 20px;
-    }
+    .technical-content :global(ol) { padding-left: 20px; }
   }
 
   @media (max-width: 480px) {
-    .container-wide {
-      padding: 0 16px;
-    }
-
-    .ultra-header {
-      padding: 60px 0 40px;
-    }
-
-    .eyebrow {
-      font-size: 10px;
-      letter-spacing: 2px;
-    }
-
-    .sidebar-inner {
-      padding: 16px;
-      border-radius: 16px;
-    }
-
-    .section-title {
-      font-size: 10px;
-      margin-bottom: 16px;
-    }
-
-    .title-emoji {
-      font-size: 14px;
-    }
-
-    .metrics-stack {
-      gap: 16px;
-    }
-
-    .m-item {
-      padding-bottom: 12px;
-    }
-
-    .metric-bar {
-      height: 3px;
-      margin-bottom: 8px;
-    }
-
-    .stack-cloud {
-      gap: 6px;
-    }
-
-    .s-tag {
-      font-size: 10px;
-      padding: 6px 10px;
-      border-radius: 6px;
-    }
-
-    .side-btn {
-      padding: 12px 14px;
-      font-size: 12px;
-    }
-
-    .sidebar-footer {
-      margin-top: 24px;
-      padding-top: 20px;
-      font-size: 11px;
-    }
-
-    .status-indicator {
-      padding: 6px 12px;
-      font-size: 11px;
-    }
-
-    .technical-content :global(blockquote) {
-      padding: 20px;
-      margin: 30px 0;
-    }
-
-    .technical-content :global(pre) {
-      padding: 16px;
-      margin: 30px 0;
-    }
-
+    .container-wide { padding: 0 16px; }
+    .ultra-header { padding: 60px 0 40px; }
+    .eyebrow { font-size: 10px; letter-spacing: 2px; }
+    .sidebar-inner { padding: 16px; border-radius: 16px; }
+    .section-title { font-size: 10px; margin-bottom: 16px; }
+    .title-emoji { font-size: 14px; }
+    .metrics-stack { gap: 16px; }
+    .m-item { padding-bottom: 12px; }
+    .metric-bar { height: 3px; margin-bottom: 8px; }
+    .stack-cloud { gap: 6px; }
+    .s-tag { font-size: 10px; padding: 6px 10px; border-radius: 6px; }
+    .side-btn { padding: 12px 14px; font-size: 12px; }
+    .sidebar-footer { margin-top: 24px; padding-top: 20px; font-size: 11px; }
+    .status-indicator { padding: 6px 12px; font-size: 11px; }
+    .technical-content :global(blockquote) { padding: 20px; margin: 30px 0; }
+    .technical-content :global(pre) { padding: 44px 16px 16px !important; margin: 30px 0; }
     .technical-content :global(ul),
-    .technical-content :global(ol) {
-      padding-left: 16px;
-    }
+    .technical-content :global(ol) { padding-left: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .elegant-title, .hero-desc { animation: none; opacity: 1; transform: none; filter: none; }
+    .glow-orb { animation: none; }
+    .eyebrow-dot { animation: none; }
+    .title-underline { animation: none; width: 120px; }
+    .metric-fill { animation: none; }
   }
 </style>
 
 <script>
-  /**
-   * Inicializa a Barra de Progresso de Leitura Superior
-   */
-  function initReadingProgress() {
-    const bar = document.querySelector(".reading-progress");
-    if (!bar) return;
+  function initCodeCopy() {
+    const codeBlocks = document.querySelectorAll('pre');
 
+    codeBlocks.forEach((block) => {
+      // Avoid duplicating if script runs twice
+      if (block.querySelector('.copy-code-btn')) return;
+
+      const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+      const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+      const button = document.createElement('button');
+      button.className = 'copy-code-btn';
+      button.type = 'button';
+      button.setAttribute('aria-label', 'Copy code to clipboard');
+      button.innerHTML = `${copyIcon}<span>Copy</span>`;
+
+      // Insert the button as the FIRST CHILD of <pre>
+      // <pre> already has position:relative via is:global, so absolute positioning works
+      block.insertBefore(button, block.firstChild);
+
+      button.addEventListener('click', async (e) => {
+        e.stopPropagation();
+
+        // Extract text from <code> if present, otherwise collect all text nodes excluding the button
+        const codeEl = block.querySelector('code');
+        const codeText = codeEl
+          ? codeEl.innerText
+          : Array.from(block.childNodes)
+              .filter((node) => node !== button)
+              .map((node) => ('innerText' in node ? (node as HTMLElement).innerText : node.textContent ?? ''))
+              .join('');
+
+        try {
+          await navigator.clipboard.writeText(codeText.trim());
+          button.classList.add('copied');
+          button.innerHTML = `${checkIcon}<span>Copied!</span>`;
+          setTimeout(() => {
+            button.classList.remove('copied');
+            button.innerHTML = `${copyIcon}<span>Copy</span>`;
+          }, 2000);
+        } catch (err) {
+          console.error('Copy failed:', err);
+        }
+      });
+    });
+  }
+
+  function initReadingProgress() {
+    const bar = document.querySelector('.reading-progress') as HTMLElement;
+    if (!bar) return;
     const updateProgress = () => {
       const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      (bar as HTMLElement).style.width = scrolled + "%";
+      const scrolled = Math.round((winScroll / height) * 100);
+      bar.style.width = scrolled + '%';
+      bar.setAttribute('aria-valuenow', String(scrolled));
     };
-
     window.addEventListener('scroll', updateProgress, { passive: true });
   }
 
-  /**
-   * Controla o comportamento Sticky da Sidebar
-   * Aos 80% de scroll da página, a sidebar fixa-se no fundo do contentor pai
-   */
   function initSidebarSticky() {
     const sidebar = document.querySelector('.sidebar-inner') as HTMLElement;
     const container = document.querySelector('.main-layout') as HTMLElement;
-    
     if (!sidebar || !container) return;
 
     const handleSidebar = () => {
-      // Desativar lógica em mobile/tablets pequenos
-      if (window.innerWidth <= 1024) {
-        sidebar.classList.remove('is-released');
-        return;
-      }
-
+      if (window.innerWidth <= 1024) { sidebar.classList.remove('is-released'); return; }
       const winScroll = window.scrollY || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrollPercent = (winScroll / height) * 100;
-
-      if (scrollPercent >= 80) {
-        // Fixa a sidebar no fundo do contentor .main-layout
-        sidebar.classList.add('is-released');
-      } else {
-        // Mantém a sidebar com position: sticky
-        sidebar.classList.remove('is-released');
-      }
+      sidebar.classList.toggle('is-released', scrollPercent >= 80);
     };
 
-    window.addEventListener('scroll', () => {
-      window.requestAnimationFrame(handleSidebar);
-    }, { passive: true });
-
+    window.addEventListener('scroll', () => window.requestAnimationFrame(handleSidebar), { passive: true });
     window.addEventListener('resize', handleSidebar);
-    handleSidebar(); // Execução inicial
+    handleSidebar();
   }
 
-  /**
-   * Corrige a navegação interna e links da Homepage
-   */
   function initNavigationFixes() {
     const navLinks = document.querySelectorAll('.nav-links a[href^="#"], .nav-cta-glow[href^="#"]');
     const logoLink = document.querySelector('.nav-logo');
-    
     const currentPath = window.location.pathname;
     const basePath = currentPath.includes('/portfolio-hub') ? '/portfolio-hub/' : '/';
-    const isHomepage = 
-      currentPath === basePath || 
+    const isHomepage =
+      currentPath === basePath ||
       currentPath === basePath + 'index.html' ||
       currentPath.endsWith('/portfolio-hub') ||
       currentPath === '/' ||
@@ -1152,12 +998,8 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
         const hash = link.getAttribute('href');
         if (isHomepage) {
           e.preventDefault();
-          const target = document.querySelector(hash || '');
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
+          document.querySelector(hash || '')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
-          // Se não estiver na home, redireciona para a home + anchor
           window.location.href = basePath + hash;
         }
       });
@@ -1171,8 +1013,8 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     }
   }
 
-  // Inicialização global após carregamento do DOM
   document.addEventListener('DOMContentLoaded', () => {
+    initCodeCopy();
     initReadingProgress();
     initSidebarSticky();
     initNavigationFixes();
