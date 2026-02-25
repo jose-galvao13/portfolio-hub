@@ -1,0 +1,200 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '⚡', value: '95%', label: 'Redução do Tempo de Pesquisa' },
+  { icon: '📄', value: '200+', label: 'Páginas por Documento' },
+  { icon: '🎯', value: '92%', label: 'Precisão das Respostas' },
+  { icon: '⏱️', value: '<10s', label: 'Tempo Médio de Consulta' }
+];
+
+const stack = ['Python', 'LangChain', 'Llama 3', 'RAG', 'ChromaDB'];
+---
+
+<CaseStudyLayout
+  title="ChatCFO - Analista Financeiro RAG"
+  description="Sistema de inteligência documental com IA para consulta instantânea de relatórios financeiros com citações de fontes."
+  projectType="IA & Fintech"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/ChatCFO"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      Auditores e analistas financeiros gastavam <strong>4-6 horas por semana</strong> a pesquisar manualmente em densos relatórios PDF (10-Ks, chamadas de resultados, relatórios de auditoria) para responder a perguntas dos stakeholders. Este processo era:
+    </p>
+    <ul>
+      <li><strong>Lento e Ineficiente:</strong> Pesquisas com Ctrl+F perdiam correspondências semânticas ("crescimento de receita" vs. "expansão da linha de topo").</li>
+      <li><strong>Propenso a Erros:</strong> Copiar trechos sem contexto levava a interpretações erradas.</li>
+      <li><strong>Não Verificável:</strong> As respostas não tinham citações, tornando difícil validar as fontes.</li>
+      <li><strong>Conhecimento em Silos:</strong> Cada analista tinha o seu próprio "índice mental" de onde a informação estava nos documentos.</li>
+    </ul>
+    <blockquote>
+      "Recebíamos perguntas como 'Qual foi a margem EBITDA no T2 2023?' e demorava 20 minutos a encontrar a resposta enterrada num suplemento de resultados de 200 páginas."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Arquitetura da Solução</h2>
+    <p>
+      Construí o <strong>ChatCFO</strong>, um sistema de Geração Aumentada por Recuperação (RAG) que age como um analista financeiro de IA, respondendo a perguntas com citações precisas dos documentos fonte.
+    </p>
+    
+    <h3>Fase 1: Ingestão e Divisão de Documentos</h3>
+    <ul>
+      <li>Os PDFs são analisados usando PyPDF2, extraindo texto enquanto preserva os números de página.</li>
+      <li>O texto é dividido em fragmentos semânticos (~500 tokens cada) usando o RecursiveCharacterTextSplitter do LangChain.</li>
+      <li>Cada fragmento é etiquetado com metadados: nome do documento, número de página, título de secção.</li>
+    </ul>
+
+    <h3>Fase 2: Embedding Vetorial e Indexação</h3>
+    <ul>
+      <li>Os fragmentos são convertidos em embeddings vetoriais densos usando o text-embedding-ada-002 da OpenAI.</li>
+      <li>Os embeddings são armazenados no ChromaDB, uma base de dados vetorial otimizada para pesquisa por similaridade.</li>
+      <li>Isto cria um "índice semântico" onde conceitos similares estão matematicamente próximos.</li>
+    </ul>
+
+    <h3>Fase 3: Geração Aumentada por Recuperação (RAG)</h3>
+    <ul>
+      <li>Utilizador faz uma pergunta: "Qual foi a margem operacional no AF2023?"</li>
+      <li><strong>Recuperação:</strong> A pergunta é convertida em embedding e os 5 fragmentos mais similares são recuperados do ChromaDB.</li>
+      <li><strong>Aumentação:</strong> Os fragmentos recuperados são injetados no prompt como contexto.</li>
+      <li><strong>Geração:</strong> O Llama 3 (70B) gera a resposta com base no contexto recuperado, incluindo citações de páginas.</li>
+    </ul>
+
+    <h3>Implementação Técnica</h3>
+    <pre is:raw><code>from langchain.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.chat_models import ChatOpenAI
+from langchain.chains import RetrievalQA
+
+# 1. Carregar e dividir PDF
+loader = PyPDFLoader("10K_report.pdf")
+documents = loader.load()
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500, 
+    chunk_overlap=50
+)
+chunks = text_splitter.split_documents(documents)
+
+# 2. Criar armazenamento vetorial
+embeddings = OpenAIEmbeddings()
+vectorstore = Chroma.from_documents(chunks, embeddings)
+
+# 3. Construir cadeia RAG
+llm = ChatOpenAI(model="gpt-4", temperature=0)
+qa_chain = RetrievalQA.from_chain_type(
+    llm=llm,
+    retriever=vectorstore.as_retriever(search_kwargs={"k": 5}),
+    return_source_documents=True
+)
+
+# 4. Consultar o sistema
+query = "Qual foi a margem operacional no AF2023?"
+result = qa_chain({"query": query})
+
+print(result["result"])  # Resposta
+print(result["source_documents"])  # Citações</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Resultados e Impacto no Negócio</h2>
+    
+    <h3>Resultados Quantificados</h3>
+    <ul>
+      <li><strong>95% de Redução de Tempo:</strong> Consultas que demoravam 20 minutos agora demoram 10 segundos.</li>
+      <li><strong>92% de Precisão:</strong> Validado por auditoria manual em 100 perguntas de teste.</li>
+      <li><strong>200+ Páginas Indexadas:</strong> Capaz de lidar com documentos financeiros densos (10-Ks, S-1s, relatórios de auditoria).</li>
+      <li><strong>Respostas Verificáveis:</strong> Cada resposta inclui citações de números de página para validação.</li>
+    </ul>
+
+    <h3>Casos de Uso Desbloqueados</h3>
+    <ul>
+      <li><strong>Due Diligence:</strong> "Quais são os 5 principais fatores de risco mencionados no 10-K?"</li>
+      <li><strong>Análise Comparativa:</strong> "Comparar margens EBITDA no T1, T2, T3, T4."</li>
+      <li><strong>Conformidade Regulatória:</strong> "A secção MD&A discute riscos relacionados com o clima?"</li>
+      <li><strong>Briefings Executivos:</strong> "Resumir as principais alterações nas políticas contabilísticas este ano."</li>
+    </ul>
+
+    <h3>Insights Estratégicos</h3>
+    <ul>
+      <li><strong>Poder da Pesquisa Semântica:</strong> Encontrou informação relevante mesmo quando as palavras-chave exatas não correspondiam (ex.: "receita" vs. "vendas").</li>
+      <li><strong>Síntese Entre Documentos:</strong> Conseguiu comparar métricas em relatórios de vários anos.</li>
+      <li><strong>Trilha de Auditoria:</strong> As citações proporcionam uma trilha de auditoria para equipas de conformidade.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Metodologia Técnica</h2>
+    
+    <h3>Arquitetura do Pipeline RAG</h3>
+    <ol>
+      <li><strong>Processamento de Documentos:</strong> PDF → Extração de texto → Etiquetagem de metadados.</li>
+      <li><strong>Estratégia de Divisão:</strong> Fragmentos de 500 tokens com sobreposição de 50 tokens para preservar contexto.</li>
+      <li><strong>Embedding:</strong> Converter fragmentos em vetores de 1536 dimensões.</li>
+      <li><strong>Indexação:</strong> Armazenar no ChromaDB com índice HNSW (Hierarchical Navigable Small World) para recuperação rápida.</li>
+      <li><strong>Execução de Consulta:</strong> Converter consulta em embedding → Recuperar top-k → Gerar resposta.</li>
+    </ol>
+
+    <h3>Seleção e Otimização do Modelo</h3>
+    <ul>
+      <li><strong>Escolha do LLM:</strong> Começou com GPT-3.5, atualizado para Llama 3 (70B) para melhor raciocínio e menor custo.</li>
+      <li><strong>Afinação de Temperatura:</strong> Definida para 0 para precisão factual (sem criatividade necessária).</li>
+      <li><strong>Engenharia de Prompt:</strong> Instruções explícitas: "Responde apenas usando o contexto fornecido. Se a informação não estiver no contexto, diz 'Não encontrado no documento'."</li>
+    </ul>
+
+    <h3>Validação de Precisão</h3>
+    <ul>
+      <li>Criado conjunto de teste de 100 perguntas com respostas conhecidas de relatórios financeiros.</li>
+      <li>Medida de precisão: 92% de correspondência exata, 98% de "resposta aceitável" (pequenas diferenças de formulação).</li>
+      <li>Modos de falha: Cálculos complexos (ex.: "Qual é a taxa de crescimento YoY?") requereram computação explícita.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lições Aprendidas</h2>
+    
+    <h3>O que Funcionou</h3>
+    <ul>
+      <li><strong>Sobreposição de Fragmentos:</strong> Sobreposição de 50 tokens evitou que respostas fossem divididas entre fragmentos.</li>
+      <li><strong>Filtragem de Metadados:</strong> Adicionar números de página e títulos de secção aos fragmentos melhorou a qualidade das citações.</li>
+      <li><strong>Pesquisa Híbrida:</strong> Combinar similaridade vetorial com filtragem por palavras-chave (BM25) aumentou a precisão em 5%.</li>
+    </ul>
+
+    <h3>Desafios Ultrapassados</h3>
+    <ul>
+      <li><strong>Problemas de Análise de PDF:</strong> Tabelas e gráficos quebravam a extração de texto; tive de usar parsers com consciência de layout (pdfplumber).</li>
+      <li><strong>Limites da Janela de Contexto:</strong> O limite inicial de 4k tokens exigiu um dimensionamento cuidadoso dos fragmentos; atualizado para modelos com contexto de 32k.</li>
+      <li><strong>Risco de Alucinação:</strong> O LLM às vezes "fabricava" números; mitigado com restrições estritas de prompt e requisitos de citação.</li>
+      <li><strong>Gestão de Custos:</strong> O GPT-4 era caro em escala; mudança para Llama 3 com redução de custo de 80%.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Melhorias Futuras</h2>
+    <ul>
+      <li><strong>Consulta Multi-Documento:</strong> "Comparar gastos em I&D da Apple e Microsoft" em vários 10-Ks.</li>
+      <li><strong>Extração de Gráficos/Tabelas:</strong> Usar modelos de visão (GPT-4 Vision) para analisar tabelas financeiras diretamente de PDFs.</li>
+      <li><strong>Memória Conversacional:</strong> Adicionar histórico de chat para permitir perguntas de seguimento ("E o T3?" após perguntar sobre o T2).</li>
+      <li><strong>Fine-Tuning:</strong> Afinar o Llama em linguagem financeira específica do domínio para melhor precisão.</li>
+      <li><strong>Integração Excel:</strong> Gerar fórmulas Excel ou descarregar resultados de consultas como CSV.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Stack Técnica em Detalhe</h2>
+    <ul>
+      <li><strong>LangChain:</strong> Framework de orquestração para pipelines RAG, cadeias de recuperação, carregadores de documentos.</li>
+      <li><strong>Llama 3 (70B):</strong> LLM open-source para geração de respostas com fortes capacidades de raciocínio.</li>
+      <li><strong>ChromaDB:</strong> Base de dados vetorial para pesquisa semântica, otimizada para conjuntos de dados pequenos a médios.</li>
+      <li><strong>OpenAI Embeddings:</strong> text-embedding-ada-002 para converter texto em vetores.</li>
+      <li><strong>PyPDF2 / pdfplumber:</strong> Análise de PDF com consciência de layout.</li>
+      <li><strong>Streamlit:</strong> Interface web para interação com o utilizador (frontend opcional).</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

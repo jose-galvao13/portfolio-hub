@@ -1,0 +1,96 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '💰', value: '€96k', label: 'Receita em Risco Identificada' },
+  { icon: '🎯', value: '€42k', label: 'Oportunidade de Cross-Sell' },
+  { icon: '📊', value: '100k+', label: 'Transações Analisadas' },
+  { icon: '📈', value: '5', label: 'Segmentos de Clientes' }
+];
+---
+
+<CaseStudyLayout
+  title="Dashboard de Analytics de E-Commerce"
+  description="Segmentação RFM e análise de coorte que revelam padrões de churn ocultos e oportunidades de cross-sell em dados transacionais."
+  projectType="Business Intelligence"
+  stack={['Power BI', 'SQL', 'DAX', 'Análise RFM']}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/ecommerce-analytics"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      O negócio de e-commerce tinha uma <strong>receita estagnada</strong> apesar do crescimento do tráfego, escondendo uma realidade perigosa: clientes de alto valor estavam a cancelar silenciosamente enquanto compradores de baixo valor à procura de promoções inflacionavam as contagens de transações.
+    </p>
+    <ul>
+      <li><strong>Cegueira Agregada:</strong> A receita total parecia estável, mascarando 15% de churn nos clientes principais.</li>
+      <li><strong>Sem Segmentação de Clientes:</strong> Tratar o comprador de €5 da mesma forma que o de €500 (gasto de marketing ineficiente).</li>
+      <li><strong>Cross-Sell Perdido:</strong> Sem visibilidade sobre afinidade de produtos (que produtos são comprados juntos?).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>💡 Solução: Análise RFM e Rastreamento de Coortes</h2>
+    <p>
+      Construído <strong>dashboard Power BI</strong> usando segmentação RFM (Recência, Frequência, Monetário) para identificar clientes em risco e oportunidades de cross-sell.
+    </p>
+    
+    <h3>Modelo de Segmentação RFM</h3>
+    <ul>
+      <li><strong>Recência:</strong> Dias desde a última compra (1=recente, 5=inativo).</li>
+      <li><strong>Frequência:</strong> Nº de encomendas nos últimos 12 meses (1=única compra, 5=fiel).</li>
+      <li><strong>Monetário:</strong> Gasto total (1=baixo valor, 5=VIP).</li>
+      <li><strong>Segmentos:</strong> Campeões (555), Em Risco (511), Perdidos (155), etc.</li>
+    </ul>
+
+    <h3>Implementação</h3>
+    <pre><code>-- SQL: Calcular Pontuações RFM
+WITH rfm_base AS (
+  SELECT 
+    customer_id,
+    DATEDIFF(day, MAX(order_date), GETDATE()) as recency,
+    COUNT(order_id) as frequency,
+    SUM(order_value) as monetary
+  FROM orders
+  WHERE order_date >= DATEADD(year, -1, GETDATE())
+  GROUP BY customer_id
+)
+SELECT 
+  customer_id,
+  NTILE(5) OVER (ORDER BY recency DESC) as R_score,
+  NTILE(5) OVER (ORDER BY frequency ASC) as F_score,
+  NTILE(5) OVER (ORDER BY monetary ASC) as M_score,
+  CONCAT(R_score, F_score, M_score) as RFM_segment
+FROM rfm_base</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Resultados Principais</h2>
+    <ul>
+      <li><strong>€96k em Risco:</strong> Identificados 200 clientes "Campeões" (RFM=555) que não compravam há 60+ dias.</li>
+      <li><strong>€42k de Cross-Sell:</strong> Encontrados clientes a comprar Produto A mas nunca o Produto B (par de alta afinidade).</li>
+      <li><strong>Rastreamento de Retenção por Coorte:</strong> Descoberto que a retenção no Mês 1 era apenas 15% (problema de onboarding).</li>
+      <li><strong>ROI de Marketing:</strong> Campanha de reengajamento dirigida ao segmento "Em Risco" atingiu ROI de 3:1.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Funcionalidades do Dashboard</h2>
+    <ul>
+      <li><strong>Mapa de Calor RFM:</strong> Grelha visual mostrando distribuição de clientes por segmentos.</li>
+      <li><strong>Tabelas de Coorte:</strong> Curvas de retenção mês a mês por coorte de aquisição.</li>
+      <li><strong>Matriz de Afinidade de Produtos:</strong> Que produtos são frequentemente comprados juntos?</li>
+      <li><strong>Valor do Cliente ao Longo da Vida:</strong> LTV previsto com base no segmento RFM + histórico de compras.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Melhorias Futuras</h2>
+    <ul>
+      <li><strong>Modelo Preditivo de Churn:</strong> Modelo ML a prever probabilidade de churn a 30 dias.</li>
+      <li><strong>Campanhas Automatizadas:</strong> Acionar emails para clientes "Em Risco" automaticamente.</li>
+      <li><strong>RFM em Tempo Real:</strong> Atualizar pontuações diariamente (atualmente batch semanal).</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

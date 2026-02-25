@@ -1,0 +1,123 @@
+---
+// src/components/LanguageSwitcher.astro
+// ─────────────────────────────────────────────────────────────────────────────
+// Accessible language switcher component
+// Detects language server-side and marks active button
+// ─────────────────────────────────────────────────────────────────────────────
+
+import { type Lang, DEFAULT_LANG, SUPPORTED_LANGS } from '../i18n/translations';
+
+interface Props {
+  class?: string;
+}
+
+// Detect language from cookie or default
+function detectServerLang(): Lang {
+  if (typeof Astro === 'undefined') return DEFAULT_LANG;
+  
+  const cookies = Astro.cookies;
+  const langCookie = cookies.get('lang')?.value as Lang | undefined;
+  
+  if (langCookie && SUPPORTED_LANGS.includes(langCookie)) {
+    return langCookie;
+  }
+  
+  return DEFAULT_LANG;
+}
+
+const currentLang = detectServerLang();
+const { class: className } = Astro.props;
+---
+
+<div class:list={["lang-switcher", className]} role="group" aria-label="Language selector">
+  <button
+    class:list={["lang-btn", { active: currentLang === 'en' }]}
+    data-lang="en"
+    type="button"
+    aria-pressed={currentLang === 'en'}
+    aria-label={currentLang === 'en' ? 'English (current language)' : 'Switch to English'}
+  >
+    EN
+  </button>
+  <span class="lang-divider" aria-hidden="true">|</span>
+  <button
+    class:list={["lang-btn", { active: currentLang === 'pt' }]}
+    data-lang="pt"
+    type="button"
+    aria-pressed={currentLang === 'pt'}
+    aria-label={currentLang === 'pt' ? 'Português (idioma atual)' : 'Mudar para Português'}
+  >
+    PT
+  </button>
+</div>
+
+<style>
+  .lang-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    background: var(--bg-secondary, rgba(255, 255, 255, 0.05));
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  }
+
+  .lang-btn {
+    padding: 0.4rem 0.8rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary, #94a3b8);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .lang-btn:hover {
+    background: var(--hover-bg, rgba(255, 255, 255, 0.1));
+    color: var(--text-primary, #ffffff);
+  }
+
+  .lang-btn:focus-visible {
+    outline: 2px solid var(--accent-color, #3b82f6);
+    outline-offset: 2px;
+  }
+
+  .lang-btn.active {
+    background: var(--accent-color, #3b82f6);
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .lang-btn:active {
+    transform: scale(0.95);
+  }
+
+  .lang-divider {
+    color: var(--border-color, rgba(255, 255, 255, 0.2));
+    font-weight: 300;
+    user-select: none;
+  }
+
+  /* Dark mode adjustments */
+  @media (prefers-color-scheme: dark) {
+    .lang-switcher {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .lang-switcher {
+      gap: 0.25rem;
+    }
+
+    .lang-btn {
+      padding: 0.35rem 0.7rem;
+      font-size: 0.8125rem;
+    }
+  }
+</style>

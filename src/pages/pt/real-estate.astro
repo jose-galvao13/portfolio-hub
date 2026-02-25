@@ -1,0 +1,193 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🏘️', value: '95.000+', label: 'Imóveis Analisados' },
+  { icon: '📍', value: '308', label: 'Municípios Abrangidos' },
+  { icon: '💎', value: '€420/m²', label: 'Maior Arbitragem de Preço Encontrada' },
+  { icon: '📊', value: '15%', label: 'Gap Médio de Subvalorização' }
+];
+
+const stack = ['Power BI', 'Python', 'Web Scraping', 'GeoPandas', 'DAX'];
+---
+
+<CaseStudyLayout
+  title="Plataforma de Análise do Mercado Imobiliário em Portugal"
+  description="Sistema de inteligência de mercado para identificar oportunidades imobiliárias subvalorizadas através de análise geoespacial e web scraping."
+  projectType="Inteligência de Mercado & Imobiliário"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/Portugal-Real-Estate"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      Os investidores imobiliários em Portugal enfrentavam um problema crítico de assimetria de informação: <strong>os dados de preços hiperlocais estavam dispersos por dezenas de plataformas</strong>, tornando impossível identificar oportunidades de arbitragem sem semanas de pesquisa manual.
+    </p>
+    <p>
+      Os principais desafios eram:
+    </p>
+    <ul>
+      <li><strong>Fragmentação de Dados:</strong> Anúncios distribuídos por 5+ plataformas (Idealista, Imovirtual, Casa Sapo) sem visão unificada.</li>
+      <li><strong>Pontos Cegos Geográficos:</strong> O preço/m² podia variar 40% entre municípios vizinhos, escondido nas estatísticas nacionais agregadas.</li>
+      <li><strong>Timing de Mercado:</strong> Sem forma de monitorizar há quanto tempo os imóveis estavam no mercado ou detetar reduções de preço.</li>
+      <li><strong>Targeting de Investimento:</strong> Os investidores precisavam de saber <em>onde</em> comprar, não apenas <em>o quê</em> comprar.</li>
+    </ul>
+    <blockquote>
+      "Encontrámos imóveis em Santarém listados a €1.200/m² enquanto unidades idênticas a 15km, no Cartaxo, se vendiam a €800/m². É uma arbitragem de €120k num imóvel de 300m²."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Arquitetura da Solução</h2>
+    <p>
+      Construí um <strong>pipeline de dados end-to-end</strong> que combina web scraping, análise geoespacial e dashboards interativos para apresentar insights de investimento acionáveis.
+    </p>
+    
+    <h3>Fase 1: Aquisição de Dados (Web Scraping)</h3>
+    <ul>
+      <li>Desenvolvidos scrapers Python para as principais plataformas imobiliárias portuguesas usando BeautifulSoup e Selenium.</li>
+      <li>Extraídos: preço, localização (lat/lon), tipo de imóvel, área (m²), quartos, ano de construção.</li>
+      <li>Implementado scraping ético: limitação de taxa, conformidade com robots.txt, rotação de user-agent.</li>
+      <li>Atualizações diárias automatizadas para monitorizar novos anúncios e alterações de preço.</li>
+    </ul>
+
+    <h3>Fase 2: Enriquecimento de Dados e Geocodificação</h3>
+    <ul>
+      <li>Uso do GeoPandas para mapear cada imóvel ao seu município e região NUTS.</li>
+      <li>Cálculo da distância a comodidades (estações de comboio, hospitais, escolas) via API do Google Maps.</li>
+      <li>Criadas métricas derivadas: Preço/m², Dias no Mercado, Variação de Preço %.</li>
+    </ul>
+
+    <h3>Fase 3: Analytics Geoespacial no Power BI</h3>
+    <ul>
+      <li>Construídas camadas de mapa interativas mostrando o preço médio/m² por município.</li>
+      <li>Implementado "Detetor de Arbitragem": destaca municípios onde o preço/m² é mais de 15% abaixo das áreas vizinhas.</li>
+      <li>Análise de séries temporais: monitorizar tendências de preço em janelas deslizantes de 12 meses.</li>
+    </ul>
+
+    <h3>Implementação Técnica</h3>
+    <pre is:raw><code>import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+import geopandas as gpd
+
+# Exemplo de Web Scraping
+def scrape_listings(url):
+    response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    listings = []
+    for item in soup.find_all('div', class_='property-card'):
+        listing = {
+            'price': item.find('span', class_='price').text,
+            'size': item.find('span', class_='area').text,
+            'location': item.find('span', class_='location').text
+        }
+        listings.append(listing)
+    
+    return pd.DataFrame(listings)
+
+# Análise Geoespacial
+gdf = gpd.GeoDataFrame(
+    df, 
+    geometry=gpd.points_from_xy(df['longitude'], df['latitude'])
+)
+
+# Calcular preço por m²
+df['price_per_m2'] = df['price'] / df['size']
+
+# Identificar oportunidades de arbitragem
+municipality_avg = df.groupby('municipality')['price_per_m2'].mean()
+df['arbitrage_gap'] = df['municipality'].map(municipality_avg) - df['price_per_m2']</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Resultados e Impacto no Negócio</h2>
+    
+    <h3>Resultados Quantificados</h3>
+    <ul>
+      <li><strong>95.000+ Imóveis:</strong> Cobertura abrangente do mercado português em todos os 308 municípios.</li>
+      <li><strong>Arbitragem Máxima de €420/m²:</strong> Identificados municípios com diferenças de preço até €420/m² face a vizinhos.</li>
+      <li><strong>15% de Subvalorização Média:</strong> Encontrada subvalorização sistemática em regiões do interior (Beja, Castelo Branco) comparado com equivalentes costeiros.</li>
+      <li><strong>Pipeline de Investimento:</strong> Gerada lista de 200+ oportunidades "comprar e manter" em corredores de alto crescimento.</li>
+    </ul>
+
+    <h3>Insights Estratégicos Descobertos</h3>
+    <ul>
+      <li><strong>Decaimento do Prémio Costeiro:</strong> O preço/m² cai 60% a 30km da costa, mas as comodidades só caem 20%.</li>
+      <li><strong>Efeito das Estações de Comboio:</strong> Imóveis a menos de 1km de estações de comboio têm um prémio de 25%.</li>
+      <li><strong>Preconceito pelo Ano de Construção:</strong> Imóveis anteriores a 1970 sistematicamente subvalorizados apesar do potencial de renovação.</li>
+      <li><strong>Velocidade do Inventário:</strong> Imóveis no Porto ficaram no mercado 18 dias vs 65 dias em Lisboa (sinal de excesso de oferta).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Metodologia Técnica</h2>
+    
+    <h3>Arquitetura do Pipeline de Dados</h3>
+    <ol>
+      <li><strong>Extração:</strong> Scrapers Python executados diariamente via cron jobs, armazenando HTML bruto em cache local.</li>
+      <li><strong>Transformação:</strong> Scripts Pandas limpam dados (remover duplicados, tratar valores em falta, normalizar formatos).</li>
+      <li><strong>Carregamento:</strong> Exportar para CSV, depois importar no Power BI via atualização incremental.</li>
+      <li><strong>Validação:</strong> Cruzamento com dados oficiais do INE (Instituto Nacional de Estatística) para verificações de sanidade.</li>
+    </ol>
+
+    <h3>Técnicas de Análise Geoespacial</h3>
+    <ul>
+      <li><strong>Joins Espaciais:</strong> Correspondência de imóveis com limites de município usando operações de overlay do GeoPandas.</li>
+      <li><strong>Análise de Buffer:</strong> Criação de buffers de 1km, 5km, 10km em torno de comodidades para calcular pontuações de proximidade.</li>
+      <li><strong>Mapas Coropléticos:</strong> Municípios com código de cores por preço médio/m² para detetar visualmente oportunidades de arbitragem.</li>
+    </ul>
+
+    <h3>Funcionalidades do Dashboard Power BI</h3>
+    <ul>
+      <li><strong>Filtros Interativos:</strong> Segmentar por tipo de imóvel, quartos, intervalo de preços, município.</li>
+      <li><strong>Páginas de Drill-Through:</strong> Clicar num município para ver anúncios de imóveis individuais.</li>
+      <li><strong>Tooltips Personalizados:</strong> Passar o rato no mapa para ver estatísticas detalhadas (preço médio, contagem de inventário, dias no mercado).</li>
+      <li><strong>Marcadores:</strong> Vistas pré-configuradas para "Melhor Arbitragem", "Áreas de Alto Crescimento", "Ativos em Dificuldade".</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lições Aprendidas</h2>
+    
+    <h3>O que Funcionou</h3>
+    <ul>
+      <li><strong>Visualização Geoespacial:</strong> Os mapas foram 10x mais eficazes do que tabelas para comunicar oportunidades de arbitragem a investidores.</li>
+      <li><strong>Atualização Incremental:</strong> A carga incremental do Power BI manteve o desempenho do dashboard rápido mesmo com 95k linhas.</li>
+      <li><strong>Validação de Dados:</strong> O cruzamento com dados censitários oficiais detetou erros de scraping precocemente.</li>
+    </ul>
+
+    <h3>Desafios Ultrapassados</h3>
+    <ul>
+      <li><strong>Anti-Scraping das Plataformas:</strong> Alguns sites bloqueavam scrapers; resolvido com proxies rotativos e backoff exponencial.</li>
+      <li><strong>Normalização de Endereços:</strong> "Rua da Sé" vs "R. Sé" exigiu correspondência difusa e correção manual.</li>
+      <li><strong>Tratamento de Outliers:</strong> Vivendas de luxo (€10M+) distorciam médias; implementado preço mediano/m² em alternativa.</li>
+      <li><strong>Coordenadas em Falta:</strong> 12% dos anúncios sem lat/lon; usado API de Geocodificação do Google para preencher lacunas.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Melhorias Futuras</h2>
+    <ul>
+      <li><strong>Modelo de Preços Preditivo:</strong> Usar XGBoost para prever "justo valor" com base em features (localização, área, comodidades).</li>
+      <li><strong>Calculadora de Rendimento de Arrendamento:</strong> Fazer scraping de dados do Airbnb para estimar rendimento potencial de arrendamento de curta duração.</li>
+      <li><strong>Análise de Sentimento:</strong> Analisar descrições de anúncios para detetar palavras-chave de urgência ("vendedor motivado", "preço reduzido").</li>
+      <li><strong>Integração API:</strong> Expor dados via API REST para integração com sistemas CRM e apps móveis.</li>
+      <li><strong>Alertas Automáticos:</strong> Notificações por email quando imóveis correspondentes aos critérios aparecem nas áreas alvo.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Stack Técnica em Detalhe</h2>
+    <ul>
+      <li><strong>Python (Requests, BeautifulSoup, Selenium):</strong> Automação de web scraping.</li>
+      <li><strong>GeoPandas:</strong> Operações geoespaciais (joins espaciais, análise de buffer, transformações de coordenadas).</li>
+      <li><strong>Pandas:</strong> Limpeza de dados, engenharia de features, agregações.</li>
+      <li><strong>Power BI:</strong> Dashboards interativos, medidas DAX, visualizações geoespaciais.</li>
+      <li><strong>API do Google Maps:</strong> Geocodificação e cálculos de distância.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

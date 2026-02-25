@@ -1,9 +1,9 @@
 ---
-import '../styles/global.css';
+import '../../styles/global.css';
 import { Image } from 'astro:assets';
-import logoImg from '../assets/images/logo.png';
-import LanguageSwitcher from '../components/LanguageSwitcher.astro';
-import { getProjects } from '../data/projects';
+import logoImg from '../../assets/images/logo.png';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import { getProjects } from '../../data/en/projects';
 
 interface Props {
   title: string;
@@ -14,7 +14,7 @@ interface Props {
 const { 
   title, 
   description = "Business Data Analyst specializing in Python automation, ML, and financial data engineering. 200h+ manual work eliminated through AI-powered solutions.",
-  currentLang = 'en' // NOVO: padrão é inglês
+  currentLang = 'en'
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalvao.com');
@@ -124,6 +124,10 @@ for (const skill of skillFilters) {
   </script>
 
   <style>
+.nav-links {
+  align-items: center; /* garante que todos os li ficam centrados */
+}
+    
     .nav-lang-wrapper {
       display: flex;
       align-items: center;
@@ -311,10 +315,6 @@ for (const skill of skillFilters) {
   </main>
 
   <style>
-.nav-links {
-  align-items: center; /* garante que todos os li ficam centrados */
-}
-
     .lang-switcher {
       display: flex;
       align-items: center;
@@ -362,6 +362,10 @@ for (const skill of skillFilters) {
   vertical-align: middle;
 }
 
+/* Remove a regra antiga .lang-flag se existir */
+@media (max-width: 380px) {
+  .lang-flag-img { display: none; }
+}
 
     .lang-divider {
       color: rgba(255,255,255,0.15);
@@ -370,10 +374,6 @@ for (const skill of skillFilters) {
       pointer-events: none;
       padding: 0 1px;
     }
-
-@media (max-width: 380px) {
-  .lang-flag-img { display: none; }
-}
 
   </style>
 

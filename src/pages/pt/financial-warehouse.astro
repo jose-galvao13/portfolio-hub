@@ -1,0 +1,182 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '⚡', value: '70%', label: 'Redução no Tempo de Consulta' },
+  { icon: '📊', value: '1M+', label: 'Transações Processadas' },
+  { icon: '🎯', value: '100%', label: 'Integridade dos Dados' },
+  { icon: '📈', value: '5', label: 'Fontes de Dados Integradas' }
+];
+---
+
+<CaseStudyLayout
+  title="Data Warehouse Financeiro (Pipeline ETL)"
+  description="Data warehouse de nível empresarial que transforma dados ERP fragmentados num Star Schema unificado para relatórios com fonte única de verdade."
+  projectType="Engenharia de Dados"
+  stack={['SQL', 'Python', 'Power BI', 'Star Schema', 'ETL']}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/financial-warehouse"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      A equipa de finanças estava a afogar-se no <strong>caos de dados</strong>: 5 sistemas diferentes (ERP, CRM, Excel, bases de dados legadas) sem uma visão unificada, levando a:
+    </p>
+    <ul>
+      <li><strong>Números Conflituantes:</strong> O relatório de vendas do CRM mostrava €2,5M de receita, o sistema contabilístico mostrava €2,3M — qual é o correto?</li>
+      <li><strong>Reconciliação Manual:</strong> Analistas a gastar 10 horas/semana a cruzar dados entre sistemas no Excel.</li>
+      <li><strong>Consultas Lentas:</strong> Gerar relatórios de fim de mês demorava 45 minutos devido a joins complexos entre tabelas desnormalizadas.</li>
+      <li><strong>Sem Rastreamento Histórico:</strong> Impossível analisar tendências (ex.: "Como evoluiu a margem bruta ao longo de 3 anos?").</li>
+    </ul>
+    <blockquote>
+      "Tínhamos 5 versões da 'verdade'. O CFO fazia uma pergunta e recebia 3 respostas diferentes consoante quem respondia."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Arquitetura da Solução</h2>
+    <p>
+      Projetei e implementei um <strong>data warehouse centralizado</strong> usando a metodologia Star Schema, com pipelines ETL automatizados que garantem a atualidade e consistência dos dados.
+    </p>
+    
+    <h3>Fase 1: Design do Data Warehouse (Star Schema)</h3>
+    <ul>
+      <li><strong>Tabelas de Factos:</strong> Transações de Vendas, Lançamentos GL, Movimentos de Inventário (granularidade: 1 linha por transação).</li>
+      <li><strong>Tabelas de Dimensões:</strong> Clientes, Produtos, Tempo (Data), Contas (Plano de Contas), Departamentos.</li>
+      <li><strong>Dimensões com Mudança Lenta (SCD Tipo 2):</strong> Rastrear alterações históricas (ex.: mudanças de morada do cliente ao longo do tempo).</li>
+    </ul>
+
+    <h3>Fase 2: Desenvolvimento do Pipeline ETL</h3>
+    <ul>
+      <li><strong>Extração:</strong> Recolher dados do ERP (SAP), CRM (Salesforce), ficheiros Excel (FTP), SQL Server legado.</li>
+      <li><strong>Transformação:</strong> Normalizar formatos, tratar nulos, desduplicar, calcular métricas derivadas (margem bruta, crescimento YoY).</li>
+      <li><strong>Carregamento:</strong> Inserir no warehouse (PostgreSQL) usando lógica UPSERT (atualizar existentes, inserir novos).</li>
+      <li><strong>Agendamento:</strong> Execuções noturnas automáticas via Python + cron (cargas incrementais para melhor desempenho).</li>
+    </ul>
+
+    <h3>Fase 3: Integração com Power BI</h3>
+    <ul>
+      <li>Ligação do Power BI ao warehouse via DirectQuery (dashboards em tempo real).</li>
+      <li>O star schema pré-construído permitiu reporting por arrastar e largar (sem SQL complexo).</li>
+      <li>Criadas medidas DAX reutilizáveis: Receita YTD, Despesas MTD, Valor do Cliente ao Longo da Vida.</li>
+    </ul>
+
+    <h3>Implementação Técnica</h3>
+    <pre><code>import pandas as pd
+import psycopg2
+from sqlalchemy import create_engine
+
+# 1. Extrair de múltiplas fontes
+erp_data = pd.read_sql("SELECT * FROM sales", erp_connection)
+crm_data = pd.read_csv("crm_export.csv")
+
+# 2. Transformar
+merged = pd.merge(erp_data, crm_data, on='customer_id', how='left')
+merged['gross_margin'] = (merged['revenue'] - merged['cogs']) / merged['revenue']
+merged['transaction_date'] = pd.to_datetime(merged['transaction_date'])
+
+# 3. Carregar para o Warehouse
+warehouse_engine = create_engine('postgresql://user:pass@localhost/warehouse')
+
+# Lógica UPSERT (atualizar se existir, inserir se for novo)
+merged.to_sql('fact_sales', warehouse_engine, if_exists='append', index=False)
+
+# 4. Atualizar Dimensões (SCD Tipo 2)
+existing_customers = pd.read_sql("SELECT * FROM dim_customer", warehouse_engine)
+new_customers = merged[~merged['customer_id'].isin(existing_customers['customer_id'])]
+new_customers.to_sql('dim_customer', warehouse_engine, if_exists='append')</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Resultados e Impacto no Negócio</h2>
+    
+    <h3>Resultados Quantificados</h3>
+    <ul>
+      <li><strong>70% Consultas Mais Rápidas:</strong> Relatórios de fim de mês de 45min passaram para 13min (Star Schema otimizado).</li>
+      <li><strong>1M+ Transações:</strong> O warehouse processa 1,2M transações com resposta sub-segundo.</li>
+      <li><strong>100% Integridade dos Dados:</strong> Discrepâncias eliminadas através de fonte única de verdade.</li>
+      <li><strong>5 Fontes Unificadas:</strong> ERP, CRM, Excel, SQL Server legado, feeds bancários — tudo num só lugar.</li>
+    </ul>
+
+    <h3>Métricas de Negócio Melhoradas</h3>
+    <ul>
+      <li><strong>Tempo de Reconciliação:</strong> 10 horas/semana → 1 hora/semana (redução de 90%).</li>
+      <li><strong>Precisão dos Relatórios:</strong> Zero "conflitos de versão" nos dashboards executivos.</li>
+      <li><strong>Analytics Self-Service:</strong> Utilizadores de negócio podem agora criar os seus próprios relatórios sem ajuda de TI.</li>
+    </ul>
+
+    <h3>Insights Estratégicos</h3>
+    <ul>
+      <li><strong>Análise de Tendências Históricas:</strong> Descoberta de um declínio de 15% na margem bruta ao longo de 2 anos devido ao aumento de preços dos fornecedores.</li>
+      <li><strong>Segmentação de Clientes:</strong> Identificados os 20% de clientes que geram 80% da receita.</li>
+      <li><strong>Otimização de Inventário:</strong> Detetadas SKUs de baixa rotação que imobilizavam €500k em fundo de maneio.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Metodologia Técnica</h2>
+    
+    <h3>Princípios de Design Star Schema</h3>
+    <ol>
+      <li><strong>Tabelas de Factos:</strong> Contêm métricas (receita, custo, quantidade) + chaves estrangeiras para dimensões.</li>
+      <li><strong>Tabelas de Dimensões:</strong> Contêm atributos descritivos (nome do cliente, categoria do produto, data).</li>
+      <li><strong>Granularidade:</strong> Definir a granularidade (ex.: 1 linha por linha de fatura).</li>
+      <li><strong>Desnormalização:</strong> As dimensões são desnormalizadas para melhor desempenho nas consultas.</li>
+    </ol>
+
+    <h3>Boas Práticas ETL</h3>
+    <ul>
+      <li><strong>Cargas Incrementais:</strong> Carregar apenas registos novos/alterados (não atualização total todas as noites).</li>
+      <li><strong>Validação de Dados:</strong> Verificar nulos, duplicados, integridade referencial antes de carregar.</li>
+      <li><strong>Tratamento de Erros:</strong> Registar falhas numa tabela de erros para revisão manual.</li>
+      <li><strong>Idempotência:</strong> O ETL pode ser re-executado sem criar duplicados (lógica UPSERT).</li>
+    </ul>
+
+    <h3>Otimização de Desempenho</h3>
+    <ul>
+      <li><strong>Índices:</strong> Índices B-tree em chaves estrangeiras, índices compostos em colunas frequentemente filtradas.</li>
+      <li><strong>Particionamento:</strong> Tabelas de factos particionadas por mês para consultas mais rápidas em dados recentes.</li>
+      <li><strong>Vistas Materializadas:</strong> Tabelas pré-agregadas para relatórios comuns (totais diários/mensais).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lições Aprendidas</h2>
+    
+    <h3>O que Funcionou</h3>
+    <ul>
+      <li><strong>Alinhamento com Stakeholders:</strong> Envolvimento dos utilizadores finais desde cedo para definir requisitos de negócio e métricas-chave.</li>
+      <li><strong>Desenvolvimento Incremental:</strong> Começou com dados de Vendas, depois adicionou Finanças, depois Inventário (abordagem iterativa).</li>
+      <li><strong>Documentação:</strong> Criado dicionário de dados a explicar cada campo (reduziu tickets de suporte em 80%).</li>
+    </ul>
+
+    <h3>Desafios Ultrapassados</h3>
+    <ul>
+      <li><strong>Qualidade dos Dados:</strong> Os sistemas de origem tinham 12% de registos duplicados; implementado correspondência difusa para deduplicação.</li>
+      <li><strong>Alterações de Schema:</strong> O fornecedor do ERP alterou nomes de campos numa atualização; adicionada camada de abstração para lidar com evolução de schema.</li>
+      <li><strong>Degradação de Desempenho:</strong> As consultas abrandaram com o crescimento dos dados; adicionado particionamento e arquivo de dados antigos.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Melhorias Futuras</h2>
+    <ul>
+      <li><strong>Streaming em Tempo Real:</strong> Passar de batch (noturno) para streaming (Apache Kafka) para dashboards em tempo real.</li>
+      <li><strong>Framework de Qualidade de Dados:</strong> Perfis automáticos de dados e deteção de anomalias (Great Expectations).</li>
+      <li><strong>Migração para a Cloud:</strong> Migrar do PostgreSQL on-premises para cloud (Snowflake/BigQuery).</li>
+      <li><strong>Machine Learning:</strong> Adicionar modelos preditivos (previsão de vendas, previsão de churn) diretamente no warehouse.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Stack Técnica em Detalhe</h2>
+    <ul>
+      <li><strong>PostgreSQL:</strong> Base de dados OLAP otimizada para consultas analíticas (Star Schema).</li>
+      <li><strong>Python (Pandas, SQLAlchemy):</strong> Scripts ETL, transformações de dados.</li>
+      <li><strong>Power BI:</strong> Camada de visualização, medidas DAX, reporting self-service.</li>
+      <li><strong>Cron:</strong> Agendamento de tarefas para execuções ETL noturnas.</li>
+      <li><strong>Git:</strong> Controlo de versões para scripts ETL e migrações de schema.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

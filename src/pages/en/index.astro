@@ -1,9 +1,9 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import profileImage from '../assets/images/profile.png';
-import liquilentesLogo from '../assets/images/liquilentes.png';
-import { getProjects } from '../data/projects';
+import Layout from '../../layouts/Layout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import profileImage from '../../assets/images/profile.png';
+import liquilentesLogo from '../../assets/images/liquilentes.png';
+import { getProjects } from '../../data/projects';
 
 const currentYear = new Date().getFullYear();
 const allProjects  = getProjects(import.meta.env.BASE_URL);
@@ -20,7 +20,7 @@ const otherProjects    = allProjects.filter(p => !p.featured);
   gtag('config', 'G-ZVWG09RGY6');
 </script>
 
-<Layout title="José Galvão | Portfolio">
+<Layout title="José Galvão | Portfolio" currentLang="en">
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" id="scrollProgress"></div>
 

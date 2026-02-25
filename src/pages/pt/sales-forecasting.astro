@@ -1,0 +1,93 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🎯', value: '88%', label: 'Precisão MAPE' },
+  { icon: '📊', value: '6 meses', label: 'Horizonte de Previsão' },
+  { icon: '📈', value: '3 anos', label: 'Dados Históricos' },
+  { icon: '⚡', value: 'Diário', label: 'Atualizações do Modelo' }
+];
+---
+
+<CaseStudyLayout
+  title="Previsão de Vendas e Orçamentação com IA"
+  description="Modelo de séries temporais Facebook Prophet que prevê a procura com 88% de precisão, permitindo planeamento preciso de inventário e fluxo de caixa."
+  projectType="Ciência de Dados & FP&A"
+  stack={['Python', 'Prophet', 'Power BI', 'ML de Séries Temporais']}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/Ai-Sales-Forecasting-Budgeting"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      A equipa de finanças dependia de <strong>orçamentos anuais estáticos</strong> que ignoravam a sazonalidade, levando a:
+    </p>
+    <ul>
+      <li><strong>Desajustes de Inventário:</strong> Stock excessivo nos meses lentos, ruturas de stock na época alta.</li>
+      <li><strong>Surpresas no Fluxo de Caixa:</strong> Défices inesperados porque a procura não era prevista com precisão.</li>
+      <li><strong>Previsão Manual:</strong> Analistas a gastar 2 semanas a cada trimestre a ajustar folhas de cálculo Excel.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>💡 Solução: Modelo Facebook Prophet</h2>
+    <p>
+      Implementado o <strong>Prophet</strong> (desenvolvido pela Meta) para previsão de séries temporais, capturando automaticamente sazonalidade, tendências e feriados.
+    </p>
+    
+    <h3>Implementação</h3>
+    <pre is:raw><code>from prophet import Prophet
+import pandas as pd
+
+# Preparar dados (Prophet requer colunas 'ds' e 'y')
+df = pd.read_csv('sales_history.csv')
+df = df.rename(columns={'date': 'ds', 'sales': 'y'})
+
+# Treinar modelo
+model = Prophet(
+    yearly_seasonality=True,
+    weekly_seasonality=True,
+    daily_seasonality=False,
+    holidays=holidays_df  # Black Friday, Natal, etc.
+)
+model.fit(df)
+
+# Gerar previsão de 6 meses
+future = model.make_future_dataframe(periods=180)
+forecast = model.predict(future)
+
+# Visualizar
+model.plot(forecast)
+model.plot_components(forecast)  # Tendência, decomposição de sazonalidade</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Resultados Principais</h2>
+    <ul>
+      <li><strong>88% de Precisão MAPE:</strong> Erro Percentual Absoluto Médio de 12% (referência da indústria: 20%).</li>
+      <li><strong>Otimização de Inventário:</strong> Redução dos custos de posse em 18% através de melhor planeamento da procura.</li>
+      <li><strong>Precisão do Fluxo de Caixa:</strong> Receita prevista com 5% de precisão permitiu melhor gestão do fundo de maneio.</li>
+      <li><strong>Poupança de Tempo:</strong> 2 semanas → 2 horas para atualizações de previsão trimestrais.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Funcionalidades do Modelo</h2>
+    <ul>
+      <li><strong>Deteção de Sazonalidade:</strong> Capturou automaticamente padrões semanais, mensais e anuais.</li>
+      <li><strong>Efeitos de Feriados:</strong> Modelou picos de Black Friday e Natal sem regras manuais.</li>
+      <li><strong>Intervalos de Confiança:</strong> Forneceu limites superior e inferior para planeamento de risco.</li>
+      <li><strong>Integração com Power BI:</strong> Previsões visualizadas em dashboards executivos.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Melhorias Futuras</h2>
+    <ul>
+      <li><strong>Previsão Multi-SKU:</strong> Modelos separados para cada categoria de produto.</li>
+      <li><strong>Regressores Externos:</strong> Incorporar investimento em marketing, preços de concorrentes.</li>
+      <li><strong>Atualizações em Tempo Real:</strong> Reaprendizagem diária à medida que chegam novos dados de vendas.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

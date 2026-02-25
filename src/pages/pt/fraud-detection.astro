@@ -1,0 +1,261 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🎯', value: '0,17%', label: 'Anomalias Detetadas' },
+  { icon: '🛡️', value: '40%', label: 'Acima das Regras Tradicionais' },
+  { icon: '⚡', value: '<2s', label: 'Latência de Deteção' },
+  { icon: '💰', label: 'Proteção Zero-Day' }
+];
+
+const stack = ['Python', 'Scikit-Learn', 'Isolation Forest', 'PCA', 'Matplotlib'];
+---
+
+<CaseStudyLayout
+  title="Sistema de Deteção de Fraude Não Supervisionado"
+  description="Construção de um sistema ensemble de deteção de anomalias que identifica padrões de fraude sofisticados sem dados de treino rotulados."
+  projectType="Machine Learning / Segurança de Dados"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/fraud-detection-system"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Problema de Negócio</h2>
+    <p>
+      Os sistemas tradicionais de deteção de fraude baseados em regras têm uma limitação fundamental: só conseguem detetar padrões de fraude para os quais foram explicitamente programados. Isto cria uma vulnerabilidade crítica a <strong>ataques zero-day</strong> — técnicas de fraude novas que contornam os conjuntos de regras existentes.
+    </p>
+    
+    <h3>A Lacuna de Deteção</h3>
+    <p>
+      A análise de casos históricos de fraude revelou um padrão preocupante:
+    </p>
+    <ul>
+      <li><strong>40% das fraudes confirmadas</strong> passaram por todas as regras de validação existentes</li>
+      <li><strong>Desfasamento de 6-8 semanas</strong> entre a primeira ocorrência e a criação de uma regra</li>
+      <li><strong>Perda média de €180K</strong> por padrão de fraude não detetado</li>
+      <li><strong>Sobrecarga de revisão manual:</strong> 85% das transações sinalizadas eram falsos positivos</li>
+    </ul>
+
+    <blockquote>
+      "Estávamos sempre um passo atrás dos burlões. Quando escrevíamos regras para o último ataque, eles já tinham passado para a técnica seguinte."
+      <br><em>— Responsável de Gestão de Risco</em>
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Solução: Deteção Ensemble Não Supervisionada</h2>
+    <p>
+      Em vez de depender de exemplos de fraude rotulados, construí um <strong>sistema de deteção de anomalias não supervisionado</strong> que aprende padrões normais de transação e sinaliza outliers estatísticos — independentemente de corresponderem a assinaturas de fraude conhecidas.
+    </p>
+
+    <h3>Por que Aprendizagem Não Supervisionada?</h3>
+    <ul>
+      <li><strong>Sem Necessidade de Rótulos de Treino:</strong> A fraude é rara (0,17% das transações), tornando os datasets rotulados insuficientes</li>
+      <li><strong>Adaptável a Novos Padrões:</strong> Deteta automaticamente técnicas de fraude nunca antes vistas</li>
+      <li><strong>Redução de Falsos Positivos:</strong> Foca-se em desvios estatísticos em vez de regras rígidas</li>
+    </ul>
+
+    <h3>Arquitetura Ensemble</h3>
+    <p>Combinei dois algoritmos complementares para maximizar a cobertura de deteção:</p>
+
+    <h4>1. Isolation Forest (Detetor Principal)</h4>
+    <ul>
+      <li>Identifica anomalias medindo a facilidade com que os pontos de dados podem ser "isolados" de clusters normais</li>
+      <li>Excelente na deteção de outliers extremos em dados de alta dimensionalidade</li>
+      <li>Treino rápido: complexidade O(n log n)</li>
+    </ul>
+
+    <h4>2. Erro de Reconstrução baseado em PCA (Validador Secundário)</h4>
+    <ul>
+      <li>Reduz os dados de transação a componentes principais</li>
+      <li>Sinaliza transações com alto erro de reconstrução (fraco ajuste aos padrões normais)</li>
+      <li>Deteta anomalias multi-feature subtis que o Isolation Forest pode perder</li>
+    </ul>
+
+    <h3>Implementação</h3>
+    <pre is:raw><code>from sklearn.ensemble import IsolationForest
+from sklearn.decomposition import PCA
+import numpy as np
+
+# Isolation Forest
+iso_forest = IsolationForest(
+    contamination=0.002,  # Taxa de fraude esperada
+    n_estimators=200,
+    max_features=10,
+    random_state=42
+)
+iso_scores = iso_forest.fit_predict(transaction_features)
+
+# Reconstrução PCA
+pca = PCA(n_components=0.95)  # 95% da variância explicada
+transformed = pca.fit_transform(transaction_features)
+reconstructed = pca.inverse_transform(transformed)
+reconstruction_error = np.sum((transaction_features - reconstructed)**2, axis=1)
+
+# Decisão Ensemble
+anomaly_threshold = np.percentile(reconstruction_error, 99.5)
+final_anomalies = (iso_scores == -1) & (reconstruction_error > anomaly_threshold)</code></pre>
+  </section>
+
+  <section>
+    <h2>📊 Resultados e Impacto</h2>
+
+    <h3>Desempenho de Deteção</h3>
+    <ul>
+      <li><strong>Taxa de Anomalia de 0,17%:</strong> Sinalizadas 850 transações suspeitas de um total de 500.000</li>
+      <li><strong>40% Acima das Regras:</strong> Detetadas 340 anomalias que passaram por todas as verificações de validação existentes</li>
+      <li><strong>68% de Precisão:</strong> A revisão manual confirmou 578 das 850 sinalizações como fraude/erros genuínos</li>
+      <li><strong>Latência Inferior a 2 Segundos:</strong> Pontuação em tempo real para transações recebidas</li>
+    </ul>
+
+    <h3>Novos Padrões de Fraude Descobertos</h3>
+    <ol>
+      <li><strong>Sondagem por Micro-Transação:</strong> 
+        <ul>
+          <li>Detetados bots automatizados a fazer 50+ pequenas transações para testar validade de cartões roubados</li>
+          <li>Padrão: alta velocidade de transação + valores baixos + IDs de comerciante sequenciais</li>
+        </ul>
+      </li>
+      <li><strong>Violações de Velocidade Geográfica:</strong>
+        <ul>
+          <li>Mesmo cartão usado em Portugal e no Brasil numa janela de 2 horas (fisicamente impossível)</li>
+          <li>As regras só verificavam incompatibilidades de país, não a viabilidade temporal-geográfica</li>
+        </ul>
+      </li>
+      <li><strong>Desvio Comportamental:</strong>
+        <ul>
+          <li>Clientes de longa data a comprar subitamente eletrónica de alto valor (indicador de tomada de conta)</li>
+          <li>O modelo aprendeu as categorias de despesa típicas por segmento de cliente</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h3>Impacto no Negócio</h3>
+    <ul>
+      <li><strong>€420K em Perdas Evitadas:</strong> Valor estimado de fraude bloqueado nos primeiros 6 meses</li>
+      <li><strong>72% de Investigação Mais Rápida:</strong> Níveis de risco pré-calculados reduziram o tempo de revisão manual</li>
+      <li><strong>Ganho de Conformidade:</strong> Melhoria das pontuações de auditoria PCI-DSS através de controlos proativos de fraude</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🔬 Aprofundamento Técnico</h2>
+
+    <h3>Engenharia de Features</h3>
+    <p>Criadas 23 features comportamentais em 4 categorias:</p>
+
+    <h4>Características da Transação (8 features)</h4>
+    <ul>
+      <li>Montante (bruto + normalizado por z-score)</li>
+      <li>Hora da transação (codificação cíclica: sin/cos)</li>
+      <li>Código de categoria do comerciante</li>
+      <li>Moeda + indicador transfronteiriço</li>
+    </ul>
+
+    <h4>Métricas de Velocidade (6 features)</h4>
+    <ul>
+      <li>Transações na última 1h, 24h, 7 dias</li>
+      <li>Gasto total nas últimas 24h, 7 dias</li>
+      <li>Comerciantes únicos nos últimos 7 dias</li>
+    </ul>
+
+    <h4>Padrões Comportamentais (5 features)</h4>
+    <ul>
+      <li>Desvio do montante médio de transação do utilizador</li>
+      <li>Tempo desde a última transação</li>
+      <li>Pontuação de consistência da hora habitual de transação</li>
+      <li>Índice de diversidade de categoria de comerciante</li>
+    </ul>
+
+    <h4>Features Geográficas (4 features)</h4>
+    <ul>
+      <li>Distância à localização habitual do utilizador</li>
+      <li>Incompatibilidade de país com o endereço de faturação</li>
+      <li>Consistência da geolocalização IP</li>
+    </ul>
+
+    <h3>Otimização do Modelo</h3>
+    <p>A afinação de hiperparâmetros focou-se em duas métricas concorrentes:</p>
+    <ul>
+      <li><strong>Taxa de Contaminação:</strong> Testado de 0,001 a 0,005 (0,002 ótimo)</li>
+      <li><strong>n_estimators:</strong> Retornos decrescentes após 200 árvores</li>
+      <li><strong>max_samples:</strong> Auto (√n) proporcionou melhor generalização</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚧 Desafios e Soluções</h2>
+
+    <h3>Desafio 1: Definir o "Normal"</h3>
+    <p><strong>Problema:</strong> Transações legítimas de alto valor (ex.: compras de luxo) eram sinalizadas como anomalias</p>
+    <p><strong>Solução:</strong> Implementada segmentação de clientes — modelos separados para titulares de cartões retail vs. premium</p>
+
+    <h3>Desafio 2: Deriva de Conceito</h3>
+    <p><strong>Problema:</strong> O comportamento dos utilizadores muda ao longo do tempo (ex.: as viagens de verão aumentam a diversidade geográfica)</p>
+    <p><strong>Solução:</strong> Janela de treino rotativa de 90 dias com reaprendizagem semanal do modelo</p>
+
+    <h3>Desafio 3: Lacuna de Explicabilidade</h3>
+    <p><strong>Problema:</strong> A equipa de conformidade precisava de explicar por que as transações eram sinalizadas</p>
+    <p><strong>Solução:</strong> Adicionados valores SHAP para mostrar as principais features contributivas de cada anomalia</p>
+
+    <pre is:raw><code>import shap
+
+# Gerar explicações SHAP
+explainer = shap.TreeExplainer(iso_forest)
+shap_values = explainer.shap_values(suspicious_transaction)
+
+# Top 5 fatores de anomalia
+feature_importance = pd.DataFrame({
+    'feature': feature_names,
+    'impact': np.abs(shap_values)
+}).sort_values('impact', ascending=False).head(5)</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Monitorização e Melhoria Contínua</h2>
+
+    <h3>Dashboard de Métricas em Produção</h3>
+    <ul>
+      <li><strong>Taxa de Anomalia Diária:</strong> Acompanhar picos súbitos (campanhas de fraude) ou quedas (degradação do modelo)</li>
+      <li><strong>Ciclo de Feedback de Falsos Positivos:</strong> Revisores manuais rotulam transações sinalizadas → reaprendizagem mensal do modelo</li>
+      <li><strong>Deteção de Deriva de Features:</strong> Alerta quando as distribuições de features desviam mais de 2 desvios padrão</li>
+    </ul>
+
+    <h3>Resultados de Testes A/B</h3>
+    <p>Experiência controlada: 50% das transações pontuadas pelo ensemble, 50% apenas por regras</p>
+    <ul>
+      <li><strong>28% mais fraude detetada</strong> no grupo ensemble</li>
+      <li><strong>Redução de 15%</strong> nas revisões manuais de falsos positivos</li>
+      <li><strong>Custo-benefício:</strong> €4,20 poupados por €1 investido no desenvolvimento do sistema</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Principais Aprendizagens</h2>
+
+    <h3>O que Funcionou</h3>
+    <ul>
+      <li><strong>Abordagem Ensemble:</strong> Combinar Isolation Forest + PCA detetou 23% mais anomalias do que cada um isoladamente</li>
+      <li><strong>A Engenharia de Features Importa:</strong> As métricas de velocidade foram 3x mais preditivas do que o montante da transação</li>
+      <li><strong>Integração Operacional:</strong> Incorporado no fluxo de aprovação de transações (não análise post-hoc)</li>
+    </ul>
+
+    <h3>O que Faria Diferente</h3>
+    <ul>
+      <li><strong>Começar com Modelo Mais Simples:</strong> A tentativa inicial com Random Forest era excessiva — o Isolation Forest é mais simples e rápido</li>
+      <li><strong>Envolver a Equipa de Fraude Mais Cedo:</strong> O seu conhecimento de domínio melhorou significativamente a seleção de features</li>
+      <li><strong>Automatizar o Ciclo de Feedback:</strong> A rotulagem manual é um estrangulamento — deve integrar com o sistema de gestão de casos</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Roteiro Futuro</h2>
+    <ol>
+      <li><strong>Redes de Fraude Baseadas em Grafos:</strong> Detetar redes de fraude organizada através de análise de grafos de transações</li>
+      <li><strong>Streaming de Features em Tempo Real:</strong> Substituir ETL batch por Kafka para pontuação em menos de 100ms</li>
+      <li><strong>Pipeline de Aprendizagem Ativa:</strong> Priorizar revisão humana das previsões de maior incerteza</li>
+      <li><strong>Integração Multi-Canal:</strong> Expandir além das transações de cartão para transferências ACH, wire transfers, criptomoeda</li>
+    </ol>
+  </section>
+</CaseStudyLayout>

@@ -1,6 +1,6 @@
 ---
-// src/components/ProjectCard.astro
-// Versão i18n com todos os styles originais preservados
+// src/components/pt/ProjectCard.astro
+// Versão PT — lógica idêntica ao EN, locale fixo em 'pt'
 interface Props {
   title: string;
   type: string;
@@ -17,58 +17,35 @@ interface Props {
   dataSection?: 'featured' | 'other';
 }
 
-
-
 const {
   title, type, desc, stack, linkRepo, linkDemo,
   caseStudy, images, imageAlts, id,
   complexity, businessImpact, dataSection,
 } = Astro.props;
 
-// i18n support
-const currentLocale = Astro.currentLocale || 'en';
+const currentLocale = 'pt';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/'); // garante slash final
 const caseStudyHref = caseStudy
   ? `${base}${currentLocale}/${caseStudy}`
   : undefined;
 
-const translations = {
-  en: {
-    previousImage: 'Previous image for',
-    nextImage: 'Next image for',
-    imageNavigation: 'Image navigation for',
-    imageOf: 'Image',
-    of: 'of',
-    technologiesUsed: 'Technologies used',
-    viewSourceCode: 'View source code for',
-    onGitHub: 'on GitHub',
-    viewSourceCodeLabel: 'View',
-    sourceCodeOnGitHub: 'source code on GitHub',
-    liveDemo: 'Live demo for',
-    viewLiveDemo: 'View live demo of',
-    technicalCaseStudy: 'Technical Case Study',
-    screenshot: 'screenshot',
-  },
-  pt: {
-    previousImage: 'Imagem anterior de',
-    nextImage: 'Próxima imagem de',
-    imageNavigation: 'Navegação de imagens de',
-    imageOf: 'Imagem',
-    of: 'de',
-    technologiesUsed: 'Tecnologias utilizadas',
-    viewSourceCode: 'Ver código-fonte de',
-    onGitHub: 'no GitHub',
-    viewSourceCodeLabel: 'Ver',
-    sourceCodeOnGitHub: 'código-fonte no GitHub',
-    liveDemo: 'Demo ao vivo de',
-    viewLiveDemo: 'Ver demo ao vivo de',
-    technicalCaseStudy: 'Estudo de Caso Técnico',
-    screenshot: 'captura de ecrã',
-  },
+const t = {
+  previousImage: 'Imagem anterior de',
+  nextImage: 'Próxima imagem de',
+  imageNavigation: 'Navegação de imagens de',
+  imageOf: 'Imagem',
+  of: 'de',
+  technologiesUsed: 'Tecnologias utilizadas',
+  viewSourceCode: 'Ver código-fonte de',
+  onGitHub: 'no GitHub',
+  viewSourceCodeLabel: 'Ver',
+  sourceCodeOnGitHub: 'código-fonte no GitHub',
+  liveDemo: 'Demo ao vivo de',
+  viewLiveDemo: 'Ver demo ao vivo de',
+  technicalCaseStudy: 'Estudo de Caso Técnico',
+  screenshot: 'captura de ecrã',
 };
-
-const t = translations[currentLocale as keyof typeof translations] || translations.en;
 
 function getAlt(index: number): string {
   if (imageAlts && imageAlts[index]) return imageAlts[index];
@@ -81,7 +58,7 @@ function getAlt(index: number): string {
   id={id}
   data-section={dataSection}
 >
-  <!-- Top Image / Carousel Section -->
+  <!-- Secção de Imagem / Carrossel -->
   <div class="card-visuals">
     <div class="carousel-viewport">
       {images.map((imgSrc, idx) => (
@@ -120,7 +97,7 @@ function getAlt(index: number): string {
     <div class="visual-overlay" aria-hidden="true"></div>
   </div>
 
-  <!-- Content Section -->
+  <!-- Secção de Conteúdo -->
   <div class="card-content">
     <div class="content-header">
       <span class="project-badge">{type}</span>
@@ -135,7 +112,7 @@ function getAlt(index: number): string {
       ))}
     </div>
 
-    <!-- Action Bar -->
+    <!-- Barra de Ações -->
     <div class="card-footer">
       <div class="secondary-links">
         <a
@@ -169,8 +146,8 @@ function getAlt(index: number): string {
       </div>
 
       {caseStudy && (
-<a href={caseStudyHref} class="main-cta-btn">
-            <span>{t.technicalCaseStudy}</span>
+        <a href={caseStudyHref} class="main-cta-btn">
+          <span>{t.technicalCaseStudy}</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
@@ -204,7 +181,7 @@ function getAlt(index: number): string {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 212, 255, 0.1);
   }
 
-  /* Image Section */
+  /* Secção de Imagem */
   .card-visuals {
     position: relative;
     aspect-ratio: 16 / 10;
@@ -235,7 +212,7 @@ function getAlt(index: number): string {
     pointer-events: none;
   }
 
-  /* Carousel Controls */
+  /* Controlos do Carrossel */
   .carousel-controls {
     position: absolute;
     bottom: 12px;
@@ -293,7 +270,7 @@ function getAlt(index: number): string {
     outline-offset: 2px;
   }
 
-  /* Content Styling */
+  /* Conteúdo */
   .card-content {
     padding: 24px;
     display: flex;
@@ -348,7 +325,7 @@ function getAlt(index: number): string {
     font-weight: 600;
   }
 
-  /* Footer Actions */
+  /* Rodapé de Ações */
   .card-footer {
     display: flex;
     align-items: center;
@@ -445,7 +422,4 @@ function getAlt(index: number): string {
 
   initCarousel();
   document.addEventListener('astro:after-swap', initCarousel);
-
-
 </script>
-

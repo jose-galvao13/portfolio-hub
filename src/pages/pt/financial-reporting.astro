@@ -1,0 +1,88 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '⚡', value: '<5 seg', label: 'Tempo de Processamento' },
+  { icon: '✅', value: '100%', label: 'Precisão Matemática' },
+  { icon: '📊', value: '12', label: 'Demonstrações Financeiras' },
+  { icon: '🎯', value: '0', label: 'Erros Manuais' }
+];
+---
+
+<CaseStudyLayout
+  title="Reporte Financeiro Automatizado"
+  description="Automação em Python que elimina 2 dias de trabalho manual em Excel no fecho mensal, com validação de conformidade SNC."
+  projectType="Automação Contabilística"
+  stack={['Python', 'Pandas', 'OpenPyXL', 'Reporte Financeiro']}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/automated-financial-reporting"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      O fecho financeiro de fim de mês era um <strong>pesadelo de 2 dias</strong>: contabilistas a copiar e colar dados manualmente entre 12 templates Excel, a validar Balancetes contra normas contabilísticas (SNC), e a torcer para que nenhuma fórmula falhasse.
+    </p>
+    <ul>
+      <li><strong>Risco de Erro Humano:</strong> Erros de cópia levaram a uma discrepância de €50k num mês (detetada pelos auditores).</li>
+      <li><strong>Demorado:</strong> 2 dias completos de trabalho que impediam os analistas de atividades de valor acrescentado.</li>
+      <li><strong>Sem Validação:</strong> Nenhuma verificação automática de débitos = créditos ou saldos balanceados.</li>
+      <li><strong>Caos de Versões:</strong> "Relatorio_Final_v3_FINAL_FINAL.xlsx"</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>💡 Arquitetura da Solução</h2>
+    <p>
+      Criado um <strong>script de automação em Python</strong> que lê o Balancete, valida conforme as regras SNC e gera demonstrações financeiras formatadas em menos de 5 segundos.
+    </p>
+    
+    <h3>Funcionalidades Principais</h3>
+    <ul>
+      <li><strong>Validação do Balancete:</strong> Verifica débitos = créditos, sem contas órfãs, consistência de saldos.</li>
+      <li><strong>Conformidade SNC:</strong> Mapeia contas para as linhas corretas das demonstrações financeiras segundo o GAAP português.</li>
+      <li><strong>Preenchimento de Templates:</strong> Preenche automaticamente 12 templates Excel (Balanço, Demonstração de Resultados, Fluxos de Caixa).</li>
+      <li><strong>Verificação de Fórmulas:</strong> Valida todas as fórmulas Excel (Ativo = Passivo + Capital Próprio, etc.).</li>
+    </ul>
+
+    <h3>Implementação Técnica</h3>
+    <pre><code>import pandas as pd
+import openpyxl
+
+# 1. Ler Balancete
+tb = pd.read_excel('trial_balance.xlsx')
+
+# 2. Validar
+assert tb['debit'].sum() == tb['credit'].sum(), "TB não balanceia!"
+assert tb['account_code'].isnull().sum() == 0, "Códigos de conta em falta"
+
+# 3. Mapear para Demonstrações Financeiras
+income_stmt = tb[tb['account_code'].str.startswith('6')].copy()
+balance_sheet = tb[~tb['account_code'].str.startswith('6')].copy()
+
+# 4. Preencher Templates
+wb = openpyxl.load_workbook('BS_template.xlsx')
+ws = wb['Balance Sheet']
+ws['B5'] = balance_sheet[balance_sheet['account_code'] == '1100']['balance'].sum()
+wb.save('Balance_Sheet_Final.xlsx')</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Resultados Principais</h2>
+    <ul>
+      <li><strong>&lt;5 Segundos:</strong> Processo que demorava 2 dias agora demora 5 segundos.</li>
+      <li><strong>100% de Precisão:</strong> Zero erros matemáticos (validado por auditores).</li>
+      <li><strong>€50k Poupados:</strong> Evitou a repetição da discrepância de reconciliação de €50k.</li>
+      <li><strong>Tempo de Analistas Libertado:</strong> 16 horas/mês redirecionadas para análise financeira.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Melhorias Futuras</h2>
+    <ul>
+      <li><strong>Integração ERP:</strong> Extrair Balancete diretamente da API do SAP (sem exportação manual).</li>
+      <li><strong>Consolidação Multi-Entidade:</strong> Automatizar consolidações ao nível do grupo com eliminações.</li>
+      <li><strong>Geração de PDF:</strong> Produzir relatórios PDF prontos para Conselho de Administração com gráficos.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

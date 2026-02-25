@@ -1,0 +1,168 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '📊', value: '30%', label: 'Receita em Risco Identificada' },
+  { icon: '🎯', value: '87%', label: 'Precisão do Modelo (AUC)' },
+  { icon: '⏱️', value: '3 meses', label: 'Janela Média de Previsão de Churn' },
+  { icon: '💰', value: '€250k', label: 'Poupanças Anuais em Retenção' }
+];
+
+const stack = ['Python', 'Scikit-Learn', 'Lifelines', 'Pandas', 'Matplotlib'];
+---
+
+<CaseStudyLayout
+  title="Analytics de Churn e Retenção de Clientes"
+  description="Previsão do tempo de vida do cliente e risco de churn através de análise de sobrevivência e gradient boosting em ML."
+  projectType="Ciência de Dados / Business Intelligence"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/churn-analysis"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      A empresa estava a experienciar uma <strong>taxa anual de churn de 20%</strong>, mas o sistema CRM existente só sinalizava clientes <em>depois</em> de já terem cancelado. Esta abordagem reativa significava receitas perdidas e orçamentos de retenção desperdiçados em clientes que já tinham partido.
+    </p>
+    <p>
+      Os principais desafios incluíam:
+    </p>
+    <ul>
+      <li><strong>Cegueira Temporal do Churn:</strong> Não saber <em>quando</em> um cliente iria cancelar tornava impossível agendar campanhas de retenção eficazmente.</li>
+      <li><strong>Sobrecarga de Atributos:</strong> 80+ atributos de cliente sem indicação clara de quais previam realmente o churn.</li>
+      <li><strong>Problema de Dados Censurados:</strong> Muitos clientes ainda estavam ativos (ainda não tinham cancelado), tornando os modelos de classificação tradicionais incompletos.</li>
+    </ul>
+    <blockquote>
+      "Estávamos a gastar €50k/mês em campanhas de retenção dirigidas a clientes que já tinham mentalmente desistido 6 meses antes."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Arquitetura da Solução</h2>
+    <p>
+      Implementei um <strong>sistema híbrido de duas fases</strong> que combina análise de sobrevivência (para previsão temporal) com gradient boosting (para importância de features e pontuação de risco).
+    </p>
+    
+    <h3>Fase 1: Análise de Sobrevivência (Kaplan-Meier e Regressão de Cox)</h3>
+    <ul>
+      <li><strong>Curvas de Kaplan-Meier:</strong> Estimaram a probabilidade de sobrevivência (retenção) ao longo do tempo para diferentes segmentos de clientes.</li>
+      <li><strong>Riscos Proporcionais de Cox:</strong> Identificaram quais features (tipo de contrato, tickets de suporte, atrasos de pagamento) aceleravam o risco de churn.</li>
+      <li>Esta fase respondeu: <em>"Quanto tempo até este cliente cancelar?"</em></li>
+    </ul>
+
+    <h3>Fase 2: Classificador de Gradient Boosting</h3>
+    <ul>
+      <li>Treinado em <strong>resultado binário</strong> (cancelou vs. retido) usando features engenheiradas da análise de sobrevivência.</li>
+      <li>Features incluídas: dias desde o último login, velocidade de tickets de suporte, volatilidade do histórico de pagamentos.</li>
+      <li>Esta fase respondeu: <em>"Por que razão é provável que este cliente cancele?"</em></li>
+    </ul>
+
+    <h3>Implementação Técnica</h3>
+    <pre is:raw><code>from lifelines import KaplanMeierFitter, CoxPHFitter
+from sklearn.ensemble import GradientBoostingClassifier
+import pandas as pd
+
+# Análise de Sobrevivência - Tempo até ao Churn
+kmf = KaplanMeierFitter()
+kmf.fit(durations=data['tenure'], event_observed=data['churned'])
+
+# Regressão de Cox para Importância de Features
+cph = CoxPHFitter()
+cph.fit(data[features + ['tenure', 'churned']], 'tenure', 'churned')
+
+# Gradient Boosting para Probabilidade de Churn
+X = data[engineered_features]
+y = data['churned']
+
+model = GradientBoostingClassifier(n_estimators=200, max_depth=5)
+model.fit(X_train, y_train)
+
+# Pontuação de Risco: Probabilidade de churn nos próximos 90 dias
+data['churn_risk_90d'] = model.predict_proba(X)[:, 1]</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Resultados e Impacto no Negócio</h2>
+    
+    <h3>Resultados Quantificados</h3>
+    <ul>
+      <li><strong>30% de Receita em Risco:</strong> Identificados segmentos de clientes de alto risco representando €1,2M em receita recorrente anual.</li>
+      <li><strong>87% de Precisão de Previsão:</strong> Pontuação AUC de 0,87, superando significativamente o sistema anterior baseado em regras (0,62).</li>
+      <li><strong>Janela de Aviso de 3 Meses:</strong> Capacidade de prever churn com 90 dias de antecedência com 75% de precisão, permitindo intervenção proativa.</li>
+      <li><strong>€250k de Poupanças Anuais:</strong> Redução do desperdício em retenção ao direcionar apenas os casos de alta probabilidade de salvar.</li>
+    </ul>
+
+    <h3>Insights Estratégicos Descobertos</h3>
+    <ul>
+      <li><strong>Paradoxo dos Tickets de Suporte:</strong> Clientes com 0 tickets estavam em <em>maior</em> risco do que os com 1-2 (indicando desengajamento).</li>
+      <li><strong>Preditor do Método de Pagamento:</strong> Clientes que usavam transferências bancárias manuais tinham churn 3x superior aos utilizadores de débito automático.</li>
+      <li><strong>Janela Crítica de Integração:</strong> 80% dos cancelamentos ocorreram nos primeiros 6 meses, apontando para problemas de onboarding.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Metodologia Técnica</h2>
+    
+    <h3>Engenharia de Features</h3>
+    <ol>
+      <li><strong>Métricas de Recência:</strong> Dias desde a última compra, login, contacto de suporte.</li>
+      <li><strong>Métricas de Frequência:</strong> Transações mensais médias, tickets de suporte por ano.</li>
+      <li><strong>Métricas Monetárias:</strong> ARPU (Receita Média por Utilizador), volatilidade de pagamento.</li>
+      <li><strong>Features Derivadas:</strong> "Pontuação de Engajamento" = (logins × transações) / antiguidade.</li>
+    </ol>
+
+    <h3>Avaliação do Modelo</h3>
+    <ul>
+      <li><strong>Validação Cruzada K-Fold Estratificada:</strong> Para lidar com desequilíbrio de classes (apenas 20% de taxa de churn).</li>
+      <li><strong>Tradeoff Precisão-Revocação:</strong> Otimizado para revocação (capturar todos os potenciais churners) mesmo ao custo de alguns falsos positivos.</li>
+      <li><strong>Validação Baseada em Tempo:</strong> Treinado nos meses 1-10, validado nos meses 11-12 para simular implementação real.</li>
+    </ul>
+
+    <h3>Implementação</h3>
+    <ul>
+      <li>Pontuação batch semanal de toda a base de clientes (~50k clientes).</li>
+      <li>Top 500 clientes de maior risco sinalizados para revisão da equipa de CRM.</li>
+      <li>Pontuações de risco integradas nos dashboards Power BI para reporting executivo.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lições Aprendidas</h2>
+    
+    <h3>O que Funcionou</h3>
+    <ul>
+      <li><strong>Análise de Sobrevivência Primeiro:</strong> Compreender <em>quando</em> os clientes cancelam ajudou a priorizar a engenharia de features.</li>
+      <li><strong>Alinhamento com o Negócio:</strong> Colaboração com a equipa de retenção para definir limiares de risco "acionáveis" (top 10% vs. top 1%).</li>
+      <li><strong>Explicabilidade:</strong> Os valores SHAP ajudaram a explicar previsões individuais à equipa de CRM ("Este cliente está em alto risco porque...").</li>
+    </ul>
+
+    <h3>Desafios Ultrapassados</h3>
+    <ul>
+      <li><strong>Problemas de Qualidade de Dados:</strong> 15% dos registos de cliente tinham dados de antiguidade em falta, requerendo imputação via datas de criação de conta.</li>
+      <li><strong>Desequilíbrio de Classes:</strong> Taxa de churn de apenas 20% significava que o modelo previa inicialmente "sem churn" para todos. Resolvido com oversampling SMOTE.</li>
+      <li><strong>Fuga de Features:</strong> O modelo inicial incluía "data_último_pagamento" que vazava informação sobre o churn (clientes que cancelaram obviamente tinham pagamentos antigos); removida.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Melhorias Futuras</h2>
+    <ul>
+      <li><strong>Pontuação em Tempo Real:</strong> Passar de batch semanal para pontuação acionada por eventos (ex.: pontuar imediatamente após o fecho de um ticket de suporte).</li>
+      <li><strong>Inferência Causal:</strong> Usar modelação de uplift para identificar quais clientes responderiam de facto a ofertas de retenção vs. os que ficariam de qualquer forma.</li>
+      <li><strong>Deep Learning (LSTM):</strong> Capturar sequências temporais (ex.: "padrão de login alterou-se subitamente") usando redes neuronais recorrentes.</li>
+      <li><strong>Framework de Testes A/B:</strong> Medir o aumento real de retenção de campanhas conduzidas por modelos vs. grupos de controlo.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Stack Técnica em Detalhe</h2>
+    <ul>
+      <li><strong>Lifelines:</strong> Biblioteca Python para análise de sobrevivência (Kaplan-Meier, regressão de Cox).</li>
+      <li><strong>Scikit-Learn:</strong> Gradient Boosting, afinação de hiperparâmetros (GridSearchCV), avaliação de modelos.</li>
+      <li><strong>Pandas:</strong> Tratamento de dados, engenharia de features, análise de coorte.</li>
+      <li><strong>Matplotlib/Seaborn:</strong> Curvas de sobrevivência, gráficos de importância de features, distribuições de risco.</li>
+      <li><strong>SHAP:</strong> Explicabilidade do modelo para comunicação com stakeholders.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

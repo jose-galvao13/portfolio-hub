@@ -1,0 +1,221 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🎯', value: '85%', label: 'Precisão de Previsão' },
+  { icon: '⏱️', value: '50%', label: 'Redução no Tempo de Processamento' },
+  { icon: '📊', value: '10.000+', label: 'Candidatos Avaliados' },
+  { icon: '✅', value: '100%', label: 'Conformidade Regulatória' }
+];
+
+const stack = ['Python', 'Scikit-Learn', 'Streamlit', 'Random Forest', 'SHAP'];
+---
+
+<CaseStudyLayout
+  title="Banker AI: Motor de Avaliação de Risco de Crédito"
+  description="Sistema de avaliação de risco de crédito baseado em ML que combina previsões Random Forest com guardrails de conformidade baseados em regras."
+  projectType="Gestão de Risco"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/banker-ai"
+  liveUrl="https://credit-risk-scoring-ai-engine-galvao.streamlit.app/"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      Os processos tradicionais de análise de crédito são <strong>lentos, tendenciosos e intensivos em recursos</strong>. As análises manuais demoram 3-5 dias por candidato, com o viés humano a infiltrar-se nas decisões e a aplicação inconsistente das políticas de crédito.
+    </p>
+    <p>
+      Os principais desafios incluíam:
+    </p>
+    <ul>
+      <li><strong>Estrangulamento Manual:</strong> Analistas de crédito a gastar 2 horas por candidatura a analisar documentos financeiros.</li>
+      <li><strong>Decisões Inconsistentes:</strong> Diferentes analistas a aprovar/rejeitar perfis semelhantes (falta de padronização).</li>
+      <li><strong>Risco de Viés:</strong> Viés inconsciente baseado em dados demográficos levando a violações de empréstimo justo.</li>
+      <li><strong>Conformidade Regulatória:</strong> Necessidade de decisões explicáveis (modelos "caixa preta" não permitidos).</li>
+    </ul>
+    <blockquote>
+      "Estávamos a aprovar empréstimos para mutuários de risco e a rejeitar candidatos merecedores de crédito — puramente devido à inconsistência humana."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Arquitetura da Solução</h2>
+    <p>
+      Construí um <strong>sistema de IA híbrido</strong> que combina machine learning para previsão com guardrails baseados em regras para conformidade regulatória, fornecendo decisões de crédito rápidas, justas e explicáveis.
+    </p>
+    
+    <h3>Fase 1: Engenharia de Features</h3>
+    <ul>
+      <li>Extração de features de dados de bureau de crédito: pontuação FICO, rácio dívida/rendimento, histórico de pagamentos, utilização de crédito.</li>
+      <li>Criadas features derivadas: "Idade do Crédito" (idade média das linhas de crédito), "Velocidade de Consultas Duras" (consultas nos últimos 6 meses).</li>
+      <li>Excluídos atributos protegidos (raça, género) para prevenir viés.</li>
+    </ul>
+
+    <h3>Fase 2: Classificador Random Forest</h3>
+    <ul>
+      <li>Treinado em 10.000 candidaturas históricas de crédito com resultado binário (incumprimento vs. reembolsado).</li>
+      <li>Afinação de hiperparâmetros via GridSearchCV: otimizado max_depth, n_estimators, min_samples_split.</li>
+      <li>Saída: Probabilidade de incumprimento (0-100%) para cada candidato.</li>
+    </ul>
+
+    <h3>Fase 3: Guardrails de Conformidade</h3>
+    <ul>
+      <li><strong>Regras Duras:</strong> Rejeição automática se falência nos últimos 2 anos, DTI &gt; 50%, FICO &lt; 580.</li>
+      <li><strong>Regras Suaves:</strong> Sinalizar para revisão manual se executada recente, histórico de emprego inconsistente.</li>
+      <li><strong>Explicabilidade:</strong> Uso de valores SHAP para explicar que features conduziram cada previsão.</li>
+    </ul>
+
+    <h3>Fase 4: Interface Web Streamlit</h3>
+    <ul>
+      <li>Utilizador introduz dados do candidato (rendimento, pontuação de crédito, montante do empréstimo) no formulário web.</li>
+      <li>Sistema retorna: Pontuação de Risco (0-100), Recomendação de Aprovação, Explicação.</li>
+      <li>Responsável de conformidade pode substituir a decisão com justificação documentada.</li>
+    </ul>
+
+    <h3>Implementação Técnica</h3>
+    <pre is:raw><code>from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+import shap
+import streamlit as st
+
+# Engenharia de features
+features = ['credit_score', 'dti_ratio', 'payment_history', 'credit_age', 'income']
+X = df[features]
+y = df['default']
+
+# Afinação de hiperparâmetros
+param_grid = {
+    'n_estimators': [100, 200, 300],
+    'max_depth': [10, 20, 30],
+    'min_samples_split': [2, 5, 10]
+}
+
+rf = RandomForestClassifier(random_state=42)
+grid_search = GridSearchCV(rf, param_grid, cv=5, scoring='roc_auc')
+grid_search.fit(X_train, y_train)
+
+best_model = grid_search.best_estimator_
+
+# Previsão + Explicabilidade
+def predict_credit_risk(applicant_data):
+    prob_default = best_model.predict_proba([applicant_data])[0][1]
+    risk_score = int(prob_default * 100)
+    
+    # Explicação SHAP
+    explainer = shap.TreeExplainer(best_model)
+    shap_values = explainer.shap_values([applicant_data])
+    
+    # Verificações de conformidade
+    if applicant_data['credit_score'] < 580:
+        return "REJEITAR", risk_score, "FICO abaixo do limiar mínimo"
+    elif applicant_data['dti_ratio'] > 0.5:
+        return "REJEITAR", risk_score, "Rácio dívida/rendimento demasiado alto"
+    elif risk_score < 30:
+        return "APROVAR", risk_score, shap_values
+    else:
+        return "REVER", risk_score, shap_values
+
+# Interface Streamlit
+st.title("Banker AI: Motor de Risco de Crédito")
+credit_score = st.number_input("Pontuação FICO", 300, 850)
+dti = st.slider("Rácio Dívida/Rendimento", 0.0, 1.0)
+decision, score, explanation = predict_credit_risk([credit_score, dti, ...])</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Resultados e Impacto no Negócio</h2>
+    
+    <h3>Resultados Quantificados</h3>
+    <ul>
+      <li><strong>85% de Precisão:</strong> AUC-ROC de 0,85, superando significativamente a análise manual (0,72).</li>
+      <li><strong>50% de Redução de Tempo:</strong> Tempo de decisão reduzido de 2 horas para 10 minutos por candidato.</li>
+      <li><strong>10.000+ Avaliados:</strong> Processado todo o backlog de candidaturas pendentes em 3 dias vs. 2 meses.</li>
+      <li><strong>Zero Violações de Viés:</strong> Passou auditoria de equidade (sem impacto díspar em grupos protegidos).</li>
+    </ul>
+
+    <h3>Métricas de Negócio Melhoradas</h3>
+    <ul>
+      <li><strong>Taxa de Incumprimento:</strong> Desceu de 8% para 5% (melhor seleção de risco).</li>
+      <li><strong>Velocidade de Aprovação:</strong> Decisões no mesmo dia permitidas, melhorando a experiência do cliente.</li>
+      <li><strong>Eficiência da Equipa:</strong> Analistas focam-se agora apenas em casos limite sinalizados para revisão manual.</li>
+    </ul>
+
+    <h3>Insights Estratégicos</h3>
+    <ul>
+      <li><strong>Idade do Crédito &gt; FICO:</strong> A "Idade do Crédito" foi a 2ª feature mais importante, frequentemente ignorada na análise manual.</li>
+      <li><strong>Sinal de Consultas Recentes:</strong> &gt;5 consultas duras em 6 meses = risco de incumprimento 3x maior (comportamento de procura de crédito).</li>
+      <li><strong>Lacuna de Verificação de Rendimento:</strong> 12% dos candidatos sobrestimou o rendimento; o modelo detetou via inconsistências de DTI.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Metodologia Técnica</h2>
+    
+    <h3>Fluxo de Desenvolvimento do Modelo</h3>
+    <ol>
+      <li><strong>Recolha de Dados:</strong> Obtidas 10k candidaturas históricas de crédito da base de dados interna.</li>
+      <li><strong>Limpeza de Dados:</strong> Tratamento de valores em falta (imputação pela mediana para numéricos, moda para categóricos).</li>
+      <li><strong>Engenharia de Features:</strong> Criadas 15 features derivadas de dados brutos do bureau de crédito.</li>
+      <li><strong>Balanceamento de Classes:</strong> Usado SMOTE para balancear amostras de incumprimento (20%) vs. não-incumprimento (80%).</li>
+      <li><strong>Treino do Modelo:</strong> Treinado Random Forest com validação cruzada em 5 folds.</li>
+      <li><strong>Avaliação:</strong> Otimizado para AUC-ROC (equilíbrio entre precisão e revocação).</li>
+    </ol>
+
+    <h3>Explicabilidade (SHAP)</h3>
+    <ul>
+      <li>SHAP (SHapley Additive exPlanations) mostra a contribuição de cada feature para a previsão.</li>
+      <li>Exemplo: "Pontuação FICO (+15 pontos para aprovação), DTI (-8 pontos para rejeição)".</li>
+      <li>Crítico para conformidade regulatória: "Podemos explicar por que rejeitámos a sua candidatura."</li>
+    </ul>
+
+    <h3>Enquadramento de Conformidade</h3>
+    <ul>
+      <li><strong>Leis de Empréstimo Justo:</strong> Garantido que o modelo não usa raça, género, religião (excluídos das features).</li>
+      <li><strong>Avisos de Ação Adversa:</strong> Cartas geradas automaticamente a explicar os motivos de rejeição.</li>
+      <li><strong>Trilha de Auditoria:</strong> Registada cada decisão com timestamp, dados de entrada e versão do modelo.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lições Aprendidas</h2>
+    
+    <h3>O que Funcionou</h3>
+    <ul>
+      <li><strong>Abordagem Híbrida:</strong> ML para velocidade + Regras para conformidade = o melhor dos dois mundos.</li>
+      <li><strong>Explicabilidade SHAP:</strong> Criou confiança nos analistas que podiam verificar a lógica do modelo.</li>
+      <li><strong>Implementação Gradual:</strong> Começou em "modo sombra" (modelo sugere, humano decide) antes da automatização total.</li>
+    </ul>
+
+    <h3>Desafios Ultrapassados</h3>
+    <ul>
+      <li><strong>Desequilíbrio de Classes:</strong> Taxa de incumprimento de apenas 20% levou o modelo a prever "aprovar" para todos; resolvido com SMOTE.</li>
+      <li><strong>Fuga de Features:</strong> O modelo inicial incluía "meses_desde_incumprimento" que vazava informação futura; removido.</li>
+      <li><strong>Resistência dos Stakeholders:</strong> Analistas com medo de perder emprego; reformulado como "aumentação e não substituição".</li>
+      <li><strong>Escrutínio Regulatório:</strong> Requereu extensa documentação e testes de equidade para satisfazer auditores.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Melhorias Futuras</h2>
+    <ul>
+      <li><strong>Dados Alternativos:</strong> Incorporar pagamentos de renda, faturas de serviços para candidatos com histórico de crédito limitado.</li>
+      <li><strong>Deep Learning (Redes Neuronais):</strong> Capturar relações não lineares para ganhos marginais de precisão.</li>
+      <li><strong>Monitorização em Tempo Real:</strong> Detetar deriva do modelo à medida que as condições económicas mudam (ex.: recessão).</li>
+      <li><strong>Reaprendizagem Automatizada:</strong> Pipeline de reaprendizagem mensal para incorporar novos dados.</li>
+      <li><strong>App Móvel:</strong> Permitir que candidatos verifiquem o estado de pré-aprovação instantaneamente.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Stack Técnica em Detalhe</h2>
+    <ul>
+      <li><strong>Scikit-Learn:</strong> Random Forest, GridSearchCV, métricas de classificação (AUC, precisão, revocação).</li>
+      <li><strong>SHAP:</strong> Biblioteca de explicabilidade de modelos para importância de features e previsões individuais.</li>
+      <li><strong>Streamlit:</strong> Interface web para responsáveis de crédito introduzirem dados e visualizarem decisões.</li>
+      <li><strong>Pandas:</strong> Pré-processamento de dados, engenharia de features, EDA.</li>
+      <li><strong>Imbalanced-Learn:</strong> SMOTE para tratamento de desequilíbrio de classes.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

@@ -4,34 +4,34 @@
 // Uses translation keys instead of hardcoded strings
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { type Lang, t } from '../i18n/translations';
+import { type Lang, t } from '../../i18n/translations';
 
-import _churn1   from '../assets/images/Churn-Analysis.png';
-import _churn2   from '../assets/images/Churn-Analysis2.png';
-import _churn3   from '../assets/images/Churn-Analysis3.png';
-import _churn4   from '../assets/images/Churn-Analysis4.png';
-import _churn5   from '../assets/images/Churn-Analysis5.png';
-import _churn6   from '../assets/images/Churn-Analysis6.png';
-import _churn7   from '../assets/images/Churn-Analysis7.png';
-import _fraud1   from '../assets/images/fraud-detection-system.png';
-import _fraud2   from '../assets/images/fraud-detection-system2.png';
-import _fraud3   from '../assets/images/fraud-detection-system3.png';
-import _fraud4   from '../assets/images/fraud-detection-system4.png';
-import _realEstate from '../assets/images/real_estate.png';
-import _chatcfo1 from '../assets/images/chatcfo.png';
-import _chatcfo2 from '../assets/images/chatcfo2.png';
-import _chatcfo3 from '../assets/images/chatcfo3.png';
-import _macro    from '../assets/images/macro.png';
-import _equity1  from '../assets/images/equity_research.png';
-import _equity2  from '../assets/images/equity_research2.png';
-import _banker   from '../assets/images/banker_ai.png';
-import _warehouse  from '../assets/images/warehouse.png';
-import _reporting  from '../assets/images/reporting.png';
-import _ecom1    from '../assets/images/ecommerce.png';
-import _ecom2    from '../assets/images/ecommerce2.png';
-import _ecom3    from '../assets/images/ecommerce3.png';
-import _ecom4    from '../assets/images/ecommerce4.png';
-import _forecast from '../assets/images/forecast.png';
+import _churn1   from '../../assets/images/Churn-Analysis.png';
+import _churn2   from '../../assets/images/Churn-Analysis2.png';
+import _churn3   from '../../assets/images/Churn-Analysis3.png';
+import _churn4   from '../../assets/images/Churn-Analysis4.png';
+import _churn5   from '../../assets/images/Churn-Analysis5.png';
+import _churn6   from '../../assets/images/Churn-Analysis6.png';
+import _churn7   from '../../assets/images/Churn-Analysis7.png';
+import _fraud1   from '../../assets/images/fraud-detection-system.png';
+import _fraud2   from '../../assets/images/fraud-detection-system2.png';
+import _fraud3   from '../../assets/images/fraud-detection-system3.png';
+import _fraud4   from '../../assets/images/fraud-detection-system4.png';
+import _realEstate from '../../assets/images/real_estate.png';
+import _chatcfo1 from '../../assets/images/chatcfo.png';
+import _chatcfo2 from '../../assets/images/chatcfo2.png';
+import _chatcfo3 from '../../assets/images/chatcfo3.png';
+import _macro    from '../../assets/images/macro.png';
+import _equity1  from '../../assets/images/equity_research.png';
+import _equity2  from '../../assets/images/equity_research2.png';
+import _banker   from '../../assets/images/banker_ai.png';
+import _warehouse  from '../../assets/images/warehouse.png';
+import _reporting  from '../../assets/images/reporting.png';
+import _ecom1    from '../../assets/images/ecommerce.png';
+import _ecom2    from '../../assets/images/ecommerce2.png';
+import _ecom3    from '../../assets/images/ecommerce3.png';
+import _ecom4    from '../../assets/images/ecommerce4.png';
+import _forecast from '../../assets/images/forecast.png';
 
 export interface Project {
   /** Unique identifier for the project */

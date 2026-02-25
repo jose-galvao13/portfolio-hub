@@ -1,25 +1,25 @@
 ---
-import '../styles/global.css';
+import '../../styles/global.css';
 import { Image } from 'astro:assets';
-import logoImg from '../assets/images/logo.png';
-import LanguageSwitcher from '../components/LanguageSwitcher.astro';
-import { getProjects } from '../data/projects';
+import logoImg from '../../assets/images/logo.png';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import { getProjects } from '../../data/pt/projects';
 
 interface Props {
   title: string;
   description?: string;
-  currentLang?: 'en' | 'pt'; // NOVO: detectar língua atual
+  currentLang?: 'en' | 'pt';
 }
 
 const { 
   title, 
-  description = "Business Data Analyst specializing in Python automation, ML, and financial data engineering. 200h+ manual work eliminated through AI-powered solutions.",
-  currentLang = 'en' // NOVO: padrão é inglês
+  description = "Analista de Dados de Negócio especializado em automação Python, ML e engenharia de dados financeiros. Mais de 200h de trabalho manual eliminadas com soluções de IA.",
+  currentLang = 'pt'
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalvao.com');
 const base = (import.meta.env.BASE_URL ?? '/').replace(/\/?$/, '/');
-const currentLocale = Astro.currentLocale || 'en';
+const currentLocale = Astro.currentLocale || 'pt';
 const allProjectsData = getProjects(import.meta.env.BASE_URL);
 
 // ── DADOS 100% DINÂMICOS de projects.ts ──────────────────────────────────────
@@ -49,7 +49,7 @@ for (const project of allProjectsData) {
   }
 }
 
-// Counts reais (igual ao tamanho do array dinâmico)
+// Contagens reais (igual ao tamanho do array dinâmico)
 const skillCounts: Record<string, number> = {};
 for (const skill of skillFilters) {
   skillCounts[skill] = megaMenuProjects[skill].length;
@@ -70,7 +70,7 @@ for (const skill of skillFilters) {
   <meta name="title" content={title}>
   <meta name="description" content={description}>
   <meta name="author" content="José Galvão">
-  <meta name="keywords" content="business data analyst, python automation, machine learning engineer, financial modeling, ETL pipelines, power bi consultant, data engineering, AI solutions">
+  <meta name="keywords" content="analista de dados de negócio, automação python, engenheiro machine learning, modelação financeira, pipelines ETL, consultor power bi, engenharia de dados, soluções IA">
   <meta name="theme-color" content="#0EA5E9">
   
   <link rel="canonical" href={canonicalURL}>
@@ -80,18 +80,18 @@ for (const skill of skillFilters) {
   
   <meta property="og:type" content="website">
   <meta property="og:url" content={canonicalURL}>
-  <meta property="og:title" content="José Galvão | Business Data Analyst & Automation Specialist">
-  <meta property="og:description" content="Eliminating 200h+ of manual work through Python automation, ML models, and financial data engineering.">
+  <meta property="og:title" content="José Galvão | Analista de Dados de Negócio & Especialista em Automação">
+  <meta property="og:description" content="Eliminando mais de 200h de trabalho manual através de automação Python, modelos ML e engenharia de dados financeiros.">
   <meta property="og:image" content={new URL('/og-image.png', Astro.site || 'https://josegalvao.com')}>
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:site_name" content="José Galvão Portfolio">
-  <meta property="og:locale" content={currentLang === 'pt' ? 'pt_PT' : 'en_US'}>
+  <meta property="og:site_name" content="José Galvão Portfólio">
+  <meta property="og:locale" content="pt_PT">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content={canonicalURL}>
-  <meta name="twitter:title" content="José Galvão | Business Data Analyst">
-  <meta name="twitter:description" content="Python automation & ML specialist. 11 projects, 500k+ data processed, 90% avg accuracy.">
+  <meta name="twitter:title" content="José Galvão | Analista de Dados de Negócio">
+  <meta name="twitter:description" content="Especialista em automação Python e ML. 11 projetos, mais de 500k dados processados, 90% de precisão média.">
   <meta name="twitter:image" content={new URL('/og-image.png', Astro.site || 'https://josegalvao.com')}>
   
   <script type="application/ld+json">
@@ -99,13 +99,13 @@ for (const skill of skillFilters) {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "José Galvão",
-    "jobTitle": "Business Data Analyst",
-    "description": "Python automation specialist and ML engineer with expertise in financial data engineering",
+    "jobTitle": "Analista de Dados de Negócio",
+    "description": "Especialista em automação Python e engenheiro ML com experiência em engenharia de dados financeiros",
     "url": "https://josegalvao.com",
     "sameAs": ["https://linkedin.com/in/jose-galvão","https://github.com/jose-galvao13"],
     "address": { "@type": "PostalAddress", "addressLocality": "Coimbra", "addressCountry": "PT" },
     "alumniOf": { "@type": "EducationalOrganization", "name": "Coimbra Business School (ISCAC)" },
-    "knowsAbout": ["Python Programming","Machine Learning","Data Engineering","Financial Modeling","Business Intelligence","ETL Pipelines","Power BI","SQL"]
+    "knowsAbout": ["Programação Python","Machine Learning","Engenharia de Dados","Modelação Financeira","Business Intelligence","Pipelines ETL","Power BI","SQL"]
   }
   </script>
 
@@ -143,16 +143,16 @@ for (const skill of skillFilters) {
 </head>
 <body>
 
-  <nav id="main-nav" role="navigation" aria-label="Main navigation">
+  <nav id="main-nav" role="navigation" aria-label="Navegação principal">
     <div class="nav-container">
       <div class="nav-content">
         
         <!-- LOGO -->
-        <a href="#about" class="nav-logo" aria-label="José Galvão - Home">
+        <a href="#about" class="nav-logo" aria-label="José Galvão - Início">
           <div class="logo-hexagon-wrapper">
             <Image 
               src={logoImg} 
-              alt="JG Logo"
+              alt="Logótipo JG"
               class="logo-image"
               width={80}
               height={80}
@@ -164,25 +164,25 @@ for (const skill of skillFilters) {
           </div>
         </a>
         
-        <!-- Desktop Menu -->
+        <!-- Menu Desktop -->
         <div class="nav-menu" id="nav-menu">
           <ul class="nav-links" role="list">
 
-            <!-- PROJECTS with Mega Menu -->
+            <!-- PROJETOS com Mega Menu -->
             <li class="nav-item-mega" id="nav-projects-item">
-              <a href="#portfolio" class="nav-link-mega" id="nav-projects-trigger" aria-haspopup="true" aria-expanded="false" data-i18n="nav.projects">Projects
+              <a href="#portfolio" class="nav-link-mega" id="nav-projects-trigger" aria-haspopup="true" aria-expanded="false" data-i18n="nav.projects">Projetos
                 <svg class="mega-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </a>
 
-              <!-- MEGA MENU PANEL -->
-              <div class="mega-menu" id="mega-menu-panel" role="region" aria-label="Projects by skill">
+              <!-- PAINEL DO MEGA MENU -->
+              <div class="mega-menu" id="mega-menu-panel" role="region" aria-label="Projetos por competência">
                 <div class="mega-menu-inner">
 
-                  <!-- LEFT: Skill filters -->
+                  <!-- ESQUERDA: Filtros de competência -->
                   <div class="mega-left">
-                    <p class="mega-section-label" data-i18n="nav.filterSkill">Filter by Skill</p>
+                    <p class="mega-section-label" data-i18n="nav.filterSkill">Filtrar por Competência</p>
                     <ul class="mega-skill-list" role="list">
                       {skillFilters.map((skill, idx) => (
                         <li>
@@ -199,7 +199,7 @@ for (const skill of skillFilters) {
                         </li>
                       ))}
                     </ul>
-                    <a href="#portfolio" class="mega-view-all" data-i18n="nav.viewAll">View all projects
+                    <a href="#portfolio" class="mega-view-all" data-i18n="nav.viewAll">Ver todos os projetos
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                         <polyline points="12 5 19 12 12 19"></polyline>
@@ -207,12 +207,12 @@ for (const skill of skillFilters) {
                     </a>
                   </div>
 
-                  <!-- DIVIDER -->
+                  <!-- DIVISOR -->
                   <div class="mega-divider" aria-hidden="true"></div>
 
-                  <!-- RIGHT: Project list per skill (scrollable) -->
+                  <!-- DIREITA: Lista de projetos por competência (com scroll) -->
                   <div class="mega-right">
-                    <p class="mega-section-label mega-right-label" id="mega-right-label">Python Projects</p>
+                    <p class="mega-section-label mega-right-label" id="mega-right-label">Projetos Python</p>
                     <div class="mega-project-scroll" id="mega-project-scroll">
                       <ul class="mega-project-list" id="mega-project-list" role="list">
                         {skillFilters.map((skill) => (
@@ -242,21 +242,21 @@ for (const skill of skillFilters) {
                         ))}
                       </ul>
                     </div>
-                    <!-- Fade indicator when more items below -->
+                    <!-- Indicador de fade quando há mais itens abaixo -->
                     <div class="mega-scroll-fade" id="mega-scroll-fade" aria-hidden="true"></div>
                   </div>
 
                 </div>
               </div>
-              <!-- End Mega Menu Panel -->
+              <!-- Fim do Painel do Mega Menu -->
             </li>
 
-            <li><a href="#timeline" data-i18n="nav.experience">Experience</a></li>
-            <li><a href="#skills" data-i18n="nav.skills">Skills</a></li>
-            <li><a href="#recommendations" data-i18n="nav.recommendations">Recommendations</a></li>
-            <li><a href="#efficiency" data-i18n="nav.roi">ROI Impact</a></li>
+            <li><a href="#timeline" data-i18n="nav.experience">Experiência</a></li>
+            <li><a href="#skills" data-i18n="nav.skills">Competências</a></li>
+            <li><a href="#recommendations" data-i18n="nav.recommendations">Recomendações</a></li>
+            <li><a href="#efficiency" data-i18n="nav.roi">Impacto ROI</a></li>
             
-            <!-- Language Switcher - VERSÃO COM REDIRECIONAMENTO -->
+            <!-- Seletor de Idioma - COM REDIRECIONAMENTO -->
             <div class="lang-switcher" id="langSwitcher" role="group" aria-label="Language selector">
   <button
     class={`lang-btn lang-btn--en${currentLang === 'en' ? ' active' : ''}`}
@@ -289,11 +289,11 @@ for (const skill of skillFilters) {
 
         <!-- CTA -->
         <div class="nav-actions">
-          <a href="#contact" class="nav-cta-glow" data-i18n="nav.contact">Let's Talk</a>
+          <a href="#contact" class="nav-cta-glow" data-i18n="nav.contact">Falar Comigo</a>
           <button 
             class="mobile-menu-btn" 
             id="mobile-menu-btn"
-            aria-label="Toggle mobile menu"
+            aria-label="Abrir/fechar menu móvel"
             aria-expanded="false"
             aria-controls="nav-menu"
           >
@@ -353,15 +353,6 @@ for (const skill of skillFilters) {
       background: rgba(14, 165, 233, 0.12);
     }
 
-    .lang-flag-img {
-  width: 20px;
-  height: 14px;
-  border-radius: 2px;
-  object-fit: cover;
-  display: inline-block;
-  vertical-align: middle;
-}
-
 
     .lang-divider {
       color: rgba(255,255,255,0.15);
@@ -371,15 +362,24 @@ for (const skill of skillFilters) {
       padding: 0 1px;
     }
 
+    .lang-flag-img {
+  width: 20px;
+  height: 14px;
+  border-radius: 2px;
+  object-fit: cover;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Remove a regra antiga .lang-flag se existir */
 @media (max-width: 380px) {
   .lang-flag-img { display: none; }
 }
-
   </style>
 
   <script define:vars={{ currentLang }}>
     // ============================================
-    // LANGUAGE SWITCHER - COM REDIRECIONAMENTO
+    // SELETOR DE IDIOMA - COM REDIRECIONAMENTO
     // ============================================
     function initLanguageSwitcher() {
       const langButtons = document.querySelectorAll('.lang-btn');
@@ -390,7 +390,7 @@ for (const skill of skillFilters) {
           const targetLang = btn.dataset.lang;
           
           if (targetUrl && targetLang) {
-            // Salvar preferência
+            // Guardar preferência
             localStorage.setItem('preferredLanguage', targetLang);
             document.cookie = `preferredLanguage=${targetLang}; path=/; max-age=31536000`;
             
@@ -401,11 +401,11 @@ for (const skill of skillFilters) {
       });
     }
 
-    // Initialize on page load
+    // Inicializar ao carregar a página
     initLanguageSwitcher();
 
     // ============================================
-    // NAVBAR SCROLL EFFECT
+    // EFEITO DE SCROLL NA NAVBAR
     // ============================================
     const nav = document.getElementById('main-nav');
     let ticking = false;
@@ -421,7 +421,7 @@ for (const skill of skillFilters) {
     }, { passive: true });
 
     // ============================================
-    // MOBILE MENU TOGGLE
+    // TOGGLE DO MENU MÓVEL
     // ============================================
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('nav-menu');
@@ -439,7 +439,7 @@ for (const skill of skillFilters) {
     });
 
     // ============================================
-    // MEGA MENU — hover / focus logic
+    // MEGA MENU — lógica de hover / foco
     // ============================================
     const megaItem    = document.getElementById('nav-projects-item');
     const megaPanel   = document.getElementById('mega-menu-panel');
@@ -450,7 +450,7 @@ for (const skill of skillFilters) {
 
     if (megaItem && megaPanel && megaTrigger) {
 
-      // Open / close on hover (desktop)
+      // Abrir / fechar ao passar o rato (desktop)
       let closeTimer;
 
       const openMega = () => {
@@ -475,14 +475,14 @@ for (const skill of skillFilters) {
         if (!megaItem.contains(e.relatedTarget)) closeMega();
       });
 
-      // Also toggle on click (touch / keyboard)
+      // Alternar ao clicar (toque / teclado)
       megaTrigger.addEventListener('click', (e) => {
         e.preventDefault();
         const isOpen = megaPanel.classList.contains('open');
         isOpen ? closeMega() : openMega();
       });
 
-      // Close when clicking outside
+      // Fechar ao clicar fora
       document.addEventListener('click', (e) => {
         if (!megaItem.contains(e.target)) {
           megaPanel.classList.remove('open');
@@ -490,7 +490,7 @@ for (const skill of skillFilters) {
         }
       });
 
-      // Close on ESC
+      // Fechar com ESC
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           megaPanel.classList.remove('open');
@@ -499,7 +499,7 @@ for (const skill of skillFilters) {
         }
       });
 
-      // ---- Skill filter switching ----
+      // ---- Alternância de filtros de competência ----
       const scrollContainer = document.getElementById('mega-project-scroll');
       const scrollFade      = document.getElementById('mega-scroll-fade');
 
@@ -512,22 +512,22 @@ for (const skill of skillFilters) {
       scrollContainer?.addEventListener('scroll', updateFade, { passive: true });
 
       function switchSkill(skill) {
-        // Update buttons
+        // Atualizar botões
         skillBtns.forEach(b => {
           const active = b.dataset.skill === skill;
           b.classList.toggle('active', active);
           b.setAttribute('aria-pressed', String(active));
         });
 
-        // Update right panel label
-        if (rightLabel) rightLabel.textContent = skill + ' Projects';
+        // Atualizar label do painel direito
+        if (rightLabel) rightLabel.textContent = 'Projetos ' + skill;
 
-        // Remove all items immediately (no animation out)
+        // Remover todos os itens imediatamente (sem animação de saída)
         projectItems.forEach(item => {
           item.classList.remove('visible', 'animating');
         });
 
-        // Staggered fade+slide in for incoming items
+        // Entrada com fade+slide escalonado para os novos itens
         const incoming = Array.from(projectItems).filter(
           item => item.dataset.skill === skill
         );
@@ -541,14 +541,14 @@ for (const skill of skillFilters) {
           });
         });
 
-        // Reset scroll to top and re-check fade
+        // Repor scroll ao topo e verificar fade
         if (scrollContainer) {
           scrollContainer.scrollTop = 0;
           requestAnimationFrame(updateFade);
         }
       }
 
-      // Initial fade check after panel opens
+      // Verificação inicial de fade ao abrir o painel
       megaItem.addEventListener('mouseenter', () => requestAnimationFrame(updateFade));
 
       skillBtns.forEach(btn => {
@@ -557,7 +557,7 @@ for (const skill of skillFilters) {
         btn.addEventListener('click',      () => switchSkill(btn.dataset.skill));
       });
 
-      // Mega menu project links — close panel on click
+      // Links de projetos no mega menu — fechar painel ao clicar
       megaPanel.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
           megaPanel.classList.remove('open');
@@ -567,7 +567,7 @@ for (const skill of skillFilters) {
     }
 
     // ============================================
-    // SMOOTH SCROLL
+    // SCROLL SUAVE
     // ============================================
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
@@ -585,7 +585,7 @@ for (const skill of skillFilters) {
     });
 
     // ============================================
-    // PREFETCH ON HOVER (desktop)
+    // PRÉ-CARREGAMENTO AO PASSAR O RATO (desktop)
     // ============================================
     if (window.matchMedia('(hover: hover)').matches) {
       document.querySelectorAll('a[href^="http"]').forEach(link => {
