@@ -33,19 +33,19 @@ const otherProjects    = allProjects.filter(p => !p.featured);
         <img src={profileImage.src} alt="José Galvão" class="profile-pic hero-reveal">
       </div>
       <h1 class="reveal">José Galvão</h1>
-      <h3 class="reveal" data-i18n="hero.role">Analista de Dados de Empresas</h3>
-      <div class="hero-description reveal" data-i18n="hero.description">
+      <h3 class="reveal">Analista de Dados de Empresas</h3>
+      <div class="hero-description reveal">
         Estudante de Gestão de Empresas no ISCAC &amp; programador autodidata.<br>
         Transformo processos manuais e repetitivos em sistemas automatizados —
         desde pipelines ETL até modelos ML que impulsionam decisões de negócio reais.
       </div>
 
       <div class="skill-pills">
-        <span class="skill-pill" data-tooltip="Proficiência avançada" data-i18n="skills.tooltip.python" data-i18n-attr="data-tooltip">Python</span>
-        <span class="skill-pill" data-tooltip="Otimização de queries" data-i18n="skills.tooltip.sql" data-i18n-attr="data-tooltip">SQL</span>
-        <span class="skill-pill" data-tooltip="DAX e visualização" data-i18n="skills.tooltip.powerbi" data-i18n-attr="data-tooltip">Power BI</span>
-        <span class="skill-pill" data-tooltip="Scikit-learn e TensorFlow" data-i18n="skills.tooltip.ml" data-i18n-attr="data-tooltip">Machine Learning</span>
-        <span class="skill-pill" data-tooltip="DCF e previsão" data-i18n="skills.tooltip.finance" data-i18n-attr="data-tooltip">Modelação Financeira</span>
+        <span class="skill-pill" data-tooltip="Proficiência avançada">Python</span>
+        <span class="skill-pill" data-tooltip="Otimização de queries">SQL</span>
+        <span class="skill-pill" data-tooltip="DAX e visualização">Power BI</span>
+        <span class="skill-pill" data-tooltip="Scikit-learn e TensorFlow">Machine Learning</span>
+        <span class="skill-pill" data-tooltip="DCF e previsão">Modelação Financeira</span>
       </div>
 
       <div class="hero-buttons">
@@ -53,20 +53,20 @@ const otherProjects    = allProjects.filter(p => !p.featured);
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
           </svg>
-          <span data-i18n="hero.btn.linkedin">LinkedIn</span>
+          <span>LinkedIn</span>
         </a>
         <a href="https://github.com/jose-galvao13" target="_blank" rel="noopener noreferrer" class="custom-btn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
           </svg>
-          <span data-i18n="hero.btn.github">GitHub</span>
+          <span>GitHub</span>
         </a>
         <a href={`${import.meta.env.BASE_URL}/Jose_Galvao_CV_PT.pdf`} download class="custom-btn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
             <polyline points="13 2 13 9 20 9"></polyline>
           </svg>
-          <span data-i18n="hero.btn.resume">Currículo</span>
+          <span>Currículo</span>
         </a>
       </div>
     </div>
@@ -77,7 +77,7 @@ const otherProjects    = allProjects.filter(p => !p.featured);
   <!-- SECÇÃO DE ESTATÍSTICAS COM CONTADORES ANIMADOS -->
   <section class="stats-section">
     <div class="container">
-      <h3><span data-i18n="stats.heading">Em</span> <span class="gradient-text" data-i18n="stats.headingAccent">Números</span></h3>
+      <h3>Em <span class="gradient-text">Números</span></h3>
       <div class="stats-grid">
         <div class="stat-card reveal-stagger">
           <div class="stat-icon">
@@ -86,8 +86,8 @@ const otherProjects    = allProjects.filter(p => !p.featured);
             </svg>
           </div>
           <div class="stat-value" data-target={allProjects.length}>0</div>
-          <div class="stat-desc" data-i18n="stats.projects.desc">Projetos de Ponta a Ponta</div>
-          <div class="stat-context" data-i18n="stats.projects.ctx">Cada um com repositório GitHub público e estudo de caso documentado</div>
+          <div class="stat-desc">Projetos de Ponta a Ponta</div>
+          <div class="stat-context">Cada um com repositório GitHub público e estudo de caso documentado</div>
         </div>
         <div class="stat-card reveal-stagger">
           <div class="stat-icon">
@@ -98,8 +98,8 @@ const otherProjects    = allProjects.filter(p => !p.featured);
             </svg>
           </div>
           <div class="stat-value" data-target="5" data-suffix="00k+">0</div>
-          <div class="stat-desc" data-i18n="stats.data.desc">Dados Processados</div>
-          <div class="stat-context" data-i18n="stats.data.ctx">Armazém: 1,2M transações · E-Commerce: 100k · Imobiliário: 95k</div>
+          <div class="stat-desc">Dados Processados</div>
+          <div class="stat-context">Armazém: 1,2M transações · E-Commerce: 100k · Imobiliário: 95k</div>
         </div>
         <div class="stat-card reveal-stagger">
           <div class="stat-icon">
@@ -109,8 +109,8 @@ const otherProjects    = allProjects.filter(p => !p.featured);
             </svg>
           </div>
           <div class="stat-value" data-target="88" data-suffix="%">0</div>
-          <div class="stat-desc" data-i18n="stats.accuracy.desc">Precisão Média dos Modelos</div>
-          <div class="stat-context" data-i18n="stats.accuracy.ctx">Em 4 projetos ML (AUC/MAPE)</div>
+          <div class="stat-desc">Precisão Média dos Modelos</div>
+          <div class="stat-context">Em 4 projetos ML (AUC/MAPE)</div>
         </div>
         <div class="stat-card reveal-stagger">
           <div class="stat-icon">
@@ -120,8 +120,81 @@ const otherProjects    = allProjects.filter(p => !p.featured);
             </svg>
           </div>
           <div class="stat-value" data-target="2" data-suffix="d→5s">0</div>
-          <div class="stat-desc" data-i18n="stats.automation.desc">Automação Mais Rápida</div>
-          <div class="stat-context" data-i18n="stats.automation.ctx">Relatório financeiro: fecho mensal de 2 dias para menos de 5 segundos</div>
+          <div class="stat-desc">Automação Mais Rápida</div>
+          <div class="stat-context">Relatório financeiro: fecho mensal de 2 dias para menos de 5 segundos</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+      SECÇÃO METODOLOGIA
+  ════════════════════════════════════════════════════════════════════════ -->
+  <section id="methodology" class="methodology-section">
+    <div class="container">
+      <h2 class="gradient-text reveal" style="text-align:center; margin-bottom:12px;">A Minha Metodologia</h2>
+      <p class="methodology-subtitle reveal">Não escrevo apenas código — resolvo problemas de negócio. É assim que abordo cada projeto.</p>
+      <div class="methodology-steps">
+        <div class="method-step reveal-stagger">
+          <div class="method-step-number">01</div>
+          <div class="method-step-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+          </div>
+          <h3 class="method-step-title">Descoberta</h3>
+          <p class="method-step-desc">Identificar o verdadeiro estrangulamento — horas manuais, relatórios imprecisos, sinais em falta. Mapeio o fluxo atual e quantifico o custo da inação antes de escrever uma única linha de código.</p>
+          <div class="method-step-tag">Entrevistas · Mapeamento de processos · Auditoria de KPIs</div>
+        </div>
+
+        <div class="method-connector" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+
+        <div class="method-step reveal-stagger">
+          <div class="method-step-number">02</div>
+          <div class="method-step-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
+            </svg>
+          </div>
+          <h3 class="method-step-title">ETL &amp; Limpeza</h3>
+          <p class="method-step-desc">Os dados do mundo real são caóticos. Construo pipelines robustos que tratam duplicados, nulos, problemas de codificação e deriva de esquema — para que a análise assente sempre em dados limpos e fiáveis.</p>
+          <div class="method-step-tag">Python · Pandas · SQL · Star Schema</div>
+        </div>
+
+        <div class="method-connector" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+
+        <div class="method-step reveal-stagger">
+          <div class="method-step-number">03</div>
+          <div class="method-step-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+            </svg>
+          </div>
+          <h3 class="method-step-title">Modelação &amp; Automação</h3>
+          <p class="method-step-desc">Escolho a ferramenta certa para o trabalho — modelo ML, pipeline ETL ou dashboard Power BI. O objetivo é sempre o mesmo: entregar um sistema que se gere a si próprio e melhora ao longo do tempo.</p>
+          <div class="method-step-tag">Scikit-Learn · LangChain · Power BI · Streamlit</div>
+        </div>
+
+        <div class="method-connector" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+
+        <div class="method-step reveal-stagger">
+          <div class="method-step-number">04</div>
+          <div class="method-step-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h3 class="method-step-title">Validação &amp; ROI</h3>
+          <p class="method-step-desc">Cada resultado é validado contra a realidade e testado retrospetivamente sempre que possível. Documento o impacto mensurável no negócio — tempo poupado, precisão melhorada, receita em risco identificada.</p>
+          <div class="method-step-tag">AUC · MAPE · Backtesting · Business case</div>
         </div>
       </div>
     </div>
@@ -132,13 +205,13 @@ const otherProjects    = allProjects.filter(p => !p.featured);
   <!-- SECÇÃO DE PROJETOS EM DESTAQUE -->
   <section id="portfolio" class="projects-section">
     <div class="container">
-      <h2 class="gradient-text reveal" data-i18n="projects.featured">⭐ Projetos em Destaque</h2>
+      <h2 class="gradient-text reveal">⭐ Projetos em Destaque</h2>
 
       <div class="filter-container">
-        <span class="filter-label" data-i18n="projects.filterLabel">🔍 FILTRAR POR COMPETÊNCIAS</span>
+        <span class="filter-label">🔍 FILTRAR POR COMPETÊNCIAS</span>
         <div class="custom-select-wrapper">
           <select class="filter-select" id="skillFilter" aria-label="Filtrar projetos por competência">
-            <option value="all" data-i18n="projects.filterAll">Todos os Projetos</option>
+            <option value="all">Todos os Projetos</option>
             <option value="Python">Python</option>
             <option value="SQL">SQL</option>
             <option value="Power BI">Power BI</option>
@@ -175,7 +248,7 @@ const otherProjects    = allProjects.filter(p => !p.featured);
   <section class="other-projects-section">
     <div class="container">
       <button class="expand-projects-btn" id="expandBtn" aria-expanded="false" aria-controls="otherProjectsContainer">
-        <span class="btn-text" data-i18n="projects.showMore">Mostrar Mais Projetos</span>
+        <span class="btn-text">Mostrar Mais Projetos</span>
         <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
@@ -208,7 +281,7 @@ const otherProjects    = allProjects.filter(p => !p.featured);
           style="margin-top: 40px;"
           aria-controls="otherProjectsContainer"
         >
-          <span class="btn-text" data-i18n="projects.showLess">Mostrar Menos Projetos</span>
+          <span class="btn-text">Mostrar Menos Projetos</span>
           <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="transform: rotate(180deg);">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
@@ -323,18 +396,25 @@ const otherProjects    = allProjects.filter(p => !p.featured);
               </div>
               <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 75%;"></div></div>
             </div>
-            <div class="compact-skill-item" data-tooltip="Automação web e testes">
+            <div class="compact-skill-item" data-tooltip="React, Node.js básico">
               <div class="skill-top">
                 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="Logo JavaScript">
                 <span class="skill-name">JavaScript</span>
               </div>
-              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 65%;"></div></div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 55%;"></div></div>
+            </div>
+            <div class="compact-skill-item" data-tooltip="Design responsivo">
+              <div class="skill-top">
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg" alt="Logo HTML5">
+                <span class="skill-name">HTML &amp; CSS</span>
+              </div>
+              <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div>
             </div>
           </div>
         </div>
 
         <div class="skill-group-card">
-          <h3 class="skill-group-title"><span class="icon">📊</span> Dados &amp; BI</h3>
+          <h3 class="skill-group-title"><span class="icon">📊</span> Motor de Dados &amp; BI</h3>
           <div class="skill-items-container">
             <div class="compact-skill-item" data-tooltip="DAX avançado e modelação de dados">
               <div class="skill-top">
@@ -494,6 +574,48 @@ const otherProjects    = allProjects.filter(p => !p.featured);
 
   <div class="divider"></div>
 
+  <!-- SECÇÃO GITHUB LIVE -->
+  <section id="github-activity" class="github-section">
+    <div class="container">
+      <h2 class="gradient-text reveal" style="text-align:center; margin-bottom:12px;">Em Direto no GitHub</h2>
+      <p class="github-subtitle reveal">Atividade real. Repositórios públicos. Cada projeto é open-source e verificável.</p>
+
+      <div class="github-stats-grid reveal" id="githubStatsGrid">
+        <div class="github-card github-card--stats">
+          <div class="github-stat-fallback" id="ghStats">
+            <div class="gh-loading">A carregar...</div>
+          </div>
+        </div>
+        <div class="github-card github-card--langs">
+          <div class="github-stat-fallback" id="ghLangs">
+            <div class="gh-loading">A carregar...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="github-streak reveal">
+        <img
+          src="https://streak-stats.demolab.com/?user=jose-galvao13&theme=transparent&hide_border=true&ring=0EA5E9&fire=0D9488&currStreakLabel=0EA5E9&sideLabels=9da5b0&dates=9da5b0"
+          alt="Streak de contribuições GitHub"
+          loading="lazy"
+          width="495"
+          height="195"
+        />
+      </div>
+
+      <div class="github-cta reveal">
+        <a href="https://github.com/jose-galvao13" target="_blank" rel="noopener noreferrer" class="custom-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          Ver todos os repositórios no GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
   <!-- SECÇÃO DE RECOMENDAÇÃO -->
   <section id="recommendations" class="recommendation-section">
     <div class="container">
@@ -601,15 +723,95 @@ const otherProjects    = allProjects.filter(p => !p.featured);
               </svg>
               Vamos automatizar os seus fluxos de trabalho
             </a>
+            <!-- EXPORTAR ROI COMO IMAGEM -->
+            <button
+              id="exportRoiBtn"
+              class="calc-export-btn"
+              type="button"
+              aria-label="Exportar resultado ROI como imagem PNG"
+              title="Exportar resultado como imagem"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Exportar
+            </button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Elemento oculto para gerar a imagem de exportação -->
+  <div id="roiExportCanvas" aria-hidden="true" style="position:fixed;left:-9999px;top:-9999px;pointer-events:none;"></div>
+
   <br>
   <div class="divider"></div>
   <br>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+      SECÇÃO INSIGHTS / KNOWLEDGE STACK
+  ════════════════════════════════════════════════════════════════════════ -->
+  <section id="insights" class="insights-section">
+    <div class="container">
+      <h2 class="gradient-text reveal" style="text-align:center; margin-bottom:12px;">Stack de Conhecimento</h2>
+      <p class="insights-subtitle reveal">Lições aprendidas em projetos reais — não em tutoriais.</p>
+
+      <div class="insights-grid">
+
+        <article class="insight-card reveal-stagger">
+          <div class="insight-tag">Machine Learning</div>
+          <h3 class="insight-title">Porque uso Random Forest por defeito em scoring de risco de crédito</h3>
+          <p class="insight-body">
+            A regressão logística é interpretável mas falha em interações não-lineares — que estão em todo o lado nos dados financeiros. O Random Forest lida bem com features correlacionadas, fornece importâncias de features de forma gratuita e raramente sofre overfitting com afinação básica de hiperparâmetros. O projeto Banker AI validou isto: 85% de precisão vs 71% para uma baseline logística afinada.
+          </p>
+          <div class="insight-footer">
+            <span class="insight-tech">Scikit-Learn</span>
+            <span class="insight-tech">Banker AI</span>
+          </div>
+        </article>
+
+        <article class="insight-card reveal-stagger">
+          <div class="insight-tag">Engenharia de Dados</div>
+          <h3 class="insight-title">O erro mais comum que vejo em projetos de automação Excel</h3>
+          <p class="insight-body">
+            Toda a gente automatiza o cálculo. Ninguém automatiza a <em>validação</em>. O projeto de Relatórios Financeiros ensinou-me que 70% dos erros vêm de incompatibilidades silenciosas de tipos de dados entre ficheiros de origem. Construo agora sempre uma camada de validação que interrompe a execução e identifica a linha e coluna exata que falhou — antes de escrever uma única célula de output.
+          </p>
+          <div class="insight-footer">
+            <span class="insight-tech">Python</span>
+            <span class="insight-tech">Contabilidade SNC</span>
+          </div>
+        </article>
+
+        <article class="insight-card reveal-stagger">
+          <div class="insight-tag">IA &amp; RAG</div>
+          <h3 class="insight-title">O tamanho do chunk é o hiperparâmetro RAG mais subestimado</h3>
+          <p class="insight-body">
+            Ao construir o ChatCFO, descobri que chunks de 512 tokens com 15% de sobreposição superaram chunks de 1024 tokens em PDFs financeiros. Chunks maiores diluem o contexto numérico denso que os embeddings precisam para manter precisão. O ponto ótimo depende da estrutura do documento — dados tabulares precisam de chunks mais pequenos do que prosa narrativa.
+          </p>
+          <div class="insight-footer">
+            <span class="insight-tech">LangChain</span>
+            <span class="insight-tech">ChatCFO</span>
+          </div>
+        </article>
+
+        <article class="insight-card reveal-stagger">
+          <div class="insight-tag">Business Intelligence</div>
+          <h3 class="insight-title">Porque a segmentação RFM supera a receita bruta como sinal de retenção</h3>
+          <p class="insight-body">
+            No projeto de E-Commerce, um cliente a gerar €5k/ano em receita parecia saudável — até o RFM revelar que não comprava há 9 meses. A receita bruta é um indicador tardio. A recência é um indicador antecipado. Esse único insight permitiu identificar €96k de receita em risco que seria invisível num relatório de vendas standard.
+          </p>
+          <div class="insight-footer">
+            <span class="insight-tech">Power BI</span>
+            <span class="insight-tech">E-Commerce Analytics</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
 
   <!-- SECÇÃO DE CONTACTO -->
   <section id="contact" class="contact-section reveal">
@@ -755,7 +957,7 @@ const statsSection = document.querySelector('.stats-section');
 if (statsSection) statsObserver.observe(statsSection);
 
 // ============================================================
-// FILTRO
+// FILTRO DE COMPETÊNCIAS
 // ============================================================
 function updateProjects() {
   if (!filterSelect || !featuredGrid || !otherGrid) return;
@@ -867,6 +1069,7 @@ addGlowEffect('.glass-project-card');
 addGlowEffect('.skill-group-card');
 addGlowEffect('.soft-skill-card');
 addGlowEffect('.lang-card');
+addGlowEffect('.insight-card');
 
 // ============================================================
 // PARALLAX NA FOTO DE PERFIL
@@ -975,6 +1178,142 @@ currencySelector?.addEventListener('change', () => {
 calculateEfficiency();
 
 // ============================================================
+// EXPORTAR ROI COMO IMAGEM (canvas, sem bibliotecas externas)
+// ============================================================
+document.getElementById('exportRoiBtn')?.addEventListener('click', () => {
+  const cfg = getCurrencyConfig();
+  const savings   = document.getElementById('savingsValue')?.textContent || '';
+  const hours     = document.getElementById('hoursValue')?.textContent   || '';
+  const fte       = document.getElementById('fteValue')?.textContent     || '';
+  const monthly   = document.getElementById('monthlyValue')?.textContent || '';
+  const daily     = document.getElementById('dailyValue')?.textContent   || '';
+  const processes = (processesInput as HTMLInputElement)?.value || '';
+  const hoursVal  = (hoursInput    as HTMLInputElement)?.value || '';
+  const rate      = (rateInput     as HTMLInputElement)?.value || '';
+
+  const W = 900, H = 500;
+  const canvas = document.createElement('canvas');
+  canvas.width  = W * 2;
+  canvas.height = H * 2;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d')!;
+  ctx.scale(2, 2);
+
+  // Fundo
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#0a0c10');
+  grad.addColorStop(1, '#0f1318');
+  ctx.fillStyle = grad;
+  ctx.roundRect(0, 0, W, H, 20);
+  ctx.fill();
+
+  // Borda brilhante
+  ctx.strokeStyle = 'rgba(14,165,233,0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.roundRect(1, 1, W - 2, H - 2, 19);
+  ctx.stroke();
+
+  // Linha de topo
+  const lineGrad = ctx.createLinearGradient(80, 0, W - 80, 0);
+  lineGrad.addColorStop(0, 'transparent');
+  lineGrad.addColorStop(0.5, '#0EA5E9');
+  lineGrad.addColorStop(1, 'transparent');
+  ctx.strokeStyle = lineGrad;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(80, 1); ctx.lineTo(W - 80, 1);
+  ctx.stroke();
+
+  // Label
+  ctx.fillStyle = 'rgba(14,165,233,0.7)';
+  ctx.font = 'bold 11px Inter, sans-serif';
+  ctx.letterSpacing = '3px';
+  ctx.textAlign = 'center';
+  ctx.fillText('🚀  RECUPERAÇÃO FINANCEIRA ANUAL', W / 2, 50);
+
+  // Número grande
+  ctx.font = 'bold 72px Inter, sans-serif';
+  ctx.letterSpacing = '-2px';
+  const numGrad = ctx.createLinearGradient(W / 2 - 200, 0, W / 2 + 200, 0);
+  numGrad.addColorStop(0, '#ffffff');
+  numGrad.addColorStop(1, '#0EA5E9');
+  ctx.fillStyle = numGrad;
+  ctx.fillText(savings, W / 2, 140);
+
+  // Sub-linha
+  ctx.font = '400 16px Inter, sans-serif';
+  ctx.letterSpacing = '0px';
+  ctx.fillStyle = 'rgba(157,165,176,0.9)';
+  ctx.fillText(`Automatizando ${hours} horas/ano · ${fte} FTE equivalente libertado`, W / 2, 175);
+
+  // Divisor
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(60, 202); ctx.lineTo(W - 60, 202);
+  ctx.stroke();
+
+  // Caixas de métricas
+  const metrics = [
+    { label: 'POUPANÇA MENSAL', value: monthly },
+    { label: 'TEMPO POUPADO/DIA', value: daily },
+    { label: 'GANHO DE EFICIÊNCIA', value: '+85%' },
+  ];
+  const mW = (W - 120) / 3;
+  metrics.forEach((m, i) => {
+    const x = 60 + i * (mW + 0);
+    ctx.fillStyle = 'rgba(14,165,233,0.07)';
+    ctx.roundRect(x, 220, mW - 10, 90, 12);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(14,165,233,0.2)';
+    ctx.lineWidth = 1;
+    ctx.roundRect(x, 220, mW - 10, 90, 12);
+    ctx.stroke();
+
+    ctx.font = 'bold 24px Inter, sans-serif';
+    ctx.fillStyle = '#0EA5E9';
+    ctx.textAlign = 'center';
+    ctx.fillText(m.value, x + (mW - 10) / 2, 258);
+
+    ctx.font = '600 10px Inter, sans-serif';
+    ctx.letterSpacing = '1.5px';
+    ctx.fillStyle = 'rgba(157,165,176,0.7)';
+    ctx.fillText(m.label, x + (mW - 10) / 2, 278);
+  });
+
+  // Inputs utilizados
+  ctx.font = '400 12px Inter, sans-serif';
+  ctx.letterSpacing = '0px';
+  ctx.fillStyle = 'rgba(157,165,176,0.4)';
+  ctx.textAlign = 'center';
+  ctx.fillText(
+    `Baseado em ${processes} processos · ${hoursVal}h/semana · ${cfg.symbol}${rate}/h`,
+    W / 2, 340
+  );
+
+  // Rodapé com marca
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  ctx.fillRect(0, H - 56, W, 56);
+
+  ctx.font = 'bold 14px Inter, sans-serif';
+  ctx.letterSpacing = '0px';
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.textAlign = 'left';
+  ctx.fillText('José Galvão · Analista de Dados de Empresas', 40, H - 24);
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = 'rgba(14,165,233,0.7)';
+  ctx.fillText('josegalvao.com', W - 40, H - 24);
+
+  // Descarregar
+  const a = document.createElement('a');
+  a.download = 'roi-analise-jose-galvao.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+});
+
+// ============================================================
 // LIGHTBOX
 // ============================================================
 const lightbox        = document.getElementById('lightbox');
@@ -1025,4 +1364,68 @@ if (lightbox && lightboxImg && closeLightbox && prevLightbox && nextLightbox && 
     if (e.key === 'ArrowLeft')  prevLightbox.click();
   });
 }
+
+// ============================================================
+// GITHUB STATS VIA API
+// ============================================================
+async function loadGitHubStats() {
+  const username = 'jose-galvao13';
+
+  try {
+    const [userRes, reposRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${username}`),
+      fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`)
+    ]);
+
+    const user = await userRes.json();
+    const repos = await reposRes.json();
+
+    // Languages
+    const langCount = {};
+    repos.forEach(r => {
+      if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1;
+    });
+    const topLangs = Object.entries(langCount)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6);
+
+    // Render Stats Card — Impact Metrics
+    const statsEl = document.getElementById('ghStats');
+    if (statsEl) {
+      statsEl.innerHTML = `
+        <div class="gh-card-inner">
+          <div class="gh-card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#0EA5E9"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            <span style="color:#0EA5E9;font-weight:700">${username} · Métricas de Impacto</span>
+          </div>
+          <div class="gh-stats-row">
+            <div class="gh-stat"><span class="gh-stat-val">1,2M</span><span class="gh-stat-label">Linhas Processadas</span></div>
+            <div class="gh-stat"><span class="gh-stat-val">88%</span><span class="gh-stat-label">Precisão ML Média</span></div>
+            <div class="gh-stat"><span class="gh-stat-val">2d→5s</span><span class="gh-stat-label">Melhor Automação</span></div>
+            <div class="gh-stat"><span class="gh-stat-val">${user.public_repos}</span><span class="gh-stat-label">Repos Open Source</span></div>
+          </div>
+        </div>`;
+    }
+
+    // Render Languages Card
+    const langsEl = document.getElementById('ghLangs');
+    if (langsEl && topLangs.length) {
+      const total = topLangs.reduce((a, b) => a + b[1], 0);
+      const bars = topLangs.map(([lang, count]) => {
+        const pct = ((count / total) * 100).toFixed(1);
+        const colors = {Python:'#3776ab',JavaScript:'#f7df1e',SQL:'#cc2927','C#':'#68217a',HTML:'#e34c26',CSS:'#563d7c',TypeScript:'#2b7489',Java:'#b07219'};
+        const color = colors[lang] || '#0EA5E9';
+        return `<div class="gh-lang-item">
+          <div class="gh-lang-top"><span class="gh-lang-dot" style="background:${color}"></span><span class="gh-lang-name">${lang}</span><span class="gh-lang-pct">${pct}%</span></div>
+          <div class="gh-lang-bar-bg"><div class="gh-lang-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        </div>`;
+      }).join('');
+      langsEl.innerHTML = `<div class="gh-card-inner"><div class="gh-card-title" style="color:#0EA5E9;font-weight:700">Linguagens Mais Usadas</div>${bars}</div>`;
+    }
+  } catch(e) {
+    console.warn('Erro GitHub API:', e);
+  }
+}
+
+loadGitHubStats();
 </script>

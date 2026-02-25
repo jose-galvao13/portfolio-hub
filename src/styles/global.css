@@ -3219,3 +3219,482 @@ footer {
 #main-nav {
   --nav-height-current: 80px;
 }
+
+/* ============================================
+   METHODOLOGY SECTION
+   ============================================ */
+.methodology-section {
+  padding: clamp(60px, 10vw, 100px) 0;
+}
+
+.methodology-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  margin-bottom: clamp(40px, 7vw, 60px);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.methodology-steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.method-step {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  padding: clamp(24px, 4vw, 32px);
+  flex: 1 1 220px;
+  max-width: 260px;
+  position: relative;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.method-step:hover {
+  border-color: rgba(14, 165, 233, 0.4);
+  background: rgba(14, 165, 233, 0.04);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(14, 165, 233, 0.15);
+}
+
+.method-step-number {
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: rgba(14, 165, 233, 0.5);
+  text-transform: uppercase;
+}
+
+.method-step-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(14, 165, 233, 0.08);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-cyan);
+  transition: all 0.3s ease;
+}
+
+.method-step:hover .method-step-icon {
+  background: rgba(14, 165, 233, 0.18);
+  border-color: rgba(14, 165, 233, 0.5);
+  transform: scale(1.05);
+}
+
+.method-step-title {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+
+.method-step-desc {
+  font-size: clamp(0.82rem, 1.5vw, 0.9rem);
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.method-step-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(14, 165, 233, 0.6);
+  background: rgba(14, 165, 233, 0.07);
+  border: 1px solid rgba(14, 165, 233, 0.15);
+  border-radius: 6px;
+  padding: 5px 10px;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
+/* Arrow connectors between steps */
+.method-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(14, 165, 233, 0.35);
+  padding: 0 4px;
+  flex-shrink: 0;
+  align-self: center;
+  margin-top: -20px; /* optical centre with card content */
+}
+
+@media (max-width: 768px) {
+  .methodology-steps {
+    flex-direction: column;
+    align-items: center;
+  }
+  .method-step {
+    max-width: 100%;
+    width: 100%;
+  }
+  .method-connector {
+    transform: rotate(90deg);
+    margin: 0;
+    padding: 4px 0;
+  }
+}
+
+/* ============================================
+   GITHUB LIVE ACTIVITY SECTION
+   ============================================ */
+.github-section {
+  padding: clamp(60px, 10vw, 100px) 0;
+}
+
+.github-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+  margin-bottom: clamp(36px, 6vw, 52px);
+}
+
+.github-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
+  gap: clamp(16px, 3vw, 24px);
+  margin-bottom: clamp(16px, 3vw, 24px);
+}
+
+.github-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 3vw, 24px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.github-card:hover {
+  border-color: rgba(14, 165, 233, 0.3);
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.1);
+}
+
+.github-card img,
+.github-streak img {
+   min-height: 195px; /* Reserva o espaço mesmo se a imagem falhar */
+  width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.github-streak {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: clamp(16px, 3vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: clamp(24px, 4vw, 36px);
+  transition: border-color 0.3s ease;
+}
+
+.github-streak:hover {
+  border-color: rgba(14, 165, 233, 0.3);
+}
+
+.github-cta {
+  display: flex;
+  justify-content: center;
+}
+
+
+/* Se a imagem quebrar, esconde o ícone de 'imagem quebrada' e foca no alt text centralizado */
+.github-card img:before {
+  content: "Loading GitHub Stats...";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 195px;
+  background: rgba(255,255,255,0.02);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+/* ============================================
+   INSIGHTS / KNOWLEDGE STACK SECTION
+   ============================================ */
+.insights-section {
+  padding: clamp(60px, 10vw, 100px) 0;
+}
+
+.insights-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+  margin-bottom: clamp(40px, 7vw, 60px);
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: clamp(20px, 3.5vw, 28px);
+}
+
+.insight-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  padding: clamp(24px, 4vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.insight-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(14, 165, 233, 0.06),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.insight-card:hover::before { opacity: 1; }
+
+.insight-card > * { position: relative; z-index: 1; }
+
+.insight-card:hover {
+  border-color: rgba(14, 165, 233, 0.3);
+  background: rgba(14, 165, 233, 0.03);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(14, 165, 233, 0.12);
+}
+
+.insight-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  background: rgba(14, 165, 233, 0.08);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  align-self: flex-start;
+}
+
+.insight-title {
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.insight-body {
+  font-size: clamp(0.85rem, 1.6vw, 0.93rem);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.insight-body em {
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+.insight-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.insight-tech {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(14, 165, 233, 0.7);
+  background: rgba(14, 165, 233, 0.06);
+  border: 1px solid rgba(14, 165, 233, 0.15);
+  border-radius: 5px;
+  padding: 3px 9px;
+}
+
+/* ============================================
+   ROI EXPORT BUTTON (sits next to calc CTA)
+   ============================================ */
+.calc-cta-row {
+  /* override existing declaration to support flex-wrap and the new button */
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.calc-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 13px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50px;
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: clamp(0.8rem, 1.5vw, 0.875rem);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.calc-export-btn:hover {
+  background: rgba(14, 165, 233, 0.1);
+  border-color: rgba(14, 165, 233, 0.4);
+  color: var(--accent-cyan);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.2);
+}
+
+.calc-export-btn:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .calc-export-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+/* ============================================
+   GITHUB API STATS CARDS
+   ============================================ */
+.github-stat-fallback {
+  width: 100%;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gh-loading {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  opacity: 0.5;
+}
+
+.gh-card-inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 8px 0;
+}
+
+.gh-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #0EA5E9;
+  font-weight: 700;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.gh-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  text-align: center;
+}
+
+.gh-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gh-stat-val {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, #0EA5E9, #0D9488);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gh-stat-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+}
+
+.gh-lang-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.gh-lang-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gh-lang-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gh-lang-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.gh-lang-pct {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0EA5E9;
+}
+
+.gh-lang-bar-bg {
+  background: rgba(255,255,255,0.05);
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.gh-lang-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s ease-out;
+}

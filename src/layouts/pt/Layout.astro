@@ -73,6 +73,11 @@ for (const skill of skillFilters) {
   <meta name="keywords" content="analista de dados de negócio, automação python, engenheiro machine learning, modelação financeira, pipelines ETL, consultor power bi, engenharia de dados, soluções IA">
   <meta name="theme-color" content="#0EA5E9">
   
+<!-- No seu Layout.astro, logo abaixo do <title> -->
+<link rel="alternate" hreflang="en" href={`${Astro.site}en${Astro.url.pathname.replace(/^\/(en|pt)/, '')}`} />
+<link rel="alternate" hreflang="pt" href={`${Astro.site}pt${Astro.url.pathname.replace(/^\/(en|pt)/, '')}`} />
+<link rel="alternate" hreflang="x-default" href={`${Astro.site}en/`} />
+
   <link rel="canonical" href={canonicalURL}>
   <link rel="icon" type="image/png" sizes="32x32" href={logoImg.src}>
   <link rel="apple-touch-icon" sizes="180x180" href={logoImg.src}>
@@ -253,7 +258,6 @@ for (const skill of skillFilters) {
 
             <li><a href="#timeline" data-i18n="nav.experience">Experiência</a></li>
             <li><a href="#skills" data-i18n="nav.skills">Competências</a></li>
-            <li><a href="#recommendations" data-i18n="nav.recommendations">Recomendações</a></li>
             <li><a href="#efficiency" data-i18n="nav.roi">Impacto ROI</a></li>
             
             <!-- Seletor de Idioma - COM REDIRECIONAMENTO -->
@@ -266,7 +270,6 @@ for (const skill of skillFilters) {
     title="Switch to English"
     type="button"
   >
-    <img src="https://flagcdn.com/w20/gb.png" alt="" aria-hidden="true" class="lang-flag-img" width="20" height="14" />
     <span class="lang-label">EN</span>
   </button>
 
@@ -280,7 +283,6 @@ for (const skill of skillFilters) {
     title="Switch to Portuguese"
     type="button"
   >
-    <img src="https://flagcdn.com/w20/pt.png" alt="" aria-hidden="true" class="lang-flag-img" width="20" height="14" />
     <span class="lang-label">PT</span>
   </button>
 </div>

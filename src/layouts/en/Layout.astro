@@ -72,6 +72,11 @@ for (const skill of skillFilters) {
   <meta name="author" content="José Galvão">
   <meta name="keywords" content="business data analyst, python automation, machine learning engineer, financial modeling, ETL pipelines, power bi consultant, data engineering, AI solutions">
   <meta name="theme-color" content="#0EA5E9">
+
+  <!-- No seu Layout.astro, logo abaixo do <title> -->
+<link rel="alternate" hreflang="en" href={`${Astro.site}en${Astro.url.pathname.replace(/^\/(en|pt)/, '')}`} />
+<link rel="alternate" hreflang="pt" href={`${Astro.site}pt${Astro.url.pathname.replace(/^\/(en|pt)/, '')}`} />
+<link rel="alternate" hreflang="x-default" href={`${Astro.site}en/`} />
   
   <link rel="canonical" href={canonicalURL}>
   <link rel="icon" type="image/png" sizes="32x32" href={logoImg.src}>
@@ -257,7 +262,6 @@ for (const skill of skillFilters) {
 
             <li><a href="#timeline" data-i18n="nav.experience">Experience</a></li>
             <li><a href="#skills" data-i18n="nav.skills">Skills</a></li>
-            <li><a href="#recommendations" data-i18n="nav.recommendations">Recommendations</a></li>
             <li><a href="#efficiency" data-i18n="nav.roi">ROI Impact</a></li>
             
             <!-- Language Switcher - VERSÃO COM REDIRECIONAMENTO -->
@@ -270,7 +274,6 @@ for (const skill of skillFilters) {
     title="Switch to English"
     type="button"
   >
-    <img src="https://flagcdn.com/w20/gb.png" alt="" aria-hidden="true" class="lang-flag-img" width="20" height="14" />
     <span class="lang-label">EN</span>
   </button>
 
@@ -284,7 +287,6 @@ for (const skill of skillFilters) {
     title="Switch to Portuguese"
     type="button"
   >
-    <img src="https://flagcdn.com/w20/pt.png" alt="" aria-hidden="true" class="lang-flag-img" width="20" height="14" />
     <span class="lang-label">PT</span>
   </button>
 </div>
