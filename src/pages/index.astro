@@ -1457,11 +1457,6 @@ async function loadGitHubStats() {
     const theRest = sortedLangs.slice(3);
     const restHtml = theRest.length
       ? `<div style="position:relative;margin-top:12px;">
-          <button onclick="const d=this.nextElementSibling,o=d.style.display!=='none';d.style.display=o?'none':'block';this.innerHTML=o?'▼ +${theRest.length} more languages':'▲ hide others';"
-            style="background:none;border:1px solid rgba(14,165,233,0.2);border-radius:6px;color:rgba(14,165,233,0.5);font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;cursor:pointer;width:100%;"
-            onmouseover="this.style.borderColor='rgba(14,165,233,0.5)';this.style.color='rgba(14,165,233,0.8)';"
-            onmouseout="this.style.borderColor='rgba(14,165,233,0.2)';this.style.color='rgba(14,165,233,0.5)';"
-          >▼ +${theRest.length} more languages</button>
           <div style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:50;background:#0f1318;border:1px solid rgba(14,165,233,0.2);border-radius:10px;padding:12px 14px;box-shadow:0 8px 30px rgba(0,0,0,0.5);max-height:200px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(14,165,233,0.3) transparent;">
             <div style="font-size:0.65rem;font-weight:700;letter-spacing:1.5px;color:rgba(157,165,176,0.4);text-transform:uppercase;margin-bottom:10px;">Also used</div>
             ${theRest.map(e => renderBar(e, false)).join('')}
