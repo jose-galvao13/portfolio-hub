@@ -583,12 +583,12 @@
     <div class="github-stats-grid reveal" id="githubStatsGrid">
       <div class="github-card github-card--stats">
         <div class="github-stat-fallback" id="ghStats">
-          <div class="gh-loading">Loading...</div>
+          <div class="gh-loading">Github is Having Trouble Loading The Data...</div>
         </div>
       </div>
       <div class="github-card github-card--langs">
         <div class="github-stat-fallback" id="ghLangs">
-          <div class="gh-loading">Loading...</div>
+          <div class="gh-loading">Github is Having Trouble Loading The Data...</div>
         </div>
       </div>
     </div>
@@ -1378,71 +1378,115 @@ async function loadGitHubStats() {
       fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`)
     ]);
     
+    if (!userRes.ok || !reposRes.ok) return; // esconde silenciosamente
+    
     const user = await userRes.json();
     const repos = await reposRes.json();
-    
-    // Calcula stats
-    const totalStars = repos.reduce((acc, r) => acc + r.stargazers_count, 0);
-    const totalForks = repos.reduce((acc, r) => acc + r.forks_count, 0);
-    
-    // Languages
-    const langCount = {};
-    repos.forEach(r => {
-      if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1;
-    });
-    const topLangs = Object.entries(langCount)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 6);
-    
-// Calcula commits totais (aproximação via repo size + pushed_at recentes)
-const activeRepos = repos.filter(r => !r.fork && r.size > 0).length;
-const totalCommitsApprox = repos.filter(r => !r.fork).reduce((acc, r) => {
-  // Estima commits baseado em datas de update
-  return acc + (r.size > 100 ? 15 : r.size > 10 ? 8 : 3);
-}, 0);
+    if (!Array.isArray(repos) || user.public_repos === undefined) return;
 
-// Data do repo mais antigo (quando começou)
-const oldestRepo = repos.filter(r => !r.fork).sort((a,b) => new Date(a.created_at) - new Date(b.created_at))[0];
-const codingSince = oldestRepo ? new Date(oldestRepo.created_at).getFullYear() : 2023;
-
-// Linguagens únicas
-const uniqueLangs = Object.keys(langCount).length;
-
-// Render Stats Card
-const statsEl = document.getElementById('ghStats');
-if (statsEl) {
-  statsEl.innerHTML = `
-    <div class="gh-card-inner">
-      <div class="gh-card-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#0EA5E9"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-        <span style="color:#0EA5E9;font-weight:700">${username} · Impact Metrics</span>
-      </div>
-      <div class="gh-stats-row">
-        <div class="gh-stat"><span class="gh-stat-val">1.2M</span><span class="gh-stat-label">Rows Processed</span></div>
-        <div class="gh-stat"><span class="gh-stat-val">88%</span><span class="gh-stat-label">Avg ML Accuracy</span></div>
-        <div class="gh-stat"><span class="gh-stat-val">2d→5s</span><span class="gh-stat-label">Best Automation</span></div>
-        <div class="gh-stat"><span class="gh-stat-val">${user.public_repos}</span><span class="gh-stat-label">Open Source Repos</span></div>
-      </div>
-    </div>`;
-}
-    
-    // Render Languages Card
-    const langsEl = document.getElementById('ghLangs');
-    if (langsEl && topLangs.length) {
-      const total = topLangs.reduce((a, b) => a + b[1], 0);
-      const bars = topLangs.map(([lang, count]) => {
-        const pct = ((count / total) * 100).toFixed(1);
-        const colors = {Python:'#3776ab',JavaScript:'#f7df1e',SQL:'#cc2927','C#':'#68217a',HTML:'#e34c26',CSS:'#563d7c',TypeScript:'#2b7489',Java:'#b07219'};
-        const color = colors[lang] || '#0EA5E9';
-        return `<div class="gh-lang-item">
-          <div class="gh-lang-top"><span class="gh-lang-dot" style="background:${color}"></span><span class="gh-lang-name">${lang}</span><span class="gh-lang-pct">${pct}%</span></div>
-          <div class="gh-lang-bar-bg"><div class="gh-lang-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+    // ── Stats Card ──────────────────────────────────────────
+    const statsEl = document.getElementById('ghStats');
+    if (statsEl) {
+      statsEl.innerHTML = `
+        <div class="gh-card-inner">
+          <div class="gh-card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#0EA5E9">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            <span style="color:#0EA5E9;font-weight:700">${username} · Impact Metrics</span>
+          </div>
+          <div class="gh-stats-row">
+            <div class="gh-stat"><span class="gh-stat-val">1.2M</span><span class="gh-stat-label">Rows Processed</span></div>
+            <div class="gh-stat"><span class="gh-stat-val">88%</span><span class="gh-stat-label">Avg ML Accuracy</span></div>
+            <div class="gh-stat"><span class="gh-stat-val">2d→5s</span><span class="gh-stat-label">Best Automation</span></div>
+            <div class="gh-stat"><span class="gh-stat-val">${user.public_repos}</span><span class="gh-stat-label">Open Source Repos</span></div>
+          </div>
         </div>`;
-      }).join('');
-      langsEl.innerHTML = `<div class="gh-card-inner"><div class="gh-card-title" style="color:#0EA5E9;font-weight:700">Most Used Languages</div>${bars}</div>`;
     }
+
+    // ── Languages ───────────────────────────────────────────
+    const nonForkRepos = repos.filter(r => !r.fork && r.size > 0).slice(0, 10);
+    
+    const langResults = await Promise.all(
+      nonForkRepos.map(r =>
+        fetch(r.languages_url)
+          .then(res => res.ok ? res.json() : {})
+          .catch(() => ({}))
+      )
+    );
+
+    const langBytes = {};
+    langResults.forEach(repoLangs => {
+      Object.entries(repoLangs).forEach(([lang, bytes]) => {
+        langBytes[lang] = (langBytes[lang] || 0) + (bytes as number);
+      });
+    });
+
+    const ignoredLangs = ['Makefile', 'Dockerfile', 'Shell', 'Batchfile', 'PowerShell', 'Astro', 'MDX'];
+    const sortedLangs = Object.entries(langBytes)
+      .filter(([lang]) => !ignoredLangs.includes(lang))
+      .sort((a, b) => (b[1] as number) - (a[1] as number));
+
+    if (!sortedLangs.length) return; // sem dados = não mostra
+
+    const totalBytes = sortedLangs.reduce((sum, [, b]) => sum + (b as number), 0);
+    const colors = {
+      Python: '#3776ab', JavaScript: '#f7df1e', TypeScript: '#2b7489',
+      SQL: '#cc2927', 'C#': '#68217a', HTML: '#e34c26', CSS: '#563d7c',
+      Java: '#b07219', 'Jupyter Notebook': '#da5b0b',
+      R: '#198ce7', Go: '#00add8', Rust: '#dea584', SCSS: '#c6538c',
+    };
+
+    const renderBar = ([lang, bytes], isTop = false) => {
+      const pct = ((bytes as number / totalBytes) * 100).toFixed(1);
+      const color = colors[lang] || '#0EA5E9';
+      return `
+        <div class="gh-lang-item" style="${isTop ? 'margin-bottom:14px;' : ''}">
+          <div class="gh-lang-top">
+            <span class="gh-lang-dot" style="background:${color};${isTop ? 'width:10px;height:10px;' : ''}"></span>
+            <span class="gh-lang-name" style="${isTop ? 'font-weight:700;color:#fff;font-size:0.9rem;' : ''}">${lang}</span>
+            <span class="gh-lang-pct" style="${isTop ? 'font-size:0.85rem;' : ''}">${pct}%</span>
+          </div>
+          <div class="gh-lang-bar-bg" style="${isTop ? 'height:6px;' : 'height:3px;'}">
+            <div class="gh-lang-bar-fill" style="width:${pct}%;background:${color}"></div>
+          </div>
+        </div>`;
+    };
+
+    const top3 = sortedLangs.slice(0, 3);
+    const theRest = sortedLangs.slice(3);
+    const restHtml = theRest.length
+      ? `<div style="position:relative;margin-top:12px;">
+          <button onclick="const d=this.nextElementSibling,o=d.style.display!=='none';d.style.display=o?'none':'block';this.innerHTML=o?'▼ +${theRest.length} more languages':'▲ hide others';"
+            style="background:none;border:1px solid rgba(14,165,233,0.2);border-radius:6px;color:rgba(14,165,233,0.5);font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;cursor:pointer;width:100%;"
+            onmouseover="this.style.borderColor='rgba(14,165,233,0.5)';this.style.color='rgba(14,165,233,0.8)';"
+            onmouseout="this.style.borderColor='rgba(14,165,233,0.2)';this.style.color='rgba(14,165,233,0.5)';"
+          >▼ +${theRest.length} more languages</button>
+          <div style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:50;background:#0f1318;border:1px solid rgba(14,165,233,0.2);border-radius:10px;padding:12px 14px;box-shadow:0 8px 30px rgba(0,0,0,0.5);max-height:200px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(14,165,233,0.3) transparent;">
+            <div style="font-size:0.65rem;font-weight:700;letter-spacing:1.5px;color:rgba(157,165,176,0.4);text-transform:uppercase;margin-bottom:10px;">Also used</div>
+            ${theRest.map(e => renderBar(e, false)).join('')}
+          </div>
+        </div>` : '';
+
+    const langsEl = document.getElementById('ghLangs');
+    if (langsEl) {
+      langsEl.innerHTML = `
+        <div class="gh-card-inner">
+          <div class="gh-card-title" style="color:#0EA5E9;font-weight:700;">
+            Most Used Languages
+            <span style="margin-left:auto;font-size:0.65rem;color:rgba(157,165,176,0.4);font-weight:400;">by bytes of code</span>
+          </div>
+          ${top3.map(e => renderBar(e, true)).join('')}
+          ${restHtml}
+        </div>`;
+    }
+
+    // ✅ Só mostra o grid se tudo correu bem
+    const grid = document.getElementById('githubStatsGrid');
+    if (grid) grid.style.display = '';
+
   } catch(e) {
-    console.warn('GitHub API error:', e);
+    // Silencioso — os containers ficam hidden
   }
 }
 

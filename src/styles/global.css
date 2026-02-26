@@ -3698,3 +3698,11 @@ footer {
   border-radius: 2px;
   transition: width 1s ease-out;
 }
+
+#ghFallback svg {
+  animation: spin 3s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
