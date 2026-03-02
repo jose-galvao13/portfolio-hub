@@ -1,0 +1,420 @@
+---
+// src/pages/404.astro
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404 — Page Not Found | José Galvão" hideNav={true}>
+    <div class="not-found-root">
+    <div class="nf-bg" aria-hidden="true">
+      <div class="nf-grid"></div>
+      <div class="nf-orb nf-orb-1"></div>
+      <div class="nf-orb nf-orb-2"></div>
+    </div>
+
+    <div class="nf-container">
+
+      <!-- Badge -->
+      <div class="nf-badge">404 Page Not Found</div>
+
+      <!-- Glitching 404 -->
+      <div class="nf-code" aria-hidden="true">
+        <span class="nf-digit" data-char="4">4</span>
+        <span class="nf-digit nf-digit--glitch" data-char="0">0</span>
+        <span class="nf-digit" data-char="4">4</span>
+      </div>
+
+      
+      <!-- Title & desc -->
+      <h1 class="nf-title">Oops — wrong route</h1>
+      <p class="nf-desc">
+        Looks like this page got lost in the ETL pipeline.<br>
+        Let's get you back on track.
+      </p>
+
+      <!-- Buttons -->
+      <div class="nf-actions">
+        <button class="nf-btn nf-btn--primary" onclick="history.back()" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          Go Back
+        </button>
+      </div>
+
+  </div>
+</Layout>
+
+<style>
+  .not-found-root {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 120px 20px 60px;
+  }
+
+  /* ── Background ── */
+  .nf-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .nf-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(14, 165, 233, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14, 165, 233, 0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  }
+
+  .nf-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.25;
+    animation: nf-float 14s ease-in-out infinite;
+  }
+
+  .nf-orb-1 {
+    width: 420px; height: 420px;
+    top: 5%; left: 15%;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.5), transparent);
+  }
+
+  .nf-orb-2 {
+    width: 320px; height: 320px;
+    bottom: 10%; right: 10%;
+    background: radial-gradient(circle, rgba(13, 148, 136, 0.5), transparent);
+    animation-delay: -7s;
+  }
+
+  @keyframes nf-float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(25px, -25px); }
+  }
+
+  /* ── Container ── */
+  .nf-container {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 660px;
+    width: 100%;
+  }
+
+  /* ── Badge ── */
+  .nf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #0EA5E9;
+    background: rgba(14, 165, 233, 0.1);
+    border: 1px solid rgba(14, 165, 233, 0.25);
+    margin-bottom: 24px;
+    animation: nf-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .nf-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #0EA5E9;
+    box-shadow: 0 0 8px #0EA5E9;
+    animation: nf-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes nf-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ── Giant 404 ── */
+  .nf-code {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 36px;
+    line-height: 1;
+    animation: nf-reveal 0.6s 0.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .nf-digit {
+    font-size: clamp(110px, 23vw, 190px);
+    font-weight: 900;
+    background: linear-gradient(135deg, #0EA5E9 0%, #0D9488 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -10px;
+    display: inline-block;
+    filter: drop-shadow(0 0 40px rgba(14, 165, 233, 0.2));
+  }
+
+  .nf-digit--glitch {
+    position: relative;
+    animation: nf-glitch 5s ease-in-out infinite;
+  }
+
+  .nf-digit--glitch::before,
+  .nf-digit--glitch::after {
+    content: attr(data-char);
+    position: absolute;
+    top: 0; left: 0;
+    background: linear-gradient(135deg, #0EA5E9, #0D9488);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .nf-digit--glitch::before {
+    animation: nf-glitch-top 5s ease-in-out infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  }
+
+  .nf-digit--glitch::after {
+    animation: nf-glitch-bottom 5s ease-in-out infinite;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  }
+
+  @keyframes nf-glitch {
+    0%, 88%, 100% { transform: none; }
+    90% { transform: skewX(-6deg); }
+    92% { transform: skewX(4deg); }
+    94% { transform: none; }
+  }
+
+  @keyframes nf-glitch-top {
+    0%, 88%, 100% { transform: none; opacity: 0; }
+    90% { transform: translate(-5px, -3px); opacity: 0.8; }
+    92% { transform: translate(4px, 1px); opacity: 0.5; }
+    94% { opacity: 0; }
+  }
+
+  @keyframes nf-glitch-bottom {
+    0%, 88%, 100% { transform: none; opacity: 0; }
+    90% { transform: translate(5px, 3px); opacity: 0.8; }
+    92% { transform: translate(-3px, -1px); opacity: 0.5; }
+    94% { opacity: 0; }
+  }
+
+  /* ── Terminal ── */
+  .nf-terminal {
+    background: rgba(6, 8, 12, 0.85);
+    border: 1px solid rgba(14, 165, 233, 0.18);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 36px;
+    text-align: left;
+    backdrop-filter: blur(12px);
+    box-shadow:
+      0 24px 48px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(14, 165, 233, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    animation: nf-reveal 0.6s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .nf-terminal-bar {
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .dot-red    { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green  { background: #28c840; }
+
+  .nf-terminal-title {
+    margin-left: 8px;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.35);
+    font-family: 'Fira Code', 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  .nf-terminal-body {
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nf-line {
+    font-family: 'Fira Code', 'JetBrains Mono', 'Courier New', monospace;
+    font-size: clamp(0.78rem, 1.5vw, 0.875rem);
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nf-prompt  { color: #0EA5E9; font-weight: 700; flex-shrink: 0; }
+  .nf-cmd     { color: rgba(255, 255, 255, 0.82); }
+  .nf-error   { color: #ff6b6b; }
+  .nf-comment { color: rgba(255, 255, 255, 0.25); }
+
+  .nf-cursor {
+    color: #0EA5E9;
+    animation: nf-blink 1.2s step-end infinite;
+  }
+
+  @keyframes nf-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ── Title & desc ── */
+  .nf-title {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 800;
+    color: #f0f0f0;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+    animation: nf-reveal 0.6s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .nf-desc {
+    font-size: clamp(0.92rem, 2vw, 1rem);
+    color: rgba(157, 165, 176, 0.85);
+    line-height: 1.7;
+    margin-bottom: 36px;
+    animation: nf-reveal 0.6s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* ── Buttons ── */
+  .nf-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    animation: nf-reveal 0.6s 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .nf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: none;
+    font-family: inherit;
+    letter-spacing: 0.2px;
+  }
+
+  .nf-btn--primary {
+    background: linear-gradient(90deg, #0EA5E9, #0D9488);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.35);
+  }
+
+  .nf-btn--primary:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 30px rgba(14, 165, 233, 0.5);
+  }
+
+  .nf-btn--secondary {
+    background: rgba(14, 165, 233, 0.08);
+    color: #0EA5E9;
+    border: 1px solid rgba(14, 165, 233, 0.28);
+  }
+
+  .nf-btn--secondary:hover {
+    background: rgba(14, 165, 233, 0.16);
+    border-color: rgba(14, 165, 233, 0.6);
+    transform: translateY(-3px);
+  }
+
+  .nf-btn--ghost {
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+  }
+
+  .nf-btn--ghost:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: rgba(255, 255, 255, 0.85);
+    transform: translateY(-3px);
+  }
+
+  /* ── Shared reveal animation ── */
+  @keyframes nf-reveal {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Light mode ── */
+  [data-theme="light"] .nf-grid {
+    background-image:
+      linear-gradient(rgba(14, 165, 233, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14, 165, 233, 0.06) 1px, transparent 1px);
+  }
+
+  [data-theme="light"] .nf-terminal {
+    background: rgba(238, 243, 250, 0.96);
+    border-color: rgba(14, 165, 233, 0.25);
+    box-shadow: 0 24px 48px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  [data-theme="light"] .nf-terminal-bar {
+    background: rgba(0,0,0,0.03);
+    border-bottom-color: rgba(0,0,0,0.07);
+  }
+
+  [data-theme="light"] .nf-terminal-title { color: rgba(30,40,55,0.35); }
+  [data-theme="light"] .nf-line    { color: rgba(30,40,55,0.8); }
+  [data-theme="light"] .nf-cmd     { color: rgba(30,40,55,0.95); }
+  [data-theme="light"] .nf-comment { color: rgba(30,40,55,0.3); }
+  [data-theme="light"] .nf-title   { color: #1a2235; }
+  [data-theme="light"] .nf-desc    { color: rgba(60,75,95,0.8); }
+  [data-theme="light"] .nf-btn--ghost {
+    color: rgba(30,40,55,0.55);
+    border-color: rgba(0,0,0,0.12);
+  }
+  [data-theme="light"] .nf-btn--ghost:hover {
+    color: #1a2235;
+    background: rgba(0,0,0,0.05);
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 480px) {
+    .nf-actions { flex-direction: column; align-items: center; }
+    .nf-btn { width: 100%; max-width: 280px; justify-content: center; }
+  }
+</style>
+
+<script>
+  const pathEl = document.getElementById('typed-path');
+  if (pathEl) {
+    const path = window.location.pathname || '/unknown';
+    pathEl.textContent = '';
+    let i = 0;
+    const type = () => {
+      if (i < path.length) {
+        pathEl.textContent += path[i++];
+        setTimeout(type, 55);
+      }
+    };
+    setTimeout(type, 500);
+  }
+</script>

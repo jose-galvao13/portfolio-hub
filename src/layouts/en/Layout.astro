@@ -3,18 +3,20 @@ import '../../styles/global.css';
 import { Image } from 'astro:assets';
 import logoImg from '../../assets/images/logo.png';
 import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
-import { getProjects } from '../../data/en/projects';
+import { getProjects } from '../../data/projects';
 
 interface Props {
   title: string;
   description?: string;
+  hideNav?: boolean;
   currentLang?: 'en' | 'pt'; // NOVO: detectar língua atual
 }
 
 const { 
+  hideNav = false,
   title, 
   description = "Business Data Analyst specializing in Python automation, ML, and financial data engineering. 200h+ manual work eliminated through AI-powered solutions.",
-  currentLang = 'en'
+  currentLang = 'en' // NOVO: padrão é inglês
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://josegalvao.com');
@@ -59,6 +61,10 @@ for (const skill of skillFilters) {
 <!DOCTYPE html>
 <html lang={currentLang}>
 <head>
+  <script is:inline>
+  const t = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   
@@ -72,12 +78,12 @@ for (const skill of skillFilters) {
   <meta name="author" content="José Galvão">
   <meta name="keywords" content="business data analyst, python automation, machine learning engineer, financial modeling, ETL pipelines, power bi consultant, data engineering, AI solutions">
   <meta name="theme-color" content="#0EA5E9">
-
-  <!-- No seu Layout.astro, logo abaixo do <title> -->
+  
+<!-- No seu Layout.astro, logo abaixo do <title> -->
 <link rel="alternate" hreflang="en" href={`${Astro.site}en${Astro.url.pathname.replace(/^\/(en|pt)/, '')}`} />
 <link rel="alternate" hreflang="pt" href={`${Astro.site}pt${Astro.url.pathname.replace(/^\/(en|pt)/, '')}`} />
 <link rel="alternate" hreflang="x-default" href={`${Astro.site}en/`} />
-  
+
   <link rel="canonical" href={canonicalURL}>
   <link rel="icon" type="image/png" sizes="32x32" href={logoImg.src}>
   <link rel="apple-touch-icon" sizes="180x180" href={logoImg.src}>
@@ -116,9 +122,13 @@ for (const skill of skillFilters) {
 
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
   
-  <style>
-    html { visibility: visible; opacity: 1; }
-  </style>
+<script is:inline>
+  const t = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+</script>
+<style>
+  html { visibility: visible; opacity: 1; }
+</style>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZVWG09RGY6"></script>
   <script is:inline>
@@ -129,10 +139,6 @@ for (const skill of skillFilters) {
   </script>
 
   <style>
-.nav-links {
-  align-items: center; /* garante que todos os li ficam centrados */
-}
-    
     .nav-lang-wrapper {
       display: flex;
       align-items: center;
@@ -149,9 +155,11 @@ for (const skill of skillFilters) {
       }
     }
   </style>
+  
 </head>
 <body>
 
+  {!hideNav && (
   <nav id="main-nav" role="navigation" aria-label="Main navigation">
     <div class="nav-container">
       <div class="nav-content">
@@ -295,6 +303,26 @@ for (const skill of skillFilters) {
 
         <!-- CTA -->
         <div class="nav-actions">
+          <!-- Theme Toggle -->
+<button
+  id="theme-toggle-btn"
+  class="theme-toggle-btn"
+  aria-label="Toggle dark/light mode"
+  type="button"
+>
+  <!-- Sun (light mode) -->
+  <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+  <!-- Moon (dark mode) -->
+  <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+</button>
           <a href="#contact" class="nav-cta-glow" data-i18n="nav.contact">Let's Talk</a>
           <button 
             class="mobile-menu-btn" 
@@ -311,12 +339,16 @@ for (const skill of skillFilters) {
       </div>
     </div>
   </nav>
-
+)}
   <main id="main-content">
     <slot />
   </main>
 
   <style>
+.nav-links {
+  align-items: center; /* garante que todos os li ficam centrados */
+}
+
     .lang-switcher {
       display: flex;
       align-items: center;
@@ -364,10 +396,6 @@ for (const skill of skillFilters) {
   vertical-align: middle;
 }
 
-/* Remove a regra antiga .lang-flag se existir */
-@media (max-width: 380px) {
-  .lang-flag-img { display: none; }
-}
 
     .lang-divider {
       color: rgba(255,255,255,0.15);
@@ -376,6 +404,10 @@ for (const skill of skillFilters) {
       pointer-events: none;
       padding: 0 1px;
     }
+
+@media (max-width: 380px) {
+  .lang-flag-img { display: none; }
+}
 
   </style>
 
@@ -610,6 +642,21 @@ for (const skill of skillFilters) {
         navigator.serviceWorker.register('/sw.js').catch(() => {});
       });
     }
+
+    // ============================================
+// THEME TOGGLE
+// ============================================
+const themeBtn = document.getElementById('theme-toggle-btn');
+const savedTheme = localStorage.getItem('theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+
+themeBtn?.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+});
+
   </script>
 </body>
 </html>

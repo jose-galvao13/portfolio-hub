@@ -1,6 +1,5 @@
 ---
 // src/components/ProjectCard.astro
-// Versão i18n com todos os styles originais preservados
 interface Props {
   title: string;
   type: string;
@@ -17,18 +16,14 @@ interface Props {
   dataSection?: 'featured' | 'other';
 }
 
-
-
 const {
   title, type, desc, stack, linkRepo, linkDemo,
   caseStudy, images, imageAlts, id,
   complexity, businessImpact, dataSection,
 } = Astro.props;
 
-// i18n support
 const currentLocale = Astro.currentLocale || 'en';
-
-const base = import.meta.env.BASE_URL.replace(/\/?$/, '/'); // garante slash final
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const caseStudyHref = caseStudy
   ? `${base}${currentLocale}/${caseStudy}`
   : undefined;
@@ -169,8 +164,8 @@ function getAlt(index: number): string {
       </div>
 
       {caseStudy && (
-<a href={caseStudyHref} class="main-cta-btn">
-            <span>{t.technicalCaseStudy}</span>
+        <a href={caseStudyHref} class="main-cta-btn">
+          <span>{t.technicalCaseStudy}</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
@@ -181,13 +176,13 @@ function getAlt(index: number): string {
   </div>
 </div>
 
-<style>
+<style is:global>
   .carousel-img { cursor: zoom-in; }
 
   .glass-project-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--card-bg, rgba(255, 255, 255, 0.03));
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
     border-radius: 24px;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -200,8 +195,8 @@ function getAlt(index: number): string {
   .glass-project-card:hover {
     transform: translateY(-8px);
     border-color: rgba(0, 212, 255, 0.4);
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 212, 255, 0.1);
+    background: var(--card-bg-hover, rgba(255, 255, 255, 0.05));
+    box-shadow: 0 20px 40px var(--card-shadow, rgba(0, 0, 0, 0.4)), 0 0 20px rgba(0, 212, 255, 0.1);
   }
 
   /* Image Section */
@@ -209,7 +204,7 @@ function getAlt(index: number): string {
     position: relative;
     aspect-ratio: 16 / 10;
     overflow: hidden;
-    background: #000;
+    background: var(--card-visual-bg, #000);
   }
 
   .carousel-viewport {
@@ -231,7 +226,7 @@ function getAlt(index: number): string {
   .visual-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, transparent 60%, rgba(10, 12, 16, 0.8));
+    background: linear-gradient(to bottom, transparent 60%, var(--card-overlay, rgba(10, 12, 16, 0.8)));
     pointer-events: none;
   }
 
@@ -253,9 +248,9 @@ function getAlt(index: number): string {
   .glass-project-card:hover .carousel-controls { opacity: 1; }
 
   .nav-arrow {
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
+    background: var(--nav-arrow-bg, rgba(0, 0, 0, 0.6));
+    border: 1px solid var(--nav-arrow-border, rgba(255, 255, 255, 0.1));
+    color: var(--nav-arrow-color, white);
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -300,6 +295,7 @@ function getAlt(index: number): string {
     flex-direction: column;
     flex-grow: 1;
     gap: 16px;
+    background: var(--card-content-bg, transparent);
   }
 
   .project-badge {
@@ -315,19 +311,19 @@ function getAlt(index: number): string {
   .project-name {
     font-size: 1.4rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--card-title-color, #fff);
     line-height: 1.2;
     margin: 0;
   }
 
   .project-brief {
     font-size: 0.95rem;
-    color: #a0a0a0;
+    color: var(--card-text-color, #a0a0a0);
     line-height: 1.6;
   }
 
   .project-brief :global(strong) {
-    color: #fff;
+    color: var(--card-strong-color, #fff);
     font-weight: 600;
   }
 
@@ -338,16 +334,6 @@ function getAlt(index: number): string {
     margin-top: auto;
   }
 
-  .tech-tag {
-    background: rgba(0, 212, 255, 0.05);
-    border: 1px solid rgba(0, 212, 255, 0.15);
-    color: #00d4ff;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-
   /* Footer Actions */
   .card-footer {
     display: flex;
@@ -355,20 +341,20 @@ function getAlt(index: number): string {
     justify-content: space-between;
     margin-top: 10px;
     padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--card-footer-border, rgba(255, 255, 255, 0.05));
   }
 
   .secondary-links { display: flex; gap: 12px; }
 
   .footer-icon-link {
-    color: #888;
+    color: var(--card-icon-color, #888);
     transition: 0.3s;
     display: flex;
   }
 
   .footer-icon-link:hover,
   .footer-icon-link:focus-visible {
-    color: #fff;
+    color: var(--card-icon-hover, #fff);
     transform: scale(1.1);
     outline: 2px solid rgba(0, 212, 255, 0.5);
     outline-offset: 3px;
@@ -401,6 +387,47 @@ function getAlt(index: number): string {
     .project-name { font-size: 1.2rem; }
     .card-footer { flex-direction: column-reverse; gap: 20px; align-items: flex-start; }
     .main-cta-btn { width: 100%; justify-content: center; }
+  }
+
+  /* ── DARK MODE (default) ── */
+  :root,
+  [data-theme="dark"] {
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --card-bg-hover: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-shadow: rgba(0, 0, 0, 0.4);
+    --card-visual-bg: #000;
+    --card-overlay: rgba(10, 12, 16, 0.8);
+    --card-content-bg: transparent;
+    --card-title-color: #fff;
+    --card-text-color: #a0a0a0;
+    --card-strong-color: #fff;
+    --card-footer-border: rgba(255, 255, 255, 0.05);
+    --card-icon-color: #888;
+    --card-icon-hover: #fff;
+    --nav-arrow-bg: rgba(0, 0, 0, 0.6);
+    --nav-arrow-border: rgba(255, 255, 255, 0.1);
+    --nav-arrow-color: white;
+  }
+
+  /* ── LIGHT MODE ── */
+  [data-theme="light"] {
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-bg-hover: rgba(255, 255, 255, 1);
+    --card-border: rgba(0, 0, 0, 0.08);
+    --card-shadow: rgba(0, 0, 0, 0.12);
+    --card-visual-bg: #f0f4f8;
+    --card-overlay: rgba(240, 244, 248, 0.5);
+    --card-content-bg: transparent;
+    --card-title-color: #1a1f2e;
+    --card-text-color: #5a6478;
+    --card-strong-color: #1a1f2e;
+    --card-footer-border: rgba(0, 0, 0, 0.07);
+    --card-icon-color: #8a96a8;
+    --card-icon-hover: #1a1f2e;
+    --nav-arrow-bg: rgba(255, 255, 255, 0.8);
+    --nav-arrow-border: rgba(0, 0, 0, 0.15);
+    --nav-arrow-color: #1a1f2e;
   }
 </style>
 
@@ -445,7 +472,4 @@ function getAlt(index: number): string {
 
   initCarousel();
   document.addEventListener('astro:after-swap', initCarousel);
-
-
 </script>
-

@@ -593,8 +593,6 @@ const otherProjects    = allProjects.filter(p => !p.featured);
         </div>
       </div>
 
-
-
       <div class="github-cta reveal">
         <a href="https://github.com/jose-galvao13" target="_blank" rel="noopener noreferrer" class="custom-btn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -1428,21 +1426,33 @@ async function loadGitHubStats() {
       R: '#198ce7', Go: '#00add8', Rust: '#dea584', SCSS: '#c6538c',
     };
 
-    const renderBar = ([lang, bytes], isTop = false) => {
-      const pct = ((bytes as number / totalBytes) * 100).toFixed(1);
-      const color = colors[lang] || '#0EA5E9';
-      return `
-        <div class="gh-lang-item" style="${isTop ? 'margin-bottom:14px;' : ''}">
-          <div class="gh-lang-top">
-            <span class="gh-lang-dot" style="background:${color};${isTop ? 'width:10px;height:10px;' : ''}"></span>
-            <span class="gh-lang-name" style="${isTop ? 'font-weight:700;color:#fff;font-size:0.9rem;' : ''}">${lang}</span>
-            <span class="gh-lang-pct" style="${isTop ? 'font-size:0.85rem;' : ''}">${pct}%</span>
-          </div>
-          <div class="gh-lang-bar-bg" style="${isTop ? 'height:6px;' : 'height:3px;'}">
-            <div class="gh-lang-bar-fill" style="width:${pct}%;background:${color}"></div>
-          </div>
-        </div>`;
-    };
+   const renderBar = ([lang, bytes], isTop = false) => {
+  const pct = ((bytes as number / totalBytes) * 100).toFixed(1);
+  const color = colors[lang] || 'var(--accent-cyan)'; // Usa a cor da linguagem ou o ciano do tema
+
+  return `
+    <div class="gh-lang-item" style="${isTop ? 'margin-bottom:14px;' : 'margin-bottom:8px;'}">
+      <div class="gh-lang-top" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+        <span class="gh-lang-dot" style="background:${color}; border-radius: 50%; ${isTop ? 'width:10px; height:10px;' : 'width:8px; height:8px;'}"></span>
+        
+        <!-- CORRIGIDO: Usar var(--text-primary) em vez de #fff -->
+        <span class="gh-lang-name" style="color: var(--text-primary); ${isTop ? 'font-weight:700; font-size:0.9rem;' : 'font-size:0.8rem;'}">
+          ${lang}
+        </span>
+
+        <!-- CORRIGIDO: Usar var(--accent-cyan) para a percentagem acompanhar o tema -->
+        <span class="gh-lang-pct" style="margin-left: auto; color: var(--accent-cyan); font-weight: 600; ${isTop ? 'font-size:0.85rem;' : 'font-size:0.75rem;'}">
+          ${pct}%
+        </span>
+      </div>
+
+      <!-- CORRIGIDO: Fundo da barra usa var(--border-color) para ser visível em ambos os modos -->
+      <div class="gh-lang-bar-bg" style="background: var(--border-color); border-radius: 4px; overflow: hidden; ${isTop ? 'height:6px;' : 'height:4px;'}">
+        <div class="gh-lang-bar-fill" style="width:${pct}%; height:100%; background:${color}; transition: width 1s ease-out;"></div>
+      </div>
+    </div>`;
+};
+
 
     const top3 = sortedLangs.slice(0, 3);
     const theRest = sortedLangs.slice(3);
@@ -1454,18 +1464,22 @@ async function loadGitHubStats() {
           </div>
         </div>` : '';
 
-    const langsEl = document.getElementById('ghLangs');
-    if (langsEl) {
-      langsEl.innerHTML = `
-        <div class="gh-card-inner">
-          <div class="gh-card-title" style="color:#0EA5E9;font-weight:700;">
+const langsEl = document.getElementById('ghLangs');
+if (langsEl) {
+  langsEl.innerHTML = `
+    <div class="gh-card-inner">
+      <!-- Usamos var(--accent-cyan) em vez de cor fixa -->
+      <div class="gh-card-title" style="color: var(--accent-cyan); font-weight:700;">
             Linguagens Mais Usadas
-            <span style="margin-left:auto;font-size:0.65rem;color:rgba(157,165,176,0.4);font-weight:400;">por bytes de código</span>
-          </div>
-          ${top3.map(e => renderBar(e, true)).join('')}
-          ${restHtml}
-        </div>`;
-    }
+        <!-- Usamos var(--text-secondary) com opacidade para o subtitulo -->
+        <span style="margin-left:auto; font-size:0.65rem; color: var(--text-secondary); opacity: 0.6; font-weight:400;">
+          por bits de código
+        </span>
+      </div>
+      ${top3.map(e => renderBar(e, true)).join('')}
+      ${restHtml}
+    </div>`;
+}
 
     // ✅ Só mostra o grid se tudo correu bem
     const grid = document.getElementById('githubStatsGrid');

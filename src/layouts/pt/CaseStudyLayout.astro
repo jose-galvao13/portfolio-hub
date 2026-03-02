@@ -144,6 +144,24 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   O botão é inserido diretamente dentro de <pre>, por isso position:relative no pre ancora-o.
 -->
 <style is:global>
+  /* ══════════════════════════════════════════════════════
+     BODY LIGHT MODE OVERRIDE — must be global to reach
+     the <body> element which lives outside this component
+  ══════════════════════════════════════════════════════ */
+[data-theme="light"] body {
+  background: linear-gradient(-45deg, var(--body-gradient-1), var(--body-gradient-2), var(--body-gradient-3), var(--body-gradient-1)) !important;
+  background-size: 400% 400%;
+  animation: none !important;   /* ← ESTA LINHA É A QUE FALTA */
+  color: var(--text-primary);
+}
+
+  [data-theme="light"] body::before {
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(14, 165, 233, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(13, 148, 136, 0.05) 0%, transparent 50%) !important;
+  }
+
+  /* ── Copy code button ── */
   pre {
     position: relative !important;
   }
@@ -162,12 +180,9 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     align-items: center !important;
     gap: 5px !important;
     padding: 4px 10px 4px 8px !important;
-    background: rgba(8, 8, 8, 0.9) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 6px !important;
-    color: rgba(255, 255, 255, 0.4) !important;
     font-family: 'Inter', -apple-system, sans-serif !important;
     font-size: 11px !important;
     font-weight: 500 !important;
@@ -179,10 +194,29 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease, background 0.2s ease !important;
   }
 
+  [data-theme="dark"] .copy-code-btn,
+  :root:not([data-theme="light"]) .copy-code-btn {
+    background: rgba(8, 8, 8, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
+
+  [data-theme="light"] .copy-code-btn {
+    background: rgba(240, 244, 248, 0.95) !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color: rgba(30, 40, 55, 0.5) !important;
+  }
+
   .copy-code-btn:hover {
     color: #ffffff !important;
     border-color: rgba(0, 242, 255, 0.5) !important;
     background: rgba(0, 242, 255, 0.08) !important;
+  }
+
+  [data-theme="light"] .copy-code-btn:hover {
+    color: #1a1f2e !important;
+    border-color: rgba(14, 165, 233, 0.5) !important;
+    background: rgba(14, 165, 233, 0.08) !important;
   }
 
   .copy-code-btn.copied {
@@ -203,28 +237,95 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 </style>
 
 <style>
-  :root {
-    --text-pure: #ffffff;
-    --text-dim: #9da5b0;
-    --bg-black: #030303;
-    --accent: #00f2ff;
-    --accent-glow: rgba(0, 242, 255, 0.3);
-    --accent-bright: #00ffff;
-    --border: rgba(255, 255, 255, 0.07);
-    --highlight-bg: rgba(0, 242, 255, 0.05);
-    --code-inline-bg: rgba(255, 255, 255, 0.05);
+  /* ── CSS VARIABLES ── */
+  :root,
+  [data-theme="dark"] {
+    --cs-bg: #030303;
+    --cs-text: #ffffff;
+    --cs-text-dim: #9da5b0;
+    --cs-accent: #00f2ff;
+    --cs-accent-glow: rgba(0, 242, 255, 0.3);
+    --cs-accent-bright: #00ffff;
+    --cs-border: rgba(255, 255, 255, 0.07);
+    --cs-highlight-bg: rgba(0, 242, 255, 0.05);
+    --cs-code-inline-bg: rgba(255, 255, 255, 0.05);
+    --cs-code-block-bg: #080808;
+    --cs-blockquote-bg: rgba(255, 255, 255, 0.02);
+    --cs-table-bg: rgba(255, 255, 255, 0.02);
+    --cs-table-head-bg: rgba(0, 242, 255, 0.1);
+    --cs-table-row-hover: rgba(0, 242, 255, 0.05);
+    --cs-sidebar-bg: rgba(255, 255, 255, 0.02);
+    --cs-sidebar-border: rgba(255, 255, 255, 0.07);
+    --cs-sidebar-hover-border: rgba(0, 242, 255, 0.3);
+    --cs-metric-bg: rgba(255, 255, 255, 0.05);
+    --cs-tag-bg: rgba(255, 255, 255, 0.05);
+    --cs-tag-border: rgba(255, 255, 255, 0.07);
+    --cs-tag-color: #ffffff;
+    --cs-link-github-bg: #fff;
+    --cs-link-github-color: #000;
+    --cs-link-live-bg: rgba(0, 242, 255, 0.1);
+    --cs-link-live-color: #00f2ff;
+    --cs-link-live-border: #00f2ff;
+    --cs-footer-border: rgba(255, 255, 255, 0.07);
+    --cs-footer-text: #9da5b0;
+    --cs-pre-border: rgba(255, 255, 255, 0.07);
+    --cs-progress-shadow: rgba(0, 242, 255, 0.3);
+    --cs-orb1-color: rgba(0, 242, 255, 0.3);
+    --cs-orb2-color: rgba(136, 0, 255, 0.2);
+    --cs-grid-color: rgba(255, 255, 255, 0.07);
+    --cs-header-before: rgba(0, 242, 255, 0.08);
+  }
+
+  [data-theme="light"] {
+    --cs-bg: #f0f4f9;
+    --cs-text: #1a1f2e;
+    --cs-text-dim: #5a6478;
+    --cs-accent: #0284c7;
+    --cs-accent-glow: rgba(14, 165, 233, 0.25);
+    --cs-accent-bright: #0ea5e9;
+    --cs-border: rgba(0, 0, 0, 0.07);
+    --cs-highlight-bg: rgba(14, 165, 233, 0.05);
+    --cs-code-inline-bg: rgba(14, 165, 233, 0.08);
+    --cs-code-block-bg: #e2e8f0;
+    --cs-blockquote-bg: rgba(255, 255, 255, 0.8);
+    --cs-table-bg: rgba(255, 255, 255, 0.8);
+    --cs-table-head-bg: rgba(14, 165, 233, 0.08);
+    --cs-table-row-hover: rgba(14, 165, 233, 0.04);
+    --cs-sidebar-bg: rgba(255, 255, 255, 0.9);
+    --cs-sidebar-border: rgba(0, 0, 0, 0.08);
+    --cs-sidebar-hover-border: rgba(14, 165, 233, 0.4);
+    --cs-metric-bg: rgba(0, 0, 0, 0.04);
+    --cs-tag-bg: rgba(14, 165, 233, 0.06);
+    --cs-tag-border: rgba(14, 165, 233, 0.15);
+    --cs-tag-color: #1a1f2e;
+    --cs-link-github-bg: #1a1f2e;
+    --cs-link-github-color: #fff;
+    --cs-link-live-bg: rgba(14, 165, 233, 0.08);
+    --cs-link-live-color: #0284c7;
+    --cs-link-live-border: #0284c7;
+    --cs-footer-border: rgba(0, 0, 0, 0.07);
+    --cs-footer-text: #5a6478;
+    --cs-pre-border: rgba(0, 0, 0, 0.08);
+    --cs-progress-shadow: rgba(14, 165, 233, 0.25);
+    --cs-orb1-color: rgba(14, 165, 233, 0.12);
+    --cs-orb2-color: rgba(100, 0, 200, 0.06);
+    --cs-grid-color: rgba(0, 0, 0, 0.03);
+    --cs-header-before: rgba(14, 165, 233, 0.05);
   }
 
   * { box-sizing: border-box; }
 
   .case-study-root {
-    background: var(--bg-black);
-    color: var(--text-pure);
+    background: var(--cs-bg);
+    color: var(--cs-text);
     font-family: 'Inter', -apple-system, sans-serif;
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
     width: 100%;
+    transition: background 0.3s ease, color 0.3s ease;
+    /* Ensure it sits above the body background */
+    isolation: isolate;
   }
 
   .container-wide {
@@ -236,6 +337,9 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     width: 100%;
   }
 
+  /* ── BACKGROUND EFFECTS ── */
+  /* In light mode, bg-effects is behind case-study-root content
+     but we still need it to not bleed through */
   .bg-effects {
     position: fixed;
     top: 0; left: 0;
@@ -243,6 +347,11 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     z-index: 0;
     pointer-events: none;
     overflow: hidden;
+  }
+
+  /* Light mode: hide the dark bg-effects entirely */
+  [data-theme="light"] .bg-effects {
+    display: none;
   }
 
   .glow-orb {
@@ -256,13 +365,13 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   .orb-1 {
     top: 10%; left: 15%;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, var(--accent-glow), transparent);
+    background: radial-gradient(circle, var(--cs-orb1-color), transparent);
   }
 
   .orb-2 {
     bottom: 20%; right: 10%;
     width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(136, 0, 255, 0.2), transparent);
+    background: radial-gradient(circle, var(--cs-orb2-color), transparent);
     animation-delay: -10s;
   }
 
@@ -276,8 +385,8 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     position: absolute;
     inset: 0;
     background-image: 
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      linear-gradient(var(--cs-grid-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--cs-grid-color) 1px, transparent 1px);
     background-size: 50px 50px;
     mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
     opacity: 0.3;
@@ -286,15 +395,16 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   .reading-progress {
     position: fixed;
     top: 0; left: 0; width: 0%; height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-bright), #00ff88);
+    background: linear-gradient(90deg, var(--cs-accent), var(--cs-accent-bright), #00ff88);
     z-index: 1000;
-    box-shadow: 0 0 20px var(--accent-glow);
+    box-shadow: 0 0 20px var(--cs-progress-shadow);
     transition: width 0.1s ease;
   }
 
+  /* ── HEADER ── */
   .ultra-header {
     padding: 120px 0 80px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--cs-border);
     position: relative;
     width: 100%;
   }
@@ -304,7 +414,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: radial-gradient(circle at 0% 0%, rgba(0, 242, 255, 0.08) 0%, transparent 50%);
+    background: radial-gradient(circle at 0% 0%, var(--cs-header-before) 0%, transparent 50%);
     pointer-events: none;
   }
 
@@ -320,7 +430,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     display: flex;
     align-items: center;
     gap: 12px;
-    color: var(--accent);
+    color: var(--cs-accent);
     text-transform: uppercase;
     font-size: 12px;
     font-weight: 800;
@@ -330,21 +440,21 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
   .eyebrow-dot {
     width: 8px; height: 8px;
-    background: var(--accent);
+    background: var(--cs-accent);
     border-radius: 50%;
     animation: pulse-dot 2s ease-in-out infinite;
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: 0 0 10px var(--cs-accent-glow);
   }
 
   @keyframes pulse-dot {
-    0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); transform: scale(1); }
+    0%, 100% { box-shadow: 0 0 0 0 var(--cs-accent-glow); transform: scale(1); }
     50% { box-shadow: 0 0 0 8px transparent; transform: scale(1.2); }
   }
 
   .eyebrow-line {
     flex: 1;
     height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent);
+    background: linear-gradient(90deg, var(--cs-accent), transparent);
     max-width: 80px;
   }
 
@@ -356,13 +466,26 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     margin: 0;
     position: relative;
     display: inline-block;
+    animation: elegantReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    max-width: 100%;
+    word-wrap: break-word;
+  }
+
+  /* Dark mode title gradient */
+  [data-theme="dark"] .elegant-title,
+  :root:not([data-theme="light"]) .elegant-title {
     background: linear-gradient(135deg, #ffffff 0%, #a8d8ea 40%, #00bfa5 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: elegantReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
-    max-width: 100%;
-    word-wrap: break-word;
+  }
+
+  /* Light mode title — dark enough to read on light bg */
+  [data-theme="light"] .elegant-title {
+    background: linear-gradient(135deg, #0f172a 0%, #0284c7 55%, #0d9488 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   @keyframes elegantReveal {
@@ -374,7 +497,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     position: absolute;
     bottom: -12px; left: 0;
     width: 120px; height: 4px;
-    background: linear-gradient(90deg, var(--accent), transparent);
+    background: linear-gradient(90deg, var(--cs-accent), transparent);
     border-radius: 2px;
     animation: underlineSlide 2s ease-in-out infinite;
   }
@@ -386,7 +509,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
   .hero-desc {
     font-size: clamp(1rem, 2vw, 1.25rem);
-    color: var(--text-dim);
+    color: var(--cs-text-dim);
     line-height: 1.6;
     margin: 0;
     position: relative;
@@ -399,9 +522,10 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     position: absolute;
     left: 0; top: 0;
     width: 3px; height: 100%;
-    background: linear-gradient(180deg, var(--accent), transparent);
+    background: linear-gradient(180deg, var(--cs-accent), transparent);
   }
 
+  /* ── MAIN LAYOUT ── */
   .main-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
@@ -421,7 +545,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 800;
     margin: 60px 0 30px;
-    color: #fff;
+    color: var(--cs-text);
     position: relative;
     padding-bottom: 16px;
     display: flex;
@@ -437,7 +561,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     position: absolute;
     bottom: 0; left: 0;
     width: 60px; height: 3px;
-    background: var(--accent);
+    background: var(--cs-accent);
     border-radius: 2px;
   }
 
@@ -445,20 +569,20 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     font-size: clamp(1.25rem, 2.5vw, 1.5rem);
     margin: 40px 0 20px;
     font-weight: 700;
-    color: #fff;
+    color: var(--cs-text);
   }
 
   .technical-content :global(h4) {
     font-size: clamp(1.1rem, 2vw, 1.3rem);
     margin: 30px 0 16px;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--cs-accent);
   }
 
   .technical-content :global(p) {
     font-size: clamp(1rem, 1.5vw, 1.15rem);
     line-height: 1.8;
-    color: var(--text-dim);
+    color: var(--cs-text-dim);
     margin-bottom: 30px;
     max-width: 100%;
     word-wrap: break-word;
@@ -466,25 +590,47 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
   .technical-content :global(strong),
   .technical-content :global(b) {
-    color: var(--text-pure);
+    color: var(--cs-text);
     font-weight: 700;
-    background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+  }
+
+  /* Gradient on strong only in dark mode */
+  [data-theme="dark"] .technical-content :global(strong),
+  [data-theme="dark"] .technical-content :global(b),
+  :root:not([data-theme="light"]) .technical-content :global(strong),
+  :root:not([data-theme="light"]) .technical-content :global(b) {
+    background: linear-gradient(135deg, var(--cs-accent-bright), var(--cs-accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
+  /* Light mode strong: solid readable colour, no gradient */
+  [data-theme="light"] .technical-content :global(strong),
+  [data-theme="light"] .technical-content :global(b) {
+    color: #0f172a;
+    -webkit-text-fill-color: #0f172a;
+    background: none;
+  }
+
   .technical-content :global(p code),
   .technical-content :global(li code),
   .technical-content :global(td code) {
-    background: var(--code-inline-bg);
-    border: 1px solid var(--border);
+    background: var(--cs-code-inline-bg);
+    border: 1px solid var(--cs-border);
     padding: 2px 8px;
     border-radius: 4px;
     font-family: 'Fira Code', 'Courier New', monospace;
     font-size: 0.9em;
-    color: var(--accent-bright);
+    color: var(--cs-accent-bright);
     font-weight: 500;
+  }
+
+  /* Light mode inline code: readable dark text */
+  [data-theme="light"] .technical-content :global(p code),
+  [data-theme="light"] .technical-content :global(li code),
+  [data-theme="light"] .technical-content :global(td code) {
+    color: #0284c7;
   }
 
   .technical-content :global(ul),
@@ -499,40 +645,44 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     line-height: 1.8;
     margin-bottom: 16px;
     word-wrap: break-word;
-    color: var(--text-dim);
+    color: var(--cs-text-dim);
     position: relative;
   }
 
-  .technical-content :global(ul > li::marker) { color: var(--accent); font-size: 1.2em; }
-  .technical-content :global(ol > li::marker) { color: var(--accent); font-weight: 700; }
+  .technical-content :global(ul > li::marker) { color: var(--cs-accent); font-size: 1.2em; }
+  .technical-content :global(ol > li::marker) { color: var(--cs-accent); font-weight: 700; }
   .technical-content :global(li > ul),
   .technical-content :global(li > ol) { margin-top: 12px; margin-bottom: 12px; }
 
   .technical-content :global(blockquote) {
     margin: 50px 0;
     padding: 40px;
-    background: rgba(255, 255, 255, 0.02);
-    border-left: 4px solid var(--accent);
+    background: var(--cs-blockquote-bg);
+    border-left: 4px solid var(--cs-accent);
     font-style: italic;
     font-size: clamp(1.1rem, 2vw, 1.3rem);
     border-radius: 0 16px 16px 0;
     position: relative;
-    box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+    box-shadow: 0 0 30px var(--cs-accent-glow);
     word-wrap: break-word;
   }
 
-  .technical-content :global(blockquote p) { margin-bottom: 0; color: var(--text-pure); }
+  .technical-content :global(blockquote p) { margin-bottom: 0; color: var(--cs-text); }
 
   .technical-content :global(pre) {
-    background: #080808 !important;
+    background: var(--cs-code-block-bg) !important;
     padding: 44px 30px 30px !important;
     border-radius: 12px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--cs-pre-border);
     margin: 40px 0;
     font-size: clamp(12px, 1.5vw, 14px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     overflow-x: auto;
     max-width: 100%;
+  }
+
+  [data-theme="light"] .technical-content :global(pre) {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   }
 
   .technical-content :global(pre::before) {
@@ -540,14 +690,14 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    background: linear-gradient(90deg, transparent, var(--cs-accent), transparent);
   }
 
   .technical-content :global(pre code) {
     background: transparent;
     border: none;
     padding: 0;
-    color: #e2e8f0;
+    color: var(--cs-text);
     word-wrap: break-word;
     overflow-wrap: break-word;
     font-family: 'Fira Code', 'Courier New', monospace;
@@ -557,32 +707,32 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     width: 100%;
     border-collapse: collapse;
     margin: 40px 0;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--cs-table-bg);
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid var(--border);
+    border: 1px solid var(--cs-border);
   }
 
-  .technical-content :global(thead) { background: rgba(0, 242, 255, 0.1); }
+  .technical-content :global(thead) { background: var(--cs-table-head-bg); }
 
   .technical-content :global(th) {
     padding: 16px;
     text-align: left;
     font-weight: 700;
-    color: var(--accent);
-    border-bottom: 2px solid var(--accent);
+    color: var(--cs-accent);
+    border-bottom: 2px solid var(--cs-accent);
     font-size: clamp(0.9rem, 1.5vw, 1rem);
   }
 
   .technical-content :global(td) {
     padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text-dim);
+    border-bottom: 1px solid var(--cs-border);
+    color: var(--cs-text-dim);
     font-size: clamp(0.9rem, 1.5vw, 1rem);
   }
 
   .technical-content :global(tr:last-child td) { border-bottom: none; }
-  .technical-content :global(tbody tr:hover) { background: rgba(0, 242, 255, 0.05); }
+  .technical-content :global(tbody tr:hover) { background: var(--cs-table-row-hover); }
 
   .technical-content :global(.highlight-box),
   .technical-content :global(.info-box),
@@ -590,8 +740,8 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     padding: 24px 28px;
     margin: 30px 0;
     border-radius: 12px;
-    border-left: 4px solid var(--accent);
-    background: var(--highlight-bg);
+    border-left: 4px solid var(--cs-accent);
+    background: var(--cs-highlight-bg);
     position: relative;
   }
 
@@ -609,42 +759,47 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     height: auto;
     border-radius: 12px;
     margin: 40px 0;
-    border: 1px solid var(--border);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--cs-border);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   }
 
   .technical-content :global(hr) {
     border: none;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    background: linear-gradient(90deg, transparent, var(--cs-border), transparent);
     margin: 60px 0;
   }
 
+  /* ── SIDEBAR ── */
   .tech-sidebar { min-width: 0; height: fit-content; }
 
   .sidebar-inner {
     position: sticky;
     top: 40px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border);
+    background: var(--cs-sidebar-bg);
+    border: 1px solid var(--cs-sidebar-border);
     padding: 30px;
     border-radius: 24px;
     backdrop-filter: blur(20px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     transition: all 0.3s ease;
     width: 100%;
   }
 
+  [data-theme="light"] .sidebar-inner {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
   .sidebar-inner:hover {
-    border-color: rgba(0, 242, 255, 0.3);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 242, 255, 0.1);
+    border-color: var(--cs-sidebar-hover-border);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), 0 0 40px var(--cs-accent-glow);
   }
 
   .section-title {
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: var(--accent);
+    color: var(--cs-accent);
     margin-bottom: 24px;
     font-weight: 700;
     display: flex;
@@ -657,7 +812,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   .sidebar-section {
     margin-bottom: 0;
     padding-bottom: 32px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--cs-border);
   }
 
   .sidebar-section:last-of-type { border-bottom: none; padding-bottom: 0; }
@@ -666,7 +821,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   .metrics-stack { display: grid; gap: 24px; }
 
   .m-item {
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--cs-border);
     padding-bottom: 18px;
     position: relative;
     animation: fadeInUp 0.6s ease-out backwards;
@@ -681,7 +836,7 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
   .metric-bar {
     height: 4px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--cs-metric-bg);
     border-radius: 2px;
     overflow: hidden;
     margin-bottom: 12px;
@@ -690,10 +845,10 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
   .metric-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+    background: linear-gradient(90deg, var(--cs-accent), var(--cs-accent-bright));
     border-radius: 2px;
     animation: fillBar 1.5s ease-out;
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: 0 0 10px var(--cs-accent-glow);
   }
 
   @keyframes fillBar { from { width: 0%; } }
@@ -702,14 +857,18 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     display: block;
     font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 900;
-    color: var(--accent);
-    text-shadow: 0 0 20px var(--accent-glow);
+    color: var(--cs-accent);
+    text-shadow: 0 0 20px var(--cs-accent-glow);
     word-wrap: break-word;
+  }
+
+  [data-theme="light"] .m-val {
+    text-shadow: none;
   }
 
   .m-lab {
     font-size: 12px;
-    color: var(--text-dim);
+    color: var(--cs-text-dim);
     text-transform: uppercase;
     font-weight: 600;
     word-wrap: break-word;
@@ -718,12 +877,13 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   .stack-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
 
   .s-tag {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--cs-tag-bg);
     padding: 8px 14px;
     border-radius: 8px;
     font-size: 12px;
     font-weight: 600;
-    border: 1px solid var(--border);
+    color: var(--cs-tag-color);
+    border: 1px solid var(--cs-tag-border);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -751,9 +911,13 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
 
   .s-tag:hover {
     background: rgba(0, 242, 255, 0.1);
-    border-color: var(--accent);
+    border-color: var(--cs-accent);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 242, 255, 0.2);
+    box-shadow: 0 5px 15px var(--cs-accent-glow);
+  }
+
+  [data-theme="light"] .s-tag:hover {
+    background: rgba(14, 165, 233, 0.12);
   }
 
   .link-group { display: flex; flex-direction: column; gap: 12px; }
@@ -783,19 +947,32 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   }
 
   .side-btn:hover::before { opacity: 1; }
-  .side-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .side-btn:focus-visible { outline: 2px solid var(--cs-accent); outline-offset: 2px; }
 
-  .github { background: #fff; color: #000; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1); }
-  .github:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2); }
+  .github {
+    background: var(--cs-link-github-bg);
+    color: var(--cs-link-github-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  .github:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); }
 
-  .live { background: rgba(0, 242, 255, 0.1); color: var(--accent); border: 1px solid var(--accent); }
-  .live:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--accent-glow); background: rgba(0, 242, 255, 0.15); }
+  .live {
+    background: var(--cs-link-live-bg);
+    color: var(--cs-link-live-color);
+    border: 1px solid var(--cs-link-live-border);
+  }
+  .live:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--cs-accent-glow); }
 
   .live-indicator {
     width: 8px; height: 8px;
-    background: var(--accent);
+    background: var(--cs-accent);
     border-radius: 50%;
     animation: pulse-glow 2s infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
   }
 
   .side-btn .arrow { transition: transform 0.3s; }
@@ -804,9 +981,9 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
   .sidebar-footer {
     margin-top: 40px;
     padding-top: 30px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--cs-footer-border);
     font-size: 12px;
-    color: var(--text-dim);
+    color: var(--cs-footer-text);
     text-align: center;
   }
 
@@ -826,12 +1003,21 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     cursor: default;
   }
 
+  [data-theme="light"] .status-indicator {
+    color: #059669;
+    border-color: #059669;
+  }
+
   .pulse {
     position: relative;
     width: 8px; height: 8px;
     border-radius: 50%;
     background: #00ff88;
     flex-shrink: 0;
+  }
+
+  [data-theme="light"] .pulse {
+    background: #059669;
   }
 
   .pulse::after {
@@ -846,12 +1032,16 @@ const { title, description, projectType, stack, metrics, githubUrl, liveUrl } = 
     animation: pulse-ring 2s ease-out infinite;
   }
 
+  [data-theme="light"] .pulse::after {
+    background: #059669;
+  }
+
   @keyframes pulse-ring {
     0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
     100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0; }
   }
 
-  /* RESPONSIVO */
+  /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
     .header-split { grid-template-columns: 1fr; }
     .main-layout { grid-template-columns: 1fr; gap: 40px; }
