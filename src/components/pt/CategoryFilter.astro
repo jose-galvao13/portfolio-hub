@@ -1,0 +1,424 @@
+---
+// src/components/CategoryFilter.astro
+export type ProjectCategory = 'all' | 'ml' | 'bi' | 'finance' | 'ai' | 'engineering';
+
+interface CategoryMeta {
+  key: ProjectCategory;
+  labelPt: string;
+  icon: string;
+  color: string;
+}
+
+export const CATEGORIES: CategoryMeta[] = [
+  { key: 'all',         labelPt: 'Todos',            icon: '◈',  color: 'var(--accent-primary, #00d4ff)' },
+  { key: 'ml',          labelPt: 'Machine Learning', icon: '🤖', color: '#a78bfa' },
+  { key: 'bi',          labelPt: 'Intel. Negócios',  icon: '📊', color: '#34d399' },
+  { key: 'finance',     labelPt: 'Finanças',         icon: '💹', color: '#fbbf24' },
+  { key: 'ai',          labelPt: 'IA & LLM',         icon: '✦',  color: '#f472b6' },
+  { key: 'engineering', labelPt: 'Engenharia',       icon: '⚙️', color: '#60a5fa' },
+];
+
+interface Props {
+  targetSelector?: string;
+  showCounts?: boolean;
+}
+
+const { targetSelector = '.glass-project-card', showCounts = true } = Astro.props;
+---
+
+<div class="category-filter-wrap" data-target={targetSelector}>
+  <div class="filter-track" role="tablist" aria-label="Filter projects by category">
+    {CATEGORIES.map((cat, i) => (
+      <button
+        class:list={['cat-tab', { active: cat.key === 'all' }]}
+        role="tab"
+        data-cat={cat.key}
+        aria-selected={cat.key === 'all' ? 'true' : 'false'}
+        tabindex={cat.key === 'all' ? '0' : '-1'}
+        style={`--tab-color: ${cat.color}; animation-delay: ${i * 0.05}s`}
+        data-label-pt={cat.labelPt}
+      >
+        <span class="cat-icon" aria-hidden="true">{cat.icon}</span>
+        <span class="cat-label">{cat.labelPt}</span>
+        {showCounts && <span class="cat-count" aria-label="project count">0</span>}
+      </button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .category-filter-wrap {
+    position: relative;
+    margin-bottom: 2.5rem;
+  }
+
+  .filter-track {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.375rem;
+    background: var(--card-bg, rgba(255,255,255,0.03));
+    border: 1px solid var(--card-border, rgba(255,255,255,0.08));
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+  }
+
+  .cat-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 1.1rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-secondary, #94a3b8);
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    animation: fadeInTab 0.4s ease both;
+  }
+
+  @keyframes fadeInTab {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .cat-tab:hover:not(.active) {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary, #e2e8f0);
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  .cat-tab:focus-visible {
+    outline: 2px solid var(--tab-color);
+    outline-offset: 2px;
+  }
+
+  .cat-tab.active {
+    background: color-mix(in srgb, var(--tab-color) 15%, transparent);
+    border-color: color-mix(in srgb, var(--tab-color) 40%, transparent);
+    color: var(--tab-color);
+    font-weight: 600;
+    box-shadow: 0 2px 12px color-mix(in srgb, var(--tab-color) 20%, transparent);
+  }
+
+  @supports not (background: color-mix(in srgb, red 10%, transparent)) {
+    .cat-tab.active {
+      background: rgba(0, 212, 255, 0.12);
+      border-color: rgba(0, 212, 255, 0.35);
+      color: #00d4ff;
+    }
+  }
+
+  .cat-icon { font-size: 0.9rem; line-height: 1; }
+
+  .cat-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 18px;
+    padding: 0 5px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-secondary, #94a3b8);
+    transition: all 0.25s ease;
+  }
+
+  .cat-tab.active .cat-count {
+    background: color-mix(in srgb, var(--tab-color) 25%, transparent);
+    color: var(--tab-color);
+  }
+
+  @supports not (background: color-mix(in srgb, red 10%, transparent)) {
+    .cat-tab.active .cat-count {
+      background: rgba(0, 212, 255, 0.2);
+      color: #00d4ff;
+    }
+  }
+
+  /* Animate count change */
+  .cat-count.bumping {
+    transform: scale(1.35);
+    color: var(--tab-color, #00d4ff);
+  }
+
+  .cat-tab[data-empty="true"] {
+    opacity: 0.38;
+    pointer-events: none;
+  }
+
+  @media (max-width: 640px) {
+    .filter-track {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      gap: 0.35rem;
+    }
+    .filter-track::-webkit-scrollbar { display: none; }
+    .cat-tab { flex-shrink: 0; padding: 0.45rem 0.85rem; font-size: 0.8rem; }
+  }
+
+  [data-theme="light"] .filter-track {
+    background: rgba(0,0,0,0.03);
+    border-color: rgba(0,0,0,0.08);
+  }
+  [data-theme="light"] .cat-tab:hover:not(.active) {
+    background: rgba(0,0,0,0.04);
+    color: var(--text-primary, #1e293b);
+  }
+  [data-theme="light"] .cat-count {
+    background: rgba(0,0,0,0.07);
+    color: var(--text-secondary, #64748b);
+  }
+</style>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// CategoryFilter — hierarchical filtering
+//
+// PRIMARY filter  = skillFilter <select>  (skill: Python, SQL, etc.)
+// SECONDARY filter = category tabs        (ML, BI, Finance, etc.)
+//
+// Flow:
+//   1. Skill changes  → recalculate category counts from skill-matching cards
+//                     → re-apply current category filter
+//   2. Category click → show cards that match BOTH active skill + active category
+//   3. Skill = "all"  → counts from ALL cards; category still works normally
+// ─────────────────────────────────────────────────────────────────────────────
+
+function initCategoryFilter(wrap: HTMLElement) {
+  const targetSelector = wrap.dataset.target ?? '.glass-project-card';
+  const tabs = wrap.querySelectorAll<HTMLButtonElement>('.cat-tab');
+
+  // State
+  let activeSkill = 'all';
+  let activeCat   = 'all';
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+
+  /** All cards regardless of current visibility */
+  function allCards(): HTMLElement[] {
+    return Array.from(document.querySelectorAll<HTMLElement>(targetSelector));
+  }
+
+  /** Cards that match the active skill filter */
+  function skillMatchingCards(): HTMLElement[] {
+    if (activeSkill === 'all') return allCards();
+    return allCards().filter(card => {
+      const skills = Array.from(card.querySelectorAll('.tech-tag'))
+        .map(t => t.textContent?.trim() ?? '');
+      return skills.includes(activeSkill);
+    });
+  }
+
+  /** Cards that match BOTH active skill AND active category */
+  function matchingCards(): HTMLElement[] {
+    return skillMatchingCards().filter(card => {
+      if (activeCat === 'all') return true;
+      const cats = (card.dataset.category ?? '').split(',').map(s => s.trim());
+      return cats.includes(activeCat);
+    });
+  }
+
+  // ── Count update (animated) ───────────────────────────────────────────────
+
+  function updateCounts() {
+    const skillCards = skillMatchingCards();
+
+    tabs.forEach(tab => {
+      const cat      = tab.dataset.cat ?? 'all';
+      const countEl  = tab.querySelector<HTMLElement>('.cat-count');
+      if (!countEl) return;
+
+      let count = 0;
+      if (cat === 'all') {
+        count = skillCards.length;
+      } else {
+        skillCards.forEach(card => {
+          const cats = (card.dataset.category ?? '').split(',').map(s => s.trim());
+          if (cats.includes(cat)) count++;
+        });
+      }
+
+      const prev = parseInt(countEl.textContent ?? '0');
+      if (prev !== count) {
+        // Animate the number change
+        countEl.classList.remove('bumping');
+        void countEl.offsetWidth; // reflow
+        countEl.classList.add('bumping');
+        countEl.textContent = String(count);
+        setTimeout(() => countEl.classList.remove('bumping'), 300);
+      }
+
+      tab.dataset.empty = count === 0 ? 'true' : 'false';
+
+      // If active category becomes empty, reset to 'all'
+      if (cat === activeCat && count === 0 && cat !== 'all') {
+        setActiveTab('all');
+        activeCat = 'all';
+      }
+    });
+  }
+
+  // ── Visibility update ─────────────────────────────────────────────────────
+
+  function applyVisibility() {
+    const visible = matchingCards();
+    const visibleSet = new Set(visible);
+
+    // Expand "other" section if filtering
+    const isFiltering = activeSkill !== 'all' || activeCat !== 'all';
+    const otherContainer = document.getElementById('otherProjectsContainer');
+    const expandBtn      = document.getElementById('expandBtn');
+
+    if (isFiltering && otherContainer) {
+      otherContainer.classList.add('expanded');
+      otherContainer.setAttribute('aria-hidden', 'false');
+      if (expandBtn) expandBtn.style.display = 'none';
+    } else if (!isFiltering && otherContainer) {
+      otherContainer.classList.remove('expanded');
+      otherContainer.setAttribute('aria-hidden', 'true');
+      if (expandBtn) expandBtn.style.display = '';
+    }
+
+    allCards().forEach(card => {
+      const show = visibleSet.has(card);
+      card.style.display   = show ? '' : 'none';
+      card.style.animation = show ? 'filterReveal 0.3s ease both' : '';
+    });
+
+    showEmptyState(visible.length === 0);
+  }
+
+  // ── Empty state ───────────────────────────────────────────────────────────
+
+  function showEmptyState(show: boolean) {
+    let el = document.getElementById('cat-filter-empty');
+    if (show && !el) {
+      el = document.createElement('div');
+      el.id = 'cat-filter-empty';
+      el.className = 'cat-empty-state';
+      el.innerHTML = `
+        <div class="empty-icon">🔍</div>
+        <p>No projects match this combination.</p>
+        <p class="empty-sub">Try a different skill or category.</p>
+      `;
+      wrap.insertAdjacentElement('afterend', el);
+    } else if (!show && el) {
+      el.remove();
+    }
+  }
+
+  // ── Active tab setter ─────────────────────────────────────────────────────
+
+  function setActiveTab(cat: string) {
+    tabs.forEach(t => {
+      const isActive = t.dataset.cat === cat;
+      t.classList.toggle('active', isActive);
+      t.setAttribute('aria-selected', String(isActive));
+      t.tabIndex = isActive ? 0 : -1;
+    });
+  }
+
+  // ── Tab click & keyboard ──────────────────────────────────────────────────
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      activeCat = tab.dataset.cat ?? 'all';
+      setActiveTab(activeCat);
+      applyVisibility();
+    });
+
+    tab.addEventListener('keydown', (e: KeyboardEvent) => {
+      const arr = Array.from(tabs);
+      const idx = arr.indexOf(tab);
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const next = arr[(idx + 1) % arr.length];
+        next.focus(); next.click();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const prev = arr[(idx - 1 + arr.length) % arr.length];
+        prev.focus(); prev.click();
+      }
+    });
+  });
+
+  // ── Listen to skill filter changes ───────────────────────────────────────
+
+  function onSkillChange() {
+    const select = document.getElementById('skillFilter') as HTMLSelectElement | null;
+    activeSkill = select?.value ?? 'all';
+    updateCounts();
+    applyVisibility();
+  }
+
+  const skillSelect = document.getElementById('skillFilter');
+  if (skillSelect) {
+    skillSelect.addEventListener('change', onSkillChange);
+  }
+
+  // ── Listen to "Show More" expand ─────────────────────────────────────────
+
+  const expandBtn = document.getElementById('expandBtn');
+  if (expandBtn) {
+    expandBtn.addEventListener('click', () => {
+      setTimeout(() => {
+        updateCounts();
+      }, 350);
+    });
+  }
+
+  // ── i18n sync ─────────────────────────────────────────────────────────────
+
+  window.addEventListener('lang-change', (e: Event) => {
+    const lang = (e as CustomEvent<{ lang: string }>).detail.lang;
+    tabs.forEach(tab => {
+      const labelEl = tab.querySelector<HTMLElement>('.cat-label');
+      if (!labelEl) return;
+      const label = lang === 'pt' ? tab.dataset.labelPt : tab.dataset.labelEn;
+      if (label) labelEl.textContent = label;
+    });
+  });
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+
+  requestAnimationFrame(() => {
+    updateCounts();
+  });
+}
+
+// ── Inject styles once ────────────────────────────────────────────────────────
+const styleId = 'cat-filter-style';
+if (!document.getElementById(styleId)) {
+  const s = document.createElement('style');
+  s.id = styleId;
+  s.textContent = `
+    @keyframes filterReveal {
+      from { opacity: 0; transform: scale(0.97) translateY(4px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .cat-empty-state {
+      text-align: center; padding: 4rem 2rem;
+      color: var(--text-secondary, #94a3b8);
+    }
+    .cat-empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .cat-empty-state .empty-sub  { font-size: 0.875rem; opacity: 0.6; margin-top: 0.25rem; }
+  `;
+  document.head.appendChild(s);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll<HTMLElement>('.category-filter-wrap').forEach(initCategoryFilter);
+});
+</script>

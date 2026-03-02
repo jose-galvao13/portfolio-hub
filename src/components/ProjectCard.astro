@@ -14,12 +14,13 @@ interface Props {
   complexity?: string;
   businessImpact?: string;
   dataSection?: 'featured' | 'other';
+  category?: string | string[];
 }
 
 const {
   title, type, desc, stack, linkRepo, linkDemo,
   caseStudy, images, imageAlts, id,
-  complexity, businessImpact, dataSection,
+  complexity, businessImpact, dataSection, category,
 } = Astro.props;
 
 const currentLocale = Astro.currentLocale || 'en';
@@ -75,6 +76,7 @@ function getAlt(index: number): string {
   class="glass-project-card reveal-stagger"
   id={id}
   data-section={dataSection}
+  data-category={Array.isArray(category) ? category.join(',') : (category ?? '')}
 >
   <!-- Top Image / Carousel Section -->
   <div class="card-visuals">

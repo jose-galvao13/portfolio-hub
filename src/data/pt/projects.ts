@@ -43,6 +43,7 @@ export interface Project {
   complexity: 'intermediate' | 'advanced';
   businessImpact: 'medium' | 'high';
   featured: boolean;
+  category: ProjectCategory | ProjectCategory[];
 }
 
 export function getProjectsData(baseUrl: string): Project[] {
@@ -69,6 +70,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "advanced",
       businessImpact: "high",
       featured: true,
+      category: ['ml', 'bi'],
     },
     {
       id: 'fraud-detection',
@@ -89,6 +91,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "advanced",
       businessImpact: "high",
       featured: true,
+      category: ['ml'],
     },
     {
       id: 'real-estate',
@@ -104,6 +107,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "intermediate",
       businessImpact: "medium",
       featured: true,
+      category: ['bi'],
     },
     {
       id: 'chatcfo',
@@ -123,6 +127,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "advanced",
       businessImpact: "high",
       featured: true,
+      category: ['ai', 'finance'],
     },
     {
       id: 'macro-portfolio',
@@ -138,6 +143,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "intermediate",
       businessImpact: "medium",
       featured: false,
+      category: ['finance', 'bi'],
     },
     {
       id: 'equity-research',
@@ -156,6 +162,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "intermediate",
       businessImpact: "high",
       featured: false,
+      category: ['finance'],
     },
     {
       id: 'banker-ai',
@@ -171,6 +178,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "advanced",
       businessImpact: "high",
       featured: false,
+      category: ['ml', 'finance'],
     },
     {
       id: 'financial-warehouse',
@@ -186,6 +194,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "advanced",
       businessImpact: "high",
       featured: false,
+      category: ['engineering', 'finance'],
     },
     {
       id: 'financial-reporting',
@@ -201,6 +210,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "intermediate",
       businessImpact: "medium",
       featured: false,
+      category: ['engineering', 'finance'],
     },
     {
       id: 'ecommerce-analytics',
@@ -221,6 +231,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "intermediate",
       businessImpact: "medium",
       featured: false,
+      category: ['bi'],
     },
     {
       id: 'sales-forecasting',
@@ -236,6 +247,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       complexity: "intermediate",
       businessImpact: "medium",
       featured: false,
+      category: ['ml', 'bi'],
     },
   ];
 }
