@@ -28,6 +28,10 @@ import _ecom2    from '../../assets/images/ecommerce2.png';
 import _ecom3    from '../../assets/images/ecommerce3.png';
 import _ecom4    from '../../assets/images/ecommerce4.png';
 import _forecast from '../../assets/images/forecast.png';
+import _fraudapi  from '../../assets/images/fraudapi.png';
+import _fraudapi2  from '../../assets/images/fraudapi2.png';
+import _fraudapi3  from '../../assets/images/fraudapi3.png';
+import _fraudapi4  from '../../assets/images/fraudapi4.png';
 
 export interface Project {
   id: string;
@@ -90,7 +94,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       ],
       complexity: "advanced",
       businessImpact: "high",
-      featured: true,
+      featured: false,
       category: ['ml'],
     },
     {
@@ -248,6 +252,27 @@ export function getProjectsData(baseUrl: string): Project[] {
       businessImpact: "medium",
       featured: false,
       category: ['ml', 'bi'],
+    },
+    {
+      id: 'fraud-api',
+      titleKey: 'project.fraudapi.title',
+      typeKey: 'project.fraudapi.type',
+      desc: "<b>🔴 Problema:</b> Filtros de fraude legados são demasiado lentos para pagamentos em tempo real e não conseguem escalar.<br><b>🟢 Solução:</b> API de MLOps de nível de produção (FastAPI) que serve um ensemble não supervisionado com processamento em lote e hot-reloading.<br><b>🚀 Impacto:</b> Latência de inferência inferior a 50ms e 64,6% de recall em padrões zero-day, automatizando a segurança de transações de alta frequência.",
+      stack: ["FastAPI", "MLOps", "Docker", "Python", "Scikit-Learn"],
+      linkRepo: "https://github.com/jose-galvao13/fraud-api",
+      linkDemo: "#",
+      caseStudy: `fraud-api`,
+      images: [_fraudapi.src, _fraudapi2.src, _fraudapi3.src, _fraudapi4.src],
+      imageAlts: [
+        "Dashboard da FraudShield API exibindo resumo executivo e métricas de deteção",
+        "Documentação Swagger UI da FastAPI para pontuação de transações em tempo real",
+        "Arquitetura do pipeline de MLOps, desde a ingestão de dados até à implementação em contentores (Docker)",
+        "Saída de terminal mostrando a resposta JSON de previsões em lote com níveis de risco"
+      ],
+      complexity: "advanced",
+      businessImpact: "high",
+      featured: true,
+      category: ['ml', 'engineering'],
     },
   ];
 }

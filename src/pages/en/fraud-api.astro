@@ -1,0 +1,216 @@
+---
+import CaseStudyLayout from '../../layouts/en/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🛡️', value: '64.6%',  label: 'Recall Rate (Fraud Caught)' },
+  { icon: '🎯', value: '318',    label: 'True Fraud Cases Detected' },
+  { icon: '⚡', value: '<5ms',   label: 'Avg. Inference Latency' },
+  { icon: '📦', value: '6.3M',   label: 'Transactions Trained On' }
+];
+
+const stack = ['Python', 'FastAPI', 'Scikit-Learn', 'MLflow', 'Joblib', 'Pydantic'];
+---
+
+<CaseStudyLayout
+  title="FraudShield — Real-Time Fraud Detection API"
+  description="Production MLOps service combining Isolation Forest, PCA reconstruction, and a Voting Ensemble to score financial transactions for fraud risk in under 5ms."
+  projectType="Machine Learning / MLOps / Financial Engineering"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/fraud-api"
+  currentLang="en"
+>
+  <section>
+    <h2>🎯 Business Challenge</h2>
+    <p>
+      Financial fraud is one of the most asymmetric problems in data science: the dataset is <strong>99.87% legitimate transactions</strong>, yet the cost of missing a fraudulent one vastly outweighs the cost of a false alarm. Standard supervised classifiers fail here because they optimise for accuracy — and predicting "not fraud" every single time gives 99.87% accuracy while catching zero fraud.
+    </p>
+    <p>
+      The core challenges were:
+    </p>
+    <ul>
+      <li><strong>Extreme Class Imbalance:</strong> Only 0.13% of the 6.3M PaySim transactions are fraudulent, making traditional classifiers useless out of the box.</li>
+      <li><strong>No Ground Truth at Inference Time:</strong> A real payment system cannot wait for a label. The model must make an unsupervised decision based solely on transaction behaviour.</li>
+      <li><strong>Latency Requirements:</strong> Production fraud scoring must happen in milliseconds — not seconds — to avoid blocking legitimate payments.</li>
+      <li><strong>Explainability Gap:</strong> A fraud flag without a risk level and anomaly score is operationally useless for analysts who need to triage alerts.</li>
+    </ul>
+    <blockquote>
+      "A model that predicts 'not fraud' every time is 99.87% accurate — and completely worthless."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Solution Architecture</h2>
+    <p>
+      I designed a <strong>three-component unsupervised ensemble</strong> served behind a production FastAPI layer with full MLflow experiment tracking. The ensemble approach was chosen specifically to reduce the false positive rate that any single anomaly detector would produce.
+    </p>
+
+    <h3>Component 1 — Isolation Forest</h3>
+    <ul>
+      <li>Detects anomalies by isolating observations through random feature splits.</li>
+      <li>Particularly effective for high-dimensional financial data with irregular distributions.</li>
+      <li>Caught <strong>285 true fraud cases</strong> in the test set independently.</li>
+    </ul>
+
+    <h3>Component 2 — PCA Reconstruction Error</h3>
+    <ul>
+      <li>Compresses the transaction feature space and reconstructs it; legitimate transactions reconstruct well, fraudulent ones produce high residual error.</li>
+      <li>Caught <strong>301 true fraud cases</strong> independently — stronger on TRANSFER and CASH-OUT patterns.</li>
+    </ul>
+
+    <h3>Component 3 — Voting Ensemble (Final Model)</h3>
+    <ul>
+      <li>A transaction is flagged as fraud only when <strong>multiple detectors agree</strong>, dramatically reducing false alarms.</li>
+      <li>Final result: <strong>318 true fraud detections</strong> with 8.3% precision — meaning 1 in 12 alerts is actionable, a significant improvement over random flagging.</li>
+    </ul>
+
+    <h3>MLOps Pipeline</h3>
+    <pre is:raw><code>PaySim Dataset → Feature Engineering → Isolation Forest + PCA → Voting Ensemble → FastAPI → /predict</code></pre>
+
+    <h3>Feature Engineering</h3>
+    <pre is:raw><code>def to_X(t: TransactionIn):
+    type_encoded    = TYPE_MAP.get(t.type.upper(), -1)
+    balance_diff_orig = t.newbalanceOrig - t.oldbalanceOrg
+    balance_diff_dest = t.newbalanceDest - t.oldbalanceDest
+    amount_vs_balance = t.amount / t.oldbalanceOrg if t.oldbalanceOrg > 0 else t.amount
+
+    return np.array([[
+        t.amount, t.step, type_encoded,
+        t.oldbalanceOrg, t.newbalanceOrig,
+        t.oldbalanceDest, t.newbalanceDest,
+        balance_diff_orig, balance_diff_dest, amount_vs_balance
+    ]])</code></pre>
+
+    <p>Three engineered features (<code>balance_diff_orig</code>, <code>balance_diff_dest</code>, <code>amount_vs_balance</code>) were the most predictive — a TRANSFER that drains the origin balance to zero is the single strongest fraud signal in PaySim data.</p>
+  </section>
+
+  <section>
+    <h2>🚀 API Design & Production Readiness</h2>
+
+    <h3>Endpoints</h3>
+    <ul>
+      <li><strong>GET /health</strong> — Service health, model load status, uptime.</li>
+      <li><strong>GET /model/info</strong> — Active version, feature list, architecture description.</li>
+      <li><strong>POST /predict</strong> — Score a single transaction. Returns <code>is_fraud</code>, <code>fraud_probability</code>, <code>risk_level</code> (LOW / MEDIUM / HIGH / CRITICAL), <code>anomaly_score</code>, and <code>inference_ms</code>.</li>
+      <li><strong>POST /predict/batch</strong> — Score up to 500 transactions in a single call, returning aggregate fraud rate alongside per-transaction scores.</li>
+      <li><strong>POST /model/reload</strong> — Hot-reload the model bundle from disk without restarting the service.</li>
+    </ul>
+
+    <h3>Risk Stratification</h3>
+    <pre is:raw><code>def risk(probability: float) -> str:
+    if probability >= 0.80: return "CRITICAL"
+    if probability >= 0.60: return "HIGH"
+    if probability >= 0.35: return "MEDIUM"
+    return "LOW"</code></pre>
+
+    <h3>Example Request / Response</h3>
+    <pre is:raw><code># Request
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 9000, "step": 2, "type": "TRANSFER",
+       "oldbalanceOrg": 9000, "newbalanceOrig": 0,
+       "oldbalanceDest": 0, "newbalanceDest": 0}'
+
+# Response
+{
+  "transaction_id": "TX-1748291234567",
+  "is_fraud": true,
+  "fraud_probability": 0.9241,
+  "risk_level": "CRITICAL",
+  "anomaly_score": 0.4241,
+  "model_version": "v1.0.0",
+  "inference_ms": 3.2,
+  "timestamp": "2025-01-15T10:30:00Z"
+}</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Model Performance & Results</h2>
+
+    <h3>Ensemble vs. Individual Detectors</h3>
+    <ul>
+      <li><strong>Isolation Forest alone:</strong> 285 true positives, ~10.0% precision.</li>
+      <li><strong>PCA Reconstruction alone:</strong> 301 true positives, ~10.6% precision.</li>
+      <li><strong>Voting Ensemble (final):</strong> 318 true positives, 8.3% precision — highest absolute recall while maintaining operationally useful precision.</li>
+    </ul>
+
+    <h3>Key Metrics at Default Threshold</h3>
+    <ul>
+      <li><strong>Recall: 64.6%</strong> — captured 318 of 492 actual fraud cases in the test set.</li>
+      <li><strong>Precision: 8.3%</strong> — acceptable for an unsupervised system on 0.13% base rate data; every flagged batch is reviewed by a human analyst.</li>
+      <li><strong>False Positives: 3,516</strong> — legitimate transactions incorrectly flagged; filtered downstream by the risk stratification layer (CRITICAL/HIGH alerts only for auto-action).</li>
+    </ul>
+
+    <h3>Why Recall Is the Right Metric Here</h3>
+    <p>
+      In fraud detection, a missed fraud (false negative) carries a direct financial loss. A false alarm (false positive) costs analyst time — far cheaper. Optimising for recall at the cost of precision is the correct business trade-off, with the risk stratification layer serving as the triage mechanism.
+    </p>
+  </section>
+
+  <section>
+    <h2>🛠️ Technical Methodology</h2>
+
+    <h3>Dataset — PaySim</h3>
+    <ul>
+      <li><strong>6.3 million rows</strong> of simulated mobile money transactions (Lopez-Rojas et al., 2016 — CC0 Public Domain).</li>
+      <li>5 transaction types: CASH-IN, CASH-OUT, DEBIT, PAYMENT, TRANSFER.</li>
+      <li>Fraud rate: 0.13% — only TRANSFER and CASH-OUT transactions are ever fraudulent in PaySim.</li>
+    </ul>
+
+    <h3>Model Persistence & Versioning</h3>
+    <ul>
+      <li>The full ensemble bundle (all three models + metadata) is serialised with <strong>Joblib</strong> to a single <code>.joblib</code> file.</li>
+      <li>Every training run is tracked in <strong>MLflow</strong> (parameters, metrics, artefacts) using a local SQLite backend.</li>
+      <li>The API supports hot-reloading via <code>POST /model/reload</code> — no downtime required for model updates.</li>
+    </ul>
+
+    <h3>Lifespan Management (FastAPI)</h3>
+    <pre is:raw><code>@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("🚀 Starting Fraud Detection API...")
+    load_model()  # loads bundle from disk at startup
+    yield
+    # graceful shutdown logic here</code></pre>
+  </section>
+
+  <section>
+    <h2>🎓 Lessons Learned</h2>
+
+    <h3>What Worked</h3>
+    <ul>
+      <li><strong>Ensemble over Single Model:</strong> No single unsupervised detector was consistently better across all fraud patterns. The voting approach gave the best coverage.</li>
+      <li><strong>Feature Engineering Over Raw Features:</strong> The three engineered balance features (<code>balance_diff_orig</code>, <code>balance_diff_dest</code>, <code>amount_vs_balance</code>) contributed more signal than the raw balances alone.</li>
+      <li><strong>Risk Stratification:</strong> Mapping a continuous anomaly score to four discrete risk levels (LOW → CRITICAL) made the output operationally useful for analysts without requiring them to interpret raw probabilities.</li>
+    </ul>
+
+    <h3>Challenges Overcome</h3>
+    <ul>
+      <li><strong>Unsupervised Threshold Calibration:</strong> Without labelled data at inference time, setting the fraud threshold required backtesting against the PaySim test set and manually tuning the contamination parameter.</li>
+      <li><strong>Probability Calibration:</strong> Isolation Forest returns decision function scores, not true probabilities. I mapped these via <code>prob = clip(0.5 - raw_score, 0, 1)</code> — a pragmatic approximation that produces monotonically consistent risk rankings.</li>
+      <li><strong>Batch Efficiency:</strong> The naive approach of looping <code>predict()</code> per transaction was ~40× slower than stacking all inputs into a single NumPy matrix and calling the ensemble once.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Future Enhancements</h2>
+    <ul>
+      <li><strong>Supervised Fine-Tuning:</strong> Once a labelled dataset accumulates from analyst reviews, add an XGBoost layer trained on confirmed fraud labels.</li>
+      <li><strong>Real-Time Streaming:</strong> Replace the REST batch endpoint with a Kafka consumer for true sub-second event-driven scoring.</li>
+      <li><strong>Drift Detection:</strong> Monitor feature distributions over time and trigger automatic retraining when statistical drift exceeds a threshold.</li>
+      <li><strong>SHAP Integration:</strong> Add per-prediction feature attribution so analysts understand <em>why</em> a transaction was flagged, not just <em>that</em> it was.</li>
+      <li><strong>Docker + CI/CD:</strong> Containerise the service and add a GitHub Actions pipeline that retrains, evaluates, and deploys on new data automatically.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Technical Stack Deep Dive</h2>
+    <ul>
+      <li><strong>FastAPI:</strong> Async REST framework with automatic OpenAPI docs, Pydantic validation, and lifespan management.</li>
+      <li><strong>Scikit-Learn:</strong> Isolation Forest, PCA, and the VotingClassifier ensemble wrapper.</li>
+      <li><strong>MLflow:</strong> Experiment tracking, model versioning, and artefact storage (SQLite backend for portability).</li>
+      <li><strong>Joblib:</strong> Efficient serialisation of the full ensemble bundle including preprocessing objects.</li>
+      <li><strong>Pydantic:</strong> Strict input validation with field constraints (<code>amount > 0</code>, <code>step >= 1</code>) — rejects malformed requests before they reach the model.</li>
+      <li><strong>NumPy:</strong> Vectorised feature construction and batch matrix assembly for low-latency inference.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

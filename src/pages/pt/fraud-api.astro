@@ -1,0 +1,216 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🛡️', value: '64.6%',  label: 'Taxa de Recall (Fraude Detetada)' },
+  { icon: '🎯', value: '318',    label: 'Casos de Fraude Reais Detetados' },
+  { icon: '⚡', value: '<5ms',   label: 'Latência Média de Inferência' },
+  { icon: '📦', value: '6.3M',   label: 'Transações Utilizadas no Treino' }
+];
+
+const stack = ['Python', 'FastAPI', 'Scikit-Learn', 'MLflow', 'Joblib', 'Pydantic'];
+---
+
+<CaseStudyLayout
+  title="FraudShield — API de Deteção de Fraude em Tempo Real"
+  description="Serviço MLOps de produção que combina Isolation Forest, reconstrução PCA e um Voting Ensemble para classificar transações financeiras quanto ao risco de fraude em menos de 5ms."
+  projectType="Machine Learning / MLOps / Engenharia Financeira"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/fraud-detection"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      A fraude financeira é um dos problemas mais assimétricos em ciência de dados: o dataset é composto por <strong>99,87% de transações legítimas</strong>, mas o custo de falhar uma transação fraudulenta supera largamente o custo de um falso alarme. Os classificadores supervisionados tradicionais falham aqui porque otimizam a precisão global — e prever "sem fraude" em todas as transações resulta em 99,87% de accuracy, sem detetar uma única fraude.
+    </p>
+    <p>
+      Os principais desafios foram:
+    </p>
+    <ul>
+      <li><strong>Desequilíbrio Extremo de Classes:</strong> Apenas 0,13% das 6,3M transações PaySim são fraudulentas, tornando os classificadores tradicionais inúteis por defeito.</li>
+      <li><strong>Sem Ground Truth no Momento da Inferência:</strong> Um sistema de pagamentos real não pode aguardar por uma etiqueta. O modelo tem de tomar uma decisão não supervisionada baseada exclusivamente no comportamento da transação.</li>
+      <li><strong>Requisitos de Latência:</strong> A classificação de fraude em produção tem de ocorrer em milissegundos — não em segundos — para evitar o bloqueio de pagamentos legítimos.</li>
+      <li><strong>Lacuna de Explicabilidade:</strong> Um alerta de fraude sem nível de risco e pontuação de anomalia é operacionalmente inútil para analistas que precisam de triagem de alertas.</li>
+    </ul>
+    <blockquote>
+      "Um modelo que prevê 'sem fraude' em todas as transações tem 99,87% de accuracy — e é completamente inútil."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Arquitetura da Solução</h2>
+    <p>
+      Projetei um <strong>ensemble não supervisionado de três componentes</strong> servido por uma camada FastAPI de produção com rastreamento completo de experiências via MLflow. A abordagem de ensemble foi escolhida especificamente para reduzir a taxa de falsos positivos que qualquer detetor de anomalias isolado produziria.
+    </p>
+
+    <h3>Componente 1 — Isolation Forest</h3>
+    <ul>
+      <li>Deteta anomalias isolando observações através de divisões aleatórias de features.</li>
+      <li>Particularmente eficaz para dados financeiros de alta dimensionalidade com distribuições irregulares.</li>
+      <li>Detetou <strong>285 casos de fraude reais</strong> no conjunto de teste de forma independente.</li>
+    </ul>
+
+    <h3>Componente 2 — Erro de Reconstrução PCA</h3>
+    <ul>
+      <li>Comprime o espaço de features das transações e reconstrói-o; transações legítimas reconstroem-se bem, as fraudulentas produzem um erro residual elevado.</li>
+      <li>Detetou <strong>301 casos de fraude reais</strong> de forma independente — mais eficaz em padrões de TRANSFER e CASH-OUT.</li>
+    </ul>
+
+    <h3>Componente 3 — Voting Ensemble (Modelo Final)</h3>
+    <ul>
+      <li>Uma transação é sinalizada como fraude apenas quando <strong>múltiplos detetores concordam</strong>, reduzindo dramaticamente os falsos alarmes.</li>
+      <li>Resultado final: <strong>318 deteções de fraude reais</strong> com 8,3% de precisão — o que significa que 1 em cada 12 alertas é acionável, uma melhoria significativa relativamente à sinalização aleatória.</li>
+    </ul>
+
+    <h3>Pipeline MLOps</h3>
+    <pre is:raw><code>Dataset PaySim → Engenharia de Features → Isolation Forest + PCA → Voting Ensemble → FastAPI → /predict</code></pre>
+
+    <h3>Engenharia de Features</h3>
+    <pre is:raw><code>def to_X(t: TransactionIn):
+    type_encoded      = TYPE_MAP.get(t.type.upper(), -1)
+    balance_diff_orig = t.newbalanceOrig - t.oldbalanceOrg
+    balance_diff_dest = t.newbalanceDest - t.oldbalanceDest
+    amount_vs_balance = t.amount / t.oldbalanceOrg if t.oldbalanceOrg > 0 else t.amount
+
+    return np.array([[
+        t.amount, t.step, type_encoded,
+        t.oldbalanceOrg, t.newbalanceOrig,
+        t.oldbalanceDest, t.newbalanceDest,
+        balance_diff_orig, balance_diff_dest, amount_vs_balance
+    ]])</code></pre>
+
+    <p>As três features engenheiradas (<code>balance_diff_orig</code>, <code>balance_diff_dest</code>, <code>amount_vs_balance</code>) foram as mais preditivas — uma TRANSFER que esgota o saldo de origem a zero é o sinal de fraude mais forte nos dados PaySim.</p>
+  </section>
+
+  <section>
+    <h2>🚀 Design da API e Prontidão para Produção</h2>
+
+    <h3>Endpoints</h3>
+    <ul>
+      <li><strong>GET /health</strong> — Saúde do serviço, estado de carregamento do modelo, uptime.</li>
+      <li><strong>GET /model/info</strong> — Versão ativa, lista de features, descrição da arquitetura.</li>
+      <li><strong>POST /predict</strong> — Classifica uma única transação. Devolve <code>is_fraud</code>, <code>fraud_probability</code>, <code>risk_level</code> (LOW / MEDIUM / HIGH / CRITICAL), <code>anomaly_score</code> e <code>inference_ms</code>.</li>
+      <li><strong>POST /predict/batch</strong> — Classifica até 500 transações numa única chamada, devolvendo a taxa agregada de fraude juntamente com pontuações por transação.</li>
+      <li><strong>POST /model/reload</strong> — Recarrega o bundle do modelo a partir do disco sem reiniciar o serviço.</li>
+    </ul>
+
+    <h3>Estratificação de Risco</h3>
+    <pre is:raw><code>def risk(probability: float) -> str:
+    if probability >= 0.80: return "CRITICAL"
+    if probability >= 0.60: return "HIGH"
+    if probability >= 0.35: return "MEDIUM"
+    return "LOW"</code></pre>
+
+    <h3>Exemplo de Pedido / Resposta</h3>
+    <pre is:raw><code># Pedido
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 9000, "step": 2, "type": "TRANSFER",
+       "oldbalanceOrg": 9000, "newbalanceOrig": 0,
+       "oldbalanceDest": 0, "newbalanceDest": 0}'
+
+# Resposta
+{
+  "transaction_id": "TX-1748291234567",
+  "is_fraud": true,
+  "fraud_probability": 0.9241,
+  "risk_level": "CRITICAL",
+  "anomaly_score": 0.4241,
+  "model_version": "v1.0.0",
+  "inference_ms": 3.2,
+  "timestamp": "2025-01-15T10:30:00Z"
+}</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Desempenho do Modelo e Resultados</h2>
+
+    <h3>Ensemble vs. Detetores Individuais</h3>
+    <ul>
+      <li><strong>Isolation Forest isolado:</strong> 285 verdadeiros positivos, ~10,0% de precisão.</li>
+      <li><strong>Reconstrução PCA isolada:</strong> 301 verdadeiros positivos, ~10,6% de precisão.</li>
+      <li><strong>Voting Ensemble (final):</strong> 318 verdadeiros positivos, 8,3% de precisão — maior recall absoluto mantendo uma precisão operacionalmente útil.</li>
+    </ul>
+
+    <h3>Métricas Principais no Limiar Padrão</h3>
+    <ul>
+      <li><strong>Recall: 64,6%</strong> — capturou 318 dos 492 casos de fraude reais no conjunto de teste.</li>
+      <li><strong>Precisão: 8,3%</strong> — aceitável para um sistema não supervisionado com taxa base de 0,13%; cada lote sinalizado é revisto por um analista humano.</li>
+      <li><strong>Falsos Positivos: 3.516</strong> — transações legítimas incorretamente sinalizadas; filtradas a jusante pela camada de estratificação de risco (apenas alertas CRITICAL/HIGH para ação automática).</li>
+    </ul>
+
+    <h3>Porque o Recall É a Métrica Correta Aqui</h3>
+    <p>
+      Na deteção de fraude, uma fraude não detetada (falso negativo) acarreta uma perda financeira direta. Um falso alarme (falso positivo) custa tempo do analista — muito mais barato. Otimizar o recall à custa da precisão é o trade-off de negócio correto, com a camada de estratificação de risco a servir como mecanismo de triagem.
+    </p>
+  </section>
+
+  <section>
+    <h2>🛠️ Metodologia Técnica</h2>
+
+    <h3>Dataset — PaySim</h3>
+    <ul>
+      <li><strong>6,3 milhões de linhas</strong> de transações simuladas de mobile money (Lopez-Rojas et al., 2016 — CC0 Domínio Público).</li>
+      <li>5 tipos de transações: CASH-IN, CASH-OUT, DEBIT, PAYMENT, TRANSFER.</li>
+      <li>Taxa de fraude: 0,13% — apenas transações TRANSFER e CASH-OUT são fraudulentas no PaySim.</li>
+    </ul>
+
+    <h3>Persistência e Versionamento do Modelo</h3>
+    <ul>
+      <li>O bundle completo do ensemble (os três modelos + metadados) é serializado com <strong>Joblib</strong> para um único ficheiro <code>.joblib</code>.</li>
+      <li>Cada execução de treino é rastreada no <strong>MLflow</strong> (parâmetros, métricas, artefactos) usando um backend SQLite local.</li>
+      <li>A API suporta recarga em quente via <code>POST /model/reload</code> — sem downtime necessário para atualizações de modelo.</li>
+    </ul>
+
+    <h3>Gestão do Ciclo de Vida (FastAPI)</h3>
+    <pre is:raw><code>@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("🚀 A iniciar API de Deteção de Fraude...")
+    load_model()  # carrega o bundle do disco na inicialização
+    yield
+    # lógica de shutdown gracioso aqui</code></pre>
+  </section>
+
+  <section>
+    <h2>🎓 Lições Aprendidas</h2>
+
+    <h3>O que Funcionou</h3>
+    <ul>
+      <li><strong>Ensemble em vez de Modelo Único:</strong> Nenhum detetor não supervisionado isolado foi consistentemente superior em todos os padrões de fraude. A abordagem de votação deu a melhor cobertura.</li>
+      <li><strong>Engenharia de Features sobre Features Brutas:</strong> As três features de saldo engenheiradas (<code>balance_diff_orig</code>, <code>balance_diff_dest</code>, <code>amount_vs_balance</code>) contribuíram com mais sinal do que os saldos brutos isolados.</li>
+      <li><strong>Estratificação de Risco:</strong> Mapear uma pontuação contínua de anomalia para quatro níveis discretos de risco (LOW → CRITICAL) tornou o output operacionalmente útil para analistas sem exigir que interpretassem probabilidades brutas.</li>
+    </ul>
+
+    <h3>Desafios Ultrapassados</h3>
+    <ul>
+      <li><strong>Calibração de Limiar Não Supervisionada:</strong> Sem dados rotulados no momento da inferência, definir o limiar de fraude exigiu backtesting no conjunto de teste PaySim e ajuste manual do parâmetro de contaminação.</li>
+      <li><strong>Calibração de Probabilidade:</strong> O Isolation Forest devolve pontuações de função de decisão, não probabilidades reais. Mapeei estas via <code>prob = clip(0.5 - raw_score, 0, 1)</code> — uma aproximação pragmática que produz rankings de risco monotonicamente consistentes.</li>
+      <li><strong>Eficiência em Batch:</strong> A abordagem ingénua de iterar <code>predict()</code> por transação era ~40× mais lenta do que empilhar todos os inputs numa única matriz NumPy e invocar o ensemble uma só vez.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Melhorias Futuras</h2>
+    <ul>
+      <li><strong>Fine-Tuning Supervisionado:</strong> Assim que um dataset rotulado acumule das revisões dos analistas, adicionar uma camada XGBoost treinada em etiquetas de fraude confirmadas.</li>
+      <li><strong>Streaming em Tempo Real:</strong> Substituir o endpoint REST de batch por um consumidor Kafka para classificação verdadeiramente orientada a eventos em sub-segundo.</li>
+      <li><strong>Deteção de Drift:</strong> Monitorizar distribuições de features ao longo do tempo e desencadear retreino automático quando o drift estatístico exceder um limiar.</li>
+      <li><strong>Integração SHAP:</strong> Adicionar atribuição de features por previsão para que os analistas compreendam <em>porquê</em> uma transação foi sinalizada, não apenas <em>que</em> o foi.</li>
+      <li><strong>Docker + CI/CD:</strong> Containerizar o serviço e adicionar um pipeline GitHub Actions que retreina, avalia e implementa automaticamente com novos dados.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Stack Técnica em Detalhe</h2>
+    <ul>
+      <li><strong>FastAPI:</strong> Framework REST assíncrono com documentação OpenAPI automática, validação Pydantic e gestão do ciclo de vida.</li>
+      <li><strong>Scikit-Learn:</strong> Isolation Forest, PCA e o wrapper VotingClassifier do ensemble.</li>
+      <li><strong>MLflow:</strong> Rastreamento de experiências, versionamento de modelos e armazenamento de artefactos (backend SQLite para portabilidade).</li>
+      <li><strong>Joblib:</strong> Serialização eficiente do bundle completo do ensemble incluindo objetos de pré-processamento.</li>
+      <li><strong>Pydantic:</strong> Validação de input estrita com restrições de campo (<code>amount > 0</code>, <code>step >= 1</code>) — rejeita pedidos malformados antes de chegarem ao modelo.</li>
+      <li><strong>NumPy:</strong> Construção vetorizada de features e montagem de matrizes em batch para inferência de baixa latência.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

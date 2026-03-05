@@ -98,7 +98,8 @@ const translations = {
   'project.ecom.type':       { en: 'Business Intelligence',                   pt: 'Business Intelligence' },
   'project.forecast.title':  { en: 'AI Sales Forecasting',                    pt: 'Previsão de Vendas com IA' },
   'project.forecast.type':   { en: 'Data Science & FP&A',                     pt: 'Ciência de Dados & FP&A' },
-
+  'project.fraudapi.title':  { en: 'FraudShield API — MLOps Engine',          pt: 'FraudShield API — Motor de MLOps'},
+  'project.fraudapi.type':   { en: 'MLOps & API Engineering',                 pt: 'Engenharia de MLOps e API'},
   // ── Skills section ────────────────────────────────────────────────────────
   'skills.heading':          { en: 'Technical',            pt: 'Competências' },
   'skills.headingAccent':    { en: 'Arsenal',              pt: 'Técnicas' },

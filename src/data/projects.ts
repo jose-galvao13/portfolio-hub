@@ -32,6 +32,10 @@ import _ecom2    from '../assets/images/ecommerce2.png';
 import _ecom3    from '../assets/images/ecommerce3.png';
 import _ecom4    from '../assets/images/ecommerce4.png';
 import _forecast from '../assets/images/forecast.png';
+import _fraudapi  from '../assets/images/fraudapi.png';
+import _fraudapi2  from '../assets/images/fraudapi2.png';
+import _fraudapi3  from '../assets/images/fraudapi3.png';
+import _fraudapi4  from '../assets/images/fraudapi4.png';
 
 export interface Project {
   /** Unique identifier for the project */
@@ -102,7 +106,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       ],
       complexity: "advanced",
       businessImpact: "high",
-      featured: true,
+      featured: false,
       category: ['ml'],
     },
     {
@@ -262,6 +266,27 @@ export function getProjectsData(baseUrl: string): Project[] {
       businessImpact: "medium",
       featured: false,
       category: ['ml', 'bi'],
+    },
+    {
+      id: 'fraud-api',
+      titleKey: 'project.fraudapi.title',
+      typeKey: 'project.fraudapi.type',
+      desc: "<b>🔴 Problem:</b> Legacy fraud filters are too slow for real-time payments and fail to scale.<br><b>🟢 Solution:</b> Production-grade MLOps API (FastAPI) serving an unsupervised ensemble with batch processing and hot-reloading.<br><b>🚀 Impact:</b> Sub-50ms inference latency and 64.6% recall on zero-day patterns, automating high-frequency transaction security.",
+      stack: ["FastAPI", "MLOps", "Docker", "Python", "Scikit-Learn"],
+      linkRepo: "https://github.com/jose-galvao13/fraud-api",
+      linkDemo: "#",
+      caseStudy: `fraud-api`,
+      images: [_fraudapi.src, _fraudapi2.src, _fraudapi3.src, _fraudapi4.src],
+      imageAlts: [
+        "FraudShield API Dashboard showing executive summary and detection metrics",
+        "FastAPI Swagger UI documentation for real-time transaction scoring",
+        "MLOps pipeline architecture from data ingestion to containerized deployment",
+        "Terminal output showing batch prediction JSON response with risk levels"
+      ],
+      complexity: "advanced",
+      businessImpact: "high",
+      featured: true,
+      category: ['ml', 'engineering'],
     },
   ];
 }
