@@ -639,14 +639,28 @@ for (const skill of skillFilters) {
 // THEME TOGGLE
 // ============================================
 const themeBtn = document.getElementById('theme-toggle-btn');
-const savedTheme = localStorage.getItem('theme') || 'dark';
-document.documentElement.setAttribute('data-theme', savedTheme);
+
+// 1. Verifica se o utilizador já escolheu manualmente
+const savedTheme = localStorage.getItem('theme');
+
+// 2. Se não escolheu, usa a preferência do sistema
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const activeTheme = savedTheme ?? systemTheme;
+
+document.documentElement.setAttribute('data-theme', activeTheme);
 
 themeBtn?.addEventListener('click', () => {
   const current = document.documentElement.getAttribute('data-theme');
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
+  localStorage.setItem('theme', next); // só grava após escolha manual
+});
+
+// 3. Opcional: reagir a mudanças do sistema SE o utilizador não escolheu
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  if (!localStorage.getItem('theme')) {
+    document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+  }
 });
   </script>
 </body>
