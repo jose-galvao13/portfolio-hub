@@ -271,33 +271,52 @@ function initCategoryFilter(wrap: HTMLElement) {
 
   // ── Visibility update ─────────────────────────────────────────────────────
 
-  function applyVisibility() {
-    const visible = matchingCards();
-    const visibleSet = new Set(visible);
+ function applyVisibility() {
+  const visible = matchingCards();
+  const visibleSet = new Set(visible);
 
-    // Expand "other" section if filtering
-    const isFiltering = activeSkill !== 'all' || activeCat !== 'all';
-    const otherContainer = document.getElementById('otherProjectsContainer');
-    const expandBtn      = document.getElementById('expandBtn');
+  const isFiltering = activeSkill !== 'all' || activeCat !== 'all';
+  const otherContainer = document.getElementById('otherProjectsContainer');
+  const featuredGrid   = document.getElementById('featuredGrid');
+  const otherGrid      = document.getElementById('otherGrid');
+  const expandBtn      = document.getElementById('expandBtn');
+  const otherSection   = document.querySelector<HTMLElement>('.other-projects-section');
 
-    if (isFiltering && otherContainer) {
-      otherContainer.classList.add('expanded');
-      otherContainer.setAttribute('aria-hidden', 'false');
-      if (expandBtn) expandBtn.style.display = 'none';
-    } else if (!isFiltering && otherContainer) {
+  if (isFiltering) {
+    // Move todos os cards para o featuredGrid para um único grid sem buracos
+    if (otherGrid && featuredGrid) {
+      Array.from(otherGrid.querySelectorAll<HTMLElement>('.glass-project-card'))
+        .forEach(card => featuredGrid.appendChild(card));
+    }
+    if (otherContainer) {
       otherContainer.classList.remove('expanded');
       otherContainer.setAttribute('aria-hidden', 'true');
-      if (expandBtn) expandBtn.style.display = '';
     }
-
-    allCards().forEach(card => {
-      const show = visibleSet.has(card);
-      card.style.display   = show ? '' : 'none';
-      card.style.animation = show ? 'filterReveal 0.3s ease both' : '';
-    });
-
-    showEmptyState(visible.length === 0);
+    if (expandBtn) expandBtn.style.display = 'none';
+    if (otherSection) otherSection.style.display = 'none';
+  } else {
+    // Repor cards no otherGrid
+    if (otherGrid && featuredGrid) {
+      // Identificar quais cards pertencem ao "other" pelo data-section
+      Array.from(featuredGrid.querySelectorAll<HTMLElement>('.glass-project-card[data-section="other"]'))
+        .forEach(card => otherGrid.appendChild(card));
+    }
+    if (otherContainer) {
+      otherContainer.classList.remove('expanded');
+      otherContainer.setAttribute('aria-hidden', 'true');
+    }
+    if (expandBtn) expandBtn.style.display = '';
+    if (otherSection) otherSection.style.display = '';
   }
+
+  allCards().forEach(card => {
+    const show = visibleSet.has(card);
+    card.style.display   = show ? '' : 'none';
+    card.style.animation = show ? 'filterReveal 0.3s ease both' : '';
+  });
+
+  showEmptyState(visible.length === 0);
+}
 
   // ── Empty state ───────────────────────────────────────────────────────────
 
