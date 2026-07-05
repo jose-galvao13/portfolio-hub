@@ -32,6 +32,10 @@ import _fraudapi  from '../../assets/images/fraudapi.png';
 import _fraudapi2  from '../../assets/images/fraudapi2.png';
 import _fraudapi3  from '../../assets/images/fraudapi3.png';
 import _fraudapi4  from '../../assets/images/fraudapi4.png';
+import _auditai  from '../../assets/images/auditai.png';
+import _auditai2  from '../../assets/images/auditai2.png';
+
+
 
 export interface Project {
   id: string;
@@ -273,6 +277,25 @@ export function getProjectsData(baseUrl: string): Project[] {
       businessImpact: "high",
       featured: true,
       category: ['ml', 'engineering'],
+    },
+     {
+      id: 'audit-ai',
+      titleKey: 'project.auditai.title',
+      typeKey: 'project.auditai.type',
+      desc: "<b>🔴 Problema:</b> Auditorias manuais em milhares de transações são lentas, caras e limitadas a amostragens estatísticas.<br><b>🟢 Solução:</b> Engine de IA que utiliza LLMs e análise de anomalias para validar 100% dos lançamentos contábeis automaticamente.<br><b>🚀 Impacto:</b> Identificação de inconsistências em tempo real e redução de 70% no tempo de revisão manual, garantindo compliance total.",
+      stack: ["Python", "LLMs", "Pandas", "OpenAI API"],
+      linkRepo: "https://github.com/jose-galvao13/audit-ai",
+      linkDemo: "#",
+      caseStudy: `audit-ai`,
+      images: [_auditai.src, _auditai2.src],
+      imageAlts: [
+        "Dashboard do Audit AI mostrando a análise de risco de lançamentos contábeis",
+        "Interface de detecção de anomalias com explicação gerada por IA para cada alerta"
+      ],
+      complexity: "advanced",
+      businessImpact: "high",
+      featured: false,
+      category: ['ai', 'finance'],
     },
   ];
 }

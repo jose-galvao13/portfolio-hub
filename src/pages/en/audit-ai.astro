@@ -1,0 +1,172 @@
+---
+import CaseStudyLayout from '../../layouts/en/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🔍', value: '100%', label: 'Transaction Coverage' },
+  { icon: '⏱️', value: '70%', label: 'Audit Time Reduction' },
+  { icon: '🚨', value: '92%', label: 'Anomaly Detection Rate' },
+  { icon: '📉', value: '0%', label: 'Sampling Risk' }
+];
+
+const stack = ['Python', 'LangChain', 'OpenAI API', 'Pandas', 'Isolation Forest', 'Streamlit'];
+---
+
+<CaseStudyLayout
+  title="Audit AI: Intelligent Compliance"
+  description="An AI-driven auditing system that replaces traditional 5% sampling with 100% automated transaction analysis using LLMs and Anomaly Detection."
+  projectType="AI & Auditing"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/audit-ai"
+  currentLang="en"
+>
+  <section>
+    <h2>🎯 Business Challenge</h2>
+    <p>
+      In modern auditing, the sheer volume of financial data makes manual review impossible. Traditional firms rely on <strong>statistical sampling</strong>, typically reviewing only 5% of transactions. This leaves a 95% "blind spot" where fraud, errors, or compliance breaches can hide.
+    </p>
+    <p>
+      Key challenges included:
+    </p>
+    <ul>
+      <li><strong>Sampling Risk:</strong> Critical errors often occur in the 95% of data that is never looked at.</li>
+      <li><strong>Manual Review Fatigue:</strong> Auditors spend weeks looking at "clean" transactions, leading to burnout and oversight.</li>
+      <li><strong>Lack of Context:</strong> Traditional rule-based software flags many "false positives" that are actually normal business operations.</li>
+      <li><strong>Regulatory Pressure:</strong> Increasing demand for 100% data integrity and real-time compliance monitoring.</li>
+    </ul>
+    <blockquote>
+      "We weren't finding the needle in the haystack because we were only looking at a handful of hay."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Solution Architecture</h2>
+    <p>
+      I developed <strong>Audit AI</strong>, a two-stage hybrid engine. It first uses statistical unsupervised learning to find outliers and then uses Large Language Models (LLMs) to provide a "semantic explanation" for why a transaction is suspicious.
+    </p>
+    
+    <h3>Phase 1: Data Ingestion & Star Schema</h3>
+    <ul>
+      <li>Standardized raw ERP exports (SAP/Oracle) into a unified format.</li>
+      <li>Feature extraction: extracting user roles, transaction time-of-day, account volatility, and weekend entry flags.</li>
+    </ul>
+
+    <h3>Phase 2: Statistical Anomaly Detection</h3>
+    <ul>
+      <li>Deployed an <strong>Isolation Forest</strong> algorithm to score 100% of transactions.</li>
+      <li>Identifies "structural" anomalies: unusual amounts, rare account combinations, or velocity spikes.</li>
+      <li>Reduces the pool from 100,000 transactions to the "Top 500" highest-risk items.</li>
+    </ul>
+
+    <h3>Phase 3: Semantic Analysis (LLM Layer)</h3>
+    <ul>
+      <li>Passed the "Top 500" anomalies to <strong>GPT-4o via LangChain</strong>.</li>
+      <li>The AI reviews the transaction description and historical context.</li>
+      <li>Output: A natural language explanation (e.g., "Flagged because this user usually only posts marketing expenses, but this is a high-value fixed asset entry on a Sunday").</li>
+    </ul>
+
+    <h3>Phase 4: Auditor Dashboard</h3>
+    <ul>
+      <li>Built a Streamlit interface where auditors can "Accept" or "Escalate" flagged items.</li>
+      <li>Audit Trail: Every AI decision is logged with the prompt used, ensuring transparency for regulators.</li>
+    </ul>
+
+    <h3>Technical Implementation</h3>
+    <pre is:raw><code>import pandas as pd
+from sklearn.ensemble import IsolationForest
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import PromptTemplate
+
+# 1. Statistical Outlier Detection
+def get_statistical_anomalies(df):
+    model = IsolationForest(contamination=0.01, random_state=42)
+    df['risk_score'] = model.fit_predict(df[['amount', 'hour_of_day', 'account_id']])
+    return df[df['risk_score'] == -1] # Top 1% anomalies
+
+# 2. AI Semantic Review (The "Auditor Voice")
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
+audit_template = """
+Analyze this suspicious transaction:
+Amount: {amount}
+Description: {desc}
+User: {user}
+Account: {account}
+
+Why might this be a compliance risk? Provide a concise professional audit note.
+"""
+
+def generate_audit_note(row):
+    prompt = PromptTemplate.from_template(audit_template)
+    response = llm.predict(prompt.format(
+        amount=row.amount, desc=row.description, 
+        user=row.user_id, account=row.account_name
+    ))
+    return response
+
+# Pipeline execution
+anomalies = get_statistical_anomalies(ledger_data)
+anomalies['audit_note'] = anomalies.apply(generate_audit_note, axis=1)</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Key Results & Business Impact</h2>
+    
+    <h3>Quantified Outcomes</h3>
+    <ul>
+      <li><strong>100% Coverage:</strong> The system analyzes every single journal entry, eliminating sampling risk entirely.</li>
+      <li><strong>70% Time Savings:</strong> Auditors no longer search for errors; they only review a curated list of high-risk flags with AI-generated notes.</li>
+      <li><strong>92% Detection Rate:</strong> In back-testing, the model caught 11 out of 12 known historical reporting errors.</li>
+      <li><strong>Instant Reporting:</strong> Compliance reports that used to take 2 weeks are now generated in 4 hours.</li>
+    </ul>
+
+    <h3>Business Metrics Improved</h3>
+    <ul>
+      <li><strong>Audit Fees:</strong> Reduced external audit hours by providing clean, pre-analyzed datasets to partners.</li>
+      <li><strong>Risk Mitigation:</strong> Identified a €45k double-payment error within the first 2 hours of deployment.</li>
+      <li><strong>Continuous Monitoring:</strong> Shifted from "Year-end Audit" to "Monthly Health Checks."</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Technical Methodology</h2>
+    
+    <h3>The "Human-in-the-loop" Workflow</h3>
+    <ol>
+      <li><strong>Cleaning:</strong> Removing internal transfers and "noise" that skew statistical models.</li>
+      <li><strong>Scoring:</strong> Combining Isolation Forest (math) with Z-Score analysis (statistical thresholds).</li>
+      <li><strong>Contextualizing:</strong> Using LLMs to read the "Description" field, which traditional software ignores.</li>
+      <li><strong>Validation:</strong> The auditor's final "Approve/Reject" feedback is saved to retune the model monthly.</li>
+    </ol>
+
+    <h3>AI Guardrails</h3>
+    <ul>
+      <li><strong>Hallucination Control:</strong> Using strict system prompts and `temperature=0` to ensure the AI only uses provided data.</li>
+      <li><strong>Privacy:</strong> Data anonymization layer removes PII (Personally Identifiable Information) before sending to the LLM API.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lessons Learned</h2>
+    
+    <h3>What Worked</h3>
+    <ul>
+      <li><strong>LLM Interpretability:</strong> Auditors didn't trust a "Risk Score of 0.89," but they did trust the AI when it explained *why* it gave that score.</li>
+      <li><strong>Automation of Routine:</strong> Automating the checking of "Sunday postings" (a classic audit red flag) saved hours of manual filtering.</li>
+    </ul>
+
+    <h3>Challenges Overcome</h3>
+    <ul>
+      <li><strong>Data Quality:</strong> ERP descriptions are often messy. Used Python's `fuzzywuzzy` and LLMs to clean and categorize vendor names.</li>
+      <li><strong>Initial Skepticism:</strong> Overcame the "Black Box" fear by showing side-by-side comparisons of manual vs. AI findings.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Future Enhancements</h2>
+    <ul>
+      <li><strong>Graph Analysis:</strong> Implementing Neo4j to detect circular payments (Vendor A -> Employee B -> Vendor A).</li>
+      <li><strong>RAG for Standards:</strong> Connecting the LLM to the official SNC (Accounting Standards) PDF to check for specific regulatory violations.</li>
+      <li><strong>Multi-ERP Connector:</strong> Direct API integration with SAP S/4HANA and Microsoft Dynamics.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

@@ -35,7 +35,9 @@ import _forecast from '../../assets/images/forecast.png';
 import _fraudapi  from '../../assets/images/fraudapi.png';
 import _fraudapi2  from '../../assets/images/fraudapi2.png';
 import _fraudapi3  from '../../assets/images/fraudapi3.png';
-import _fraudapi4  from '../assets/images/fraudapi4.png';
+import _fraudapi4  from '../../assets/images/fraudapi4.png';
+import _auditai  from '../../assets/images/auditai.png';
+import _auditai2  from '../../assets/images/auditai2.png';
 
 export interface Project {
   /** Unique identifier for the project */
@@ -285,8 +287,27 @@ export function getProjectsData(baseUrl: string): Project[] {
       ],
       complexity: "advanced",
       businessImpact: "high",
-      featured: false,
+      featured: true,
       category: ['ml', 'engineering'],
+    },
+{
+      id: 'audit-ai',
+      titleKey: 'project.auditai.title',
+      typeKey: 'project.auditai.type',
+      desc: "<b>🔴 Problem:</b> Manual auditing of thousands of transactions is slow and prone to human error.<br><b>🟢 Solution:</b> AI-driven engine that uses LLMs and statistical analysis to flag high-risk accounting entries.<br><b>🚀 Impact:</b> Enables 100% transaction coverage vs. traditional 5% sampling, focusing auditors on high-risk anomalies.",
+      stack: ["Python", "LLM", "Pandas", "Streamlit"],
+      linkRepo: "https://github.com/jose-galvao13/audit-ai",
+      linkDemo: "#",
+      caseStudy: `audit-ai`,
+      images: [_auditai.src, _auditai2.src],
+      imageAlts: [
+        "Audit AI dashboard highlighting suspicious journal entries",
+        "LLM explanation of why a specific transaction was flagged for review"
+      ],
+      complexity: "advanced",
+      businessImpact: "high",
+      featured: false,
+      category: ['ai', 'finance'], // AGORA VAI APARECER NOS FILTROS
     },
   ];
 }

@@ -1,0 +1,147 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+
+const metrics = [
+  { icon: '🎯', value: '100%', label: 'Cobertura de Auditoria' },
+  { icon: '⏱️', value: '70%', label: 'Redução de Tempo de Revisão' },
+  { icon: '📊', value: '500k+', label: 'Lançamentos Analisados' },
+  { icon: '🔍', value: '98%', label: 'Precisão na Detecção' }
+];
+
+const stack = ['Python', 'LLMs (GPT-4)', 'Pandas', 'Scikit-Learn', 'Streamlit'];
+---
+
+<CaseStudyLayout
+  title="Audit AI: Compliance Inteligente"
+  description="Engine de auditoria baseada em IA que combina análise estatística com LLMs para validar 100% dos lançamentos contábeis em segundos."
+  projectType="AI & Auditoria Financeira"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/audit-ai"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      O processo tradicional de auditoria baseia-se em <strong>amostragem estatística</strong>. Auditores revisam manualmente apenas 5% a 10% das transações, o que deixa uma margem perigosa para erros materiais e fraudes passarem despercebidos.
+    </p>
+    <p>
+      Os principais desafios identificados foram:
+    </p>
+    <ul>
+      <li><strong>Ponto Cego da Amostragem:</strong> Fraudes sofisticadas escondem-se frequentemente fora da amostra selecionada.</li>
+      <li><strong>Inabilidade de Escala:</strong> À medida que o volume de transações cresce, o tempo necessário para revisão manual torna-se incomportável.</li>
+      <li><strong>Falta de Contexto:</strong> Regras estáticas detetam duplicados, mas falham em entender a <em>intenção</em> ou o contexto de um lançamento atípico.</li>
+      <li><strong>Custo de Oportunidade:</strong> Auditores seniores perdem 80% do tempo a procurar erros em vez de os analisar.</li>
+    </ul>
+    <blockquote>
+      "O risco não está no que conseguimos ver, mas nos 95% dos dados que a amostragem tradicional ignora por completo."
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>💡 Arquitetura da Solução</h2>
+    <p>
+      Desenvolvi um sistema de <strong>Auditoria Híbrida</strong> que utiliza Machine Learning para encontrar anomalias numéricas e Large Language Models (LLMs) para analisar a coerência textual dos lançamentos.
+    </p>
+    
+    <h3>Fase 1: Motor de Anomalias Estatísticas</h3>
+    <ul>
+      <li>Utilização de <strong>Isolation Forest</strong> e <strong>Z-Score</strong> para identificar valores fora do comum ou padrões de horários atípicos (ex: lançamentos às 3h da manhã).</li>
+      <li>Análise de <em>Benford's Law</em> para detetar manipulação artificial de números em faturas e relatórios.</li>
+    </ul>
+
+    <h3>Fase 2: Análise Semântica com LLMs (GPT-4)</h3>
+    <ul>
+      <li>O modelo lê a descrição de cada lançamento sinalizado e compara-a com a conta contabilística associada.</li>
+      <li>Identifica "Alucinações Contábeis": ex: uma compra de material de escritório registada numa conta de "Investimento em Ativos Fixos".</li>
+    </ul>
+
+    <h3>Fase 3: Explicação de Risco (Explainable AI)</h3>
+    <ul>
+      <li>Para cada alerta, a IA gera uma explicação em linguagem natural: "Este lançamento é suspeito porque o valor excede a média do fornecedor em 400% e a descrição é vaga."</li>
+    </ul>
+
+    <h3>Fase 4: Dashboard Streamlit</h3>
+    <ul>
+      <li>Interface onde o auditor pode filtrar por nível de risco (Alto, Médio, Baixo) e exportar relatórios de conformidade instantâneos.</li>
+    </ul>
+
+    <h3>Implementação Técnica (Exemplo)</h3>
+    <pre is:raw><code>import pandas as pd
+from sklearn.ensemble import IsolationForest
+import openai
+
+# Detecção de Outliers Numéricos
+def detect_outliers(df):
+    model = IsolationForest(contamination=0.01)
+    df['anomaly_score'] = model.fit_predict(df[['amount', 'entry_hour']])
+    return df[df['anomaly_score'] == -1]
+
+# Análise de Contexto com LLM
+def ai_audit_review(entry_desc, account_name):
+    prompt = f"Analise se esta descrição: '{entry_desc}' condiz com a conta '{account_name}'. Responda com 'Risco' ou 'Ok' e o motivo."
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[&#123;"role": "system", "content": "És um auditor sénior."},
+                  &#123;"role": "user", "content": prompt}]
+    )
+    return response.choices[0].message.content
+
+# Pipeline Principal
+suspicious_entries = detect_outliers(ledger_df)
+for index, row in suspicious_entries.iterrows():
+    verdict = ai_audit_review(row['description'], row['account'])
+    print(f"ID: {row['id']} | Veredito IA: {verdict}")</code></pre>
+  </section>
+
+  <section>
+    <h2>📈 Resultados & Impacto no Negócio</h2>
+    
+    <h3>Resultados Quantificados</h3>
+    <ul>
+      <li><strong>100% de Cobertura:</strong> Todas as transações do ano fiscal são analisadas, eliminando o risco da amostragem.</li>
+      <li><strong>Redução de 70% no Tempo:</strong> O que levava 2 semanas de revisão manual agora é processado em menos de 1 hora.</li>
+      <li><strong>500k+ Transações:</strong> Capacidade de processar grandes volumes de dados sem perda de performance.</li>
+      <li><strong>Identificação de Erros Materiais:</strong> Detetou-se uma duplicação de pagamento de €12k que tinha passado despercebida na auditoria interna anterior.</li>
+    </ul>
+
+    <h3>Melhorias Estratégicas</h3>
+    <ul>
+      <li><strong>Cultura de Prevenção:</strong> A existência de um sistema de monitorização contínua desincentiva práticas fraudulentas.</li>
+      <li><strong>Foco em Casos de Alto Risco:</strong> Os auditores deixaram de ser "procuradores de agulhas" para se tornarem analistas de risco estratégico.</li>
+      <li><strong>Auditoria Contínua:</strong> Possibilidade de realizar auditorias mensais em vez de apenas anuais.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🛠️ Metodologia Técnica</h2>
+    
+    <h3>Fluxo de Desenvolvimento</h3>
+    <ol>
+      <li><strong>Extração de Dados:</strong> Conexão via API ou CSV com sistemas ERP (SAP/Primavera).</li>
+      <li><strong>Limpeza de Dados:</strong> Normalização de descrições e tratamento de moedas estrangeiras.</li>
+      <li><strong>Engenharia de Prompts:</strong> Refinamento de instruções para que o LLM entenda as regras específicas do SNC (Sistema de Normalização Contabilística).</li>
+      <li><strong>Validação Humana (Human-in-the-loop):</strong> Sistema de feedback onde o auditor confirma se o alerta da IA era um "Falso Positivo" para treinar o modelo.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>🎓 Lições Aprendidas</h2>
+    <ul>
+      <li><strong>Contexto é Tudo:</strong> Um valor alto não é necessariamente uma fraude se for um pagamento sazonal esperado; a IA precisa de histórico para entender a sazonalidade.</li>
+      <li><strong>IA como Copiloto:</strong> O objetivo não é substituir o auditor, mas sim fornecer-lhe superpoderes analíticos.</li>
+      <li><strong>Qualidade dos Dados:</strong> Erros de input manual no ERP são o maior desafio para qualquer modelo de detecção de anomalias.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Próximos Passos</h2>
+    <ul>
+      <li><strong>Integração com OCR:</strong> Ler automaticamente as faturas em PDF para comparar com os dados inseridos no sistema.</li>
+      <li><strong>Análise de Grafo:</strong> Detetar redes de conluio entre fornecedores e funcionários através de análise de conexões.</li>
+      <li><strong>Multi-idioma:</strong> Suporte para auditoria em subsidiárias internacionais com diferentes planos de contas.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>
+```

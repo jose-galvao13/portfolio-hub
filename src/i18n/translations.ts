@@ -74,7 +74,7 @@ const translations = {
   'projects.viewImages':   { en: 'Click to expand image',   pt: 'Clique para ampliar imagem' },
   'projects.prevImage':    { en: 'Previous image',          pt: 'Imagem anterior' },
   'projects.nextImage':    { en: 'Next image',              pt: 'Próxima imagem' },
-
+  
   // ── Project titles & types ─────────────────────────────────────────────────
   'project.churn.title':     { en: 'Customer Churn & Retention Analytics',    pt: 'Análise de Churn & Retenção de Clientes' },
   'project.churn.type':      { en: 'Data Science / Business Intelligence',    pt: 'Ciência de Dados / Business Intelligence' },
@@ -100,6 +100,9 @@ const translations = {
   'project.forecast.type':   { en: 'Data Science & FP&A',                     pt: 'Ciência de Dados & FP&A' },
   'project.fraudapi.title':  { en: 'FraudShield API — MLOps Engine',          pt: 'FraudShield API — Motor de MLOps'},
   'project.fraudapi.type':   { en: 'MLOps & API Engineering',                 pt: 'Engenharia de MLOps e API'},
+  'project.auditai.title': { en: 'Audit AI — Intelligent Compliance', pt: 'Audit AI — Compliance Inteligente' },
+  'project.auditai.type':  { en: 'AI & Auditing', pt: 'IA & Auditoria' },
+
   // ── Skills section ────────────────────────────────────────────────────────
   'skills.heading':          { en: 'Technical',            pt: 'Competências' },
   'skills.headingAccent':    { en: 'Arsenal',              pt: 'Técnicas' },
