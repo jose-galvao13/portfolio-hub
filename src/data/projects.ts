@@ -296,7 +296,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       titleKey: 'project.auditai.title',
       typeKey: 'project.auditai.type',
       desc: "<b>🔴 Problem:</b> Manual auditing of thousands of transactions is slow and prone to human error.<br><b>🟢 Solution:</b> AI-driven engine that uses LLMs and statistical analysis to flag high-risk accounting entries.<br><b>🚀 Impact:</b> Enables 100% transaction coverage vs. traditional 5% sampling, focusing auditors on high-risk anomalies.",
-      stack: ["Python", "LLM", "Pandas", "Streamlit"],
+      stack: ["Python", "LLM", "Pandas", "Audit"],
       linkRepo: "https://github.com/jose-galvao13/audit-ai",
       linkDemo: "#",
       caseStudy: `audit-ai`,
