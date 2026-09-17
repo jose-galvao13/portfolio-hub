@@ -258,6 +258,15 @@ h3 { font-size: clamp(1.1rem, 3vw, 1.75rem); }
   display: inline-block;
 }
 
+.methodology-subtitle {
+  padding: 10px;
+  font-weight: 500;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
 /* ============================================
    LAYOUT CONTAINERS
    ============================================ */
