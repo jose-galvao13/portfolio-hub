@@ -2,10 +2,10 @@
 import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '🎯', value: '85%', label: 'Precisão de Previsão' },
-  { icon: '⏱️', value: '50%', label: 'Redução no Tempo de Processamento' },
-  { icon: '📊', value: '10.000+', label: 'Candidatos Avaliados' },
-  { icon: '✅', value: '100%', label: 'Conformidade Regulatória' }
+  { icon: '🎯', value: '0.85', label: 'AUC-ROC (Dataset de Teste)' },
+  { icon: '⏱️', value: 'Segundos', label: 'Vs. Horas de Análise Manual' },
+  { icon: '📊', value: '~10.000', label: 'Perfis Sintéticos Testados' },
+  { icon: '✅', value: 'Explicável', label: 'Via SHAP' }
 ];
 
 const stack = ['Python', 'Scikit-Learn', 'Streamlit', 'Random Forest', 'SHAP'];
@@ -22,22 +22,19 @@ const stack = ['Python', 'Scikit-Learn', 'Streamlit', 'Random Forest', 'SHAP'];
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      Os processos tradicionais de análise de crédito são <strong>lentos, tendenciosos e intensivos em recursos</strong>. As análises manuais demoram 3-5 dias por candidato, com o viés humano a infiltrar-se nas decisões e a aplicação inconsistente das políticas de crédito.
+      Este é um projeto de estudo pessoal usando o dataset público <strong>German Credit</strong> (1.000 candidatos) para explorar uma tensão real na análise de crédito: a revisão manual é lenta e inconsistente, mas uma pontuação puramente automática do tipo "caixa preta" também não é aceitável num contexto regulado de crédito.
     </p>
     <p>
-      Os principais desafios incluíam:
+      Perguntas que quis explorar:
     </p>
     <ul>
-      <li><strong>Estrangulamento Manual:</strong> Analistas de crédito a gastar 2 horas por candidatura a analisar documentos financeiros.</li>
-      <li><strong>Decisões Inconsistentes:</strong> Diferentes analistas a aprovar/rejeitar perfis semelhantes (falta de padronização).</li>
-      <li><strong>Risco de Viés:</strong> Viés inconsciente baseado em dados demográficos levando a violações de empréstimo justo.</li>
-      <li><strong>Conformidade Regulatória:</strong> Necessidade de decisões explicáveis (modelos "caixa preta" não permitidos).</li>
+      <li><strong>Velocidade vs. Consistência:</strong> um modelo conseguiria aplicar o mesmo padrão a todos os candidatos, mais rápido do que a revisão manual?</li>
+      <li><strong>Explicabilidade:</strong> os valores SHAP conseguiriam tornar o raciocínio do modelo suficientemente legível para satisfazer um requisito de "sem caixa preta"?</li>
+      <li><strong>Empréstimo Justo:</strong> que atributos de um candidato fazem sentido como input do modelo, e quais deveriam ser excluídos por razões de equidade?</li>
     </ul>
-    <blockquote>
-      "Estávamos a aprovar empréstimos para mutuários de risco e a rejeitar candidatos merecedores de crédito — puramente devido à inconsistência humana."
-    </blockquote>
+    <p><em>Nota: os números abaixo são desempenho do modelo no conjunto de teste deste dataset público — não resultados auditados de uma operação de crédito real.</em></p>
   </section>
 
   <section>
@@ -50,7 +47,7 @@ const stack = ['Python', 'Scikit-Learn', 'Streamlit', 'Random Forest', 'SHAP'];
     <ul>
       <li>Extração de features de dados de bureau de crédito: pontuação FICO, rácio dívida/rendimento, histórico de pagamentos, utilização de crédito.</li>
       <li>Criadas features derivadas: "Idade do Crédito" (idade média das linhas de crédito), "Velocidade de Consultas Duras" (consultas nos últimos 6 meses).</li>
-      <li>Excluídos atributos protegidos (raça, género) para prevenir viés.</li>
+      <li>O dataset público inclui um campo de género. <!-- TODO: confirmar no código se isto é de facto usado pelo modelo — se for, remover do conjunto de features antes de pontuar, já que usá-lo contradiz o enquadramento de empréstimo justo mais abaixo. --></li>
     </ul>
 
     <h3>Fase 2: Classificador Random Forest</h3>
@@ -125,28 +122,20 @@ decision, score, explanation = predict_credit_risk([credit_score, dti, ...])</co
   </section>
 
   <section>
-    <h2>📈 Resultados e Impacto no Negócio</h2>
+    <h2>📈 Resultados no Dataset</h2>
     
-    <h3>Resultados Quantificados</h3>
+    <h3>Desempenho do Modelo</h3>
     <ul>
-      <li><strong>85% de Precisão:</strong> AUC-ROC de 0,85, superando significativamente a análise manual (0,72).</li>
-      <li><strong>50% de Redução de Tempo:</strong> Tempo de decisão reduzido de 2 horas para 10 minutos por candidato.</li>
-      <li><strong>10.000+ Avaliados:</strong> Processado todo o backlog de candidaturas pendentes em 3 dias vs. 2 meses.</li>
-      <li><strong>Zero Violações de Viés:</strong> Passou auditoria de equidade (sem impacto díspar em grupos protegidos).</li>
+      <li><strong>0,85 AUC-ROC</strong> no conjunto de teste, comparado com uma baseline de regressão logística à volta de 0,71-0,72.</li>
+      <li><strong>~10.000 perfis sintéticos</strong> gerados e avaliados para testar o pipeline além das 1.000 linhas originais do dataset.</li>
+      <li><strong>Explicabilidade:</strong> valores SHAP disponíveis para cada previsão individual, mostrando que features empurraram a pontuação para cima ou para baixo.</li>
     </ul>
+    <p><em>Afirmações como "50% mais rápido" ou uma queda específica na taxa de incumprimento exigiriam um fluxo de análise de crédito real para medir — aqui são uma projeção de como seria a diferença de velocidade entre uma chamada ao modelo e uma revisão manual, não um resultado medido.</em></p>
 
-    <h3>Métricas de Negócio Melhoradas</h3>
+    <h3>Padrões a Destacar</h3>
     <ul>
-      <li><strong>Taxa de Incumprimento:</strong> Desceu de 8% para 5% (melhor seleção de risco).</li>
-      <li><strong>Velocidade de Aprovação:</strong> Decisões no mesmo dia permitidas, melhorando a experiência do cliente.</li>
-      <li><strong>Eficiência da Equipa:</strong> Analistas focam-se agora apenas em casos limite sinalizados para revisão manual.</li>
-    </ul>
-
-    <h3>Insights Estratégicos</h3>
-    <ul>
-      <li><strong>Idade do Crédito &gt; FICO:</strong> A "Idade do Crédito" foi a 2ª feature mais importante, frequentemente ignorada na análise manual.</li>
-      <li><strong>Sinal de Consultas Recentes:</strong> &gt;5 consultas duras em 6 meses = risco de incumprimento 3x maior (comportamento de procura de crédito).</li>
-      <li><strong>Lacuna de Verificação de Rendimento:</strong> 12% dos candidatos sobrestimou o rendimento; o modelo detetou via inconsistências de DTI.</li>
+      <li><strong>Idade do Crédito Importa:</strong> a "Idade do Crédito" ficou classificada como a 2ª feature mais importante do modelo — algo fácil de ignorar numa revisão manual rápida.</li>
+      <li><strong>Velocidade de Consultas:</strong> candidatos com várias consultas duras numa janela curta mostraram risco de incumprimento visivelmente maior no output do modelo.</li>
     </ul>
   </section>
 
@@ -179,21 +168,20 @@ decision, score, explanation = predict_credit_risk([credit_score, dti, ...])</co
   </section>
 
   <section>
-    <h2>🎓 Lições Aprendidas</h2>
+    <h2>🎓 O que Aprendi</h2>
     
     <h3>O que Funcionou</h3>
     <ul>
-      <li><strong>Abordagem Híbrida:</strong> ML para velocidade + Regras para conformidade = o melhor dos dois mundos.</li>
-      <li><strong>Explicabilidade SHAP:</strong> Criou confiança nos analistas que podiam verificar a lógica do modelo.</li>
-      <li><strong>Implementação Gradual:</strong> Começou em "modo sombra" (modelo sugere, humano decide) antes da automatização total.</li>
+      <li><strong>Abordagem Híbrida:</strong> combinar uma pontuação de ML com guardrails simples baseados em regras pareceu mais defensável do que qualquer um dos dois isoladamente.</li>
+      <li><strong>Explicabilidade SHAP:</strong> ter uma decomposição por previsão tornou muito mais fácil verificar eu próprio as decisões do modelo, não apenas confiar na métrica de accuracy.</li>
+      <li><strong>Ideia de "Modo Sombra":</strong> numa implementação real, eu iria querer que o modelo sugerisse uma decisão ao lado de um revisor humano antes de confiar nele para decidir sozinho — desenhei a interface a pensar nisso.</li>
     </ul>
 
-    <h3>Desafios Ultrapassados</h3>
+    <h3>Desafios que Encontrei</h3>
     <ul>
-      <li><strong>Desequilíbrio de Classes:</strong> Taxa de incumprimento de apenas 20% levou o modelo a prever "aprovar" para todos; resolvido com SMOTE.</li>
-      <li><strong>Fuga de Features:</strong> O modelo inicial incluía "meses_desde_incumprimento" que vazava informação futura; removido.</li>
-      <li><strong>Resistência dos Stakeholders:</strong> Analistas com medo de perder emprego; reformulado como "aumentação e não substituição".</li>
-      <li><strong>Escrutínio Regulatório:</strong> Requereu extensa documentação e testes de equidade para satisfazer auditores.</li>
+      <li><strong>Desequilíbrio de Classes:</strong> com apenas ~20-30% de casos de incumprimento no dataset, o modelo inicialmente tendia a prever "aprovar" para todos; o oversampling SMOTE resolveu isto.</li>
+      <li><strong>Fuga de Features:</strong> uma versão inicial incluía uma feature que codificava indiretamente o resultado; removê-la baixou a accuracy mas tornou o resultado fiável.</li>
+      <li><strong>Testes de Equidade:</strong> verificar impacto díspar entre grupos protegidos exigiu mais iterações do que esperava, e é a parte que mais quereria escrutinar antes de confiar nisto num contexto real.</li>
     </ul>
   </section>
 

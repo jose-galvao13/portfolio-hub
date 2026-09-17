@@ -13,7 +13,7 @@ const stack = ['Python', 'FastAPI', 'Scikit-Learn', 'MLflow', 'Joblib', 'Pydanti
 
 <CaseStudyLayout
   title="FraudShield — Real-Time Fraud Detection API"
-  description="Production MLOps service combining Isolation Forest, PCA reconstruction, and a Voting Ensemble to score financial transactions for fraud risk in under 5ms."
+  description="An MLOps-style fraud scoring service combining Isolation Forest, PCA reconstruction, and a Voting Ensemble, served behind a FastAPI layer with sub-5ms inference on a public synthetic dataset."
   projectType="Machine Learning / MLOps / Financial Engineering"
   stack={stack}
   metrics={metrics}
@@ -34,9 +34,7 @@ const stack = ['Python', 'FastAPI', 'Scikit-Learn', 'MLflow', 'Joblib', 'Pydanti
       <li><strong>Latency Requirements:</strong> Production fraud scoring must happen in milliseconds — not seconds — to avoid blocking legitimate payments.</li>
       <li><strong>Explainability Gap:</strong> A fraud flag without a risk level and anomaly score is operationally useless for analysts who need to triage alerts.</li>
     </ul>
-    <blockquote>
-      "A model that predicts 'not fraud' every time is 99.87% accurate — and completely worthless."
-    </blockquote>
+    <p><em>This is a self-directed project built on PaySim, a public synthetic dataset — not a real payment processor's transaction log.</em></p>
   </section>
 
   <section>
@@ -137,13 +135,13 @@ curl -X POST http://localhost:8000/predict \
     <h3>Key Metrics at Default Threshold</h3>
     <ul>
       <li><strong>Recall: 64.6%</strong> — captured 318 of 492 actual fraud cases in the test set.</li>
-      <li><strong>Precision: 8.3%</strong> — acceptable for an unsupervised system on 0.13% base rate data; every flagged batch is reviewed by a human analyst.</li>
-      <li><strong>False Positives: 3,516</strong> — legitimate transactions incorrectly flagged; filtered downstream by the risk stratification layer (CRITICAL/HIGH alerts only for auto-action).</li>
+      <li><strong>Precision: 8.3%</strong> — meaning roughly 9 out of 10 flagged transactions are false alarms. This is a real limitation of a purely unsupervised approach on such an imbalanced dataset (0.13% fraud rate), not a number I'd call "production-ready" without a supervised layer or human review step on top.</li>
+      <li><strong>False Positives: 3,516</strong> — legitimate transactions incorrectly flagged. In a real deployment, this volume would need the risk stratification layer (only CRITICAL/HIGH alerts acted on automatically) to be usable at all.</li>
     </ul>
 
-    <h3>Why Recall Is the Right Metric Here</h3>
+    <h3>Why I Prioritized Recall Over Precision</h3>
     <p>
-      In fraud detection, a missed fraud (false negative) carries a direct financial loss. A false alarm (false positive) costs analyst time — far cheaper. Optimising for recall at the cost of precision is the correct business trade-off, with the risk stratification layer serving as the triage mechanism.
+      In fraud detection, missing real fraud (a false negative) is usually more costly than reviewing a false alarm. So I tuned the ensemble to favor catching more fraud even at the cost of more false alarms — a reasonable trade-off in theory, though the current precision would need improvement before this could run with full automation rather than analyst review.
     </p>
   </section>
 

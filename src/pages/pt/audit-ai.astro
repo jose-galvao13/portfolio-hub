@@ -2,10 +2,10 @@
 import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '🎯', value: '100%', label: 'Cobertura de Auditoria' },
-  { icon: '⏱️', value: '70%', label: 'Redução de Tempo de Revisão' },
-  { icon: '📊', value: '500k+', label: 'Lançamentos Analisados' },
-  { icon: '🔍', value: '98%', label: 'Precisão na Detecção' }
+  { icon: '🎯', value: '100%', label: 'Cobertura de Transações' },
+  { icon: '⏱️', value: 'Rápido', label: 'Vs. Amostragem Manual' },
+  { icon: '📊', value: 'Dataset', label: 'Sintético / Exemplo' },
+  { icon: '🔍', value: 'Explicável', label: 'Nota por Lançamento' }
 ];
 
 const stack = ['Python', 'LLMs (GPT-4)', 'Pandas', 'Scikit-Learn', 'Streamlit'];
@@ -21,22 +21,19 @@ const stack = ['Python', 'LLMs (GPT-4)', 'Pandas', 'Scikit-Learn', 'Streamlit'];
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      O processo tradicional de auditoria baseia-se em <strong>amostragem estatística</strong>. Auditores revisam manualmente apenas 5% a 10% das transações, o que deixa uma margem perigosa para erros materiais e fraudes passarem despercebidos.
+      Este é um projeto de estudo pessoal a explorar uma limitação conhecida da auditoria tradicional: as firmas costumam basear-se em <strong>amostragem estatística</strong>, revisando manualmente apenas uma pequena fração das transações, o que deixa a maior parte dos dados sem verificação.
     </p>
     <p>
-      Os principais desafios identificados foram:
+      Perguntas que quis explorar:
     </p>
     <ul>
-      <li><strong>Ponto Cego da Amostragem:</strong> Fraudes sofisticadas escondem-se frequentemente fora da amostra selecionada.</li>
-      <li><strong>Inabilidade de Escala:</strong> À medida que o volume de transações cresce, o tempo necessário para revisão manual torna-se incomportável.</li>
-      <li><strong>Falta de Contexto:</strong> Regras estáticas detetam duplicados, mas falham em entender a <em>intenção</em> ou o contexto de um lançamento atípico.</li>
-      <li><strong>Custo de Oportunidade:</strong> Auditores seniores perdem 80% do tempo a procurar erros em vez de os analisar.</li>
+      <li><strong>Risco da Amostragem:</strong> conseguiria a deteção de anomalias não supervisionada apanhar problemas que uma amostra de 5-10% deixaria passar?</li>
+      <li><strong>Falta de Contexto:</strong> conseguiria uma camada de LLM adicionar contexto que regras estáticas não conseguem captar (a intenção por trás de um lançamento atípico)?</li>
+      <li><strong>Explicabilidade:</strong> uma explicação em linguagem natural tornaria um lançamento sinalizado mais fácil de analisar do que apenas uma pontuação de risco?</li>
     </ul>
-    <blockquote>
-      "O risco não está no que conseguimos ver, mas nos 95% dos dados que a amostragem tradicional ignora por completo."
-    </blockquote>
+    <p><em>Nota: construído e testado sobre um livro-razão sintético/de exemplo, não dados reais de auditoria de uma empresa.</em></p>
   </section>
 
   <section>
@@ -96,22 +93,15 @@ for index, row in suspicious_entries.iterrows():
   </section>
 
   <section>
-    <h2>📈 Resultados & Impacto no Negócio</h2>
+    <h2>📈 Resultados no Dataset de Teste</h2>
     
-    <h3>Resultados Quantificados</h3>
+    <h3>O que o Pipeline Alcança</h3>
     <ul>
-      <li><strong>100% de Cobertura:</strong> Todas as transações do ano fiscal são analisadas, eliminando o risco da amostragem.</li>
-      <li><strong>Redução de 70% no Tempo:</strong> O que levava 2 semanas de revisão manual agora é processado em menos de 1 hora.</li>
-      <li><strong>500k+ Transações:</strong> Capacidade de processar grandes volumes de dados sem perda de performance.</li>
-      <li><strong>Identificação de Erros Materiais:</strong> Detetou-se uma duplicação de pagamento de €12k que tinha passado despercebida na auditoria interna anterior.</li>
+      <li><strong>100% de Cobertura:</strong> todas as transações do dataset são analisadas — sem passo de amostragem.</li>
+      <li><strong>Lista de Alertas Curada:</strong> em vez de uma pontuação de risco em bruto, cada lançamento sinalizado vem com uma nota gerada por IA a explicar porque parece atípico.</li>
+      <li><strong>Deteção em Casos de Teste Injetados:</strong> o modelo apanhou a maioria das anomalias que inseri deliberadamente no conjunto de teste para verificar a sua sensibilidade.</li>
     </ul>
-
-    <h3>Melhorias Estratégicas</h3>
-    <ul>
-      <li><strong>Cultura de Prevenção:</strong> A existência de um sistema de monitorização contínua desincentiva práticas fraudulentas.</li>
-      <li><strong>Foco em Casos de Alto Risco:</strong> Os auditores deixaram de ser "procuradores de agulhas" para se tornarem analistas de risco estratégico.</li>
-      <li><strong>Auditoria Contínua:</strong> Possibilidade de realizar auditorias mensais em vez de apenas anuais.</li>
-    </ul>
+    <p><em>Números como "70% menos tempo" ou a deteção de um erro específico de €12k no resumo do projeto são projeções ilustrativas de como o pipeline se comporta nos dados de teste — não resultados medidos numa auditoria real.</em></p>
   </section>
 
   <section>
@@ -127,11 +117,11 @@ for index, row in suspicious_entries.iterrows():
   </section>
 
   <section>
-    <h2>🎓 Lições Aprendidas</h2>
+    <h2>🎓 O que Aprendi</h2>
     <ul>
-      <li><strong>Contexto é Tudo:</strong> Um valor alto não é necessariamente uma fraude se for um pagamento sazonal esperado; a IA precisa de histórico para entender a sazonalidade.</li>
-      <li><strong>IA como Copiloto:</strong> O objetivo não é substituir o auditor, mas sim fornecer-lhe superpoderes analíticos.</li>
-      <li><strong>Qualidade dos Dados:</strong> Erros de input manual no ERP são o maior desafio para qualquer modelo de detecção de anomalias.</li>
+      <li><strong>Contexto é Tudo:</strong> um valor alto não é necessariamente suspeito se for um pagamento sazonal esperado — o modelo precisa de histórico para distinguir isso.</li>
+      <li><strong>Explicações em Vez de Pontuações:</strong> uma nota em linguagem natural tornou muito mais fácil, mesmo para mim durante os testes, perceber porque um lançamento tinha sido sinalizado do que olhar para uma pontuação de risco isolada.</li>
+      <li><strong>Qualidade dos Dados:</strong> erros de input manual são, mesmo num dataset sintético, o maior desafio para qualquer modelo de deteção de anomalias.</li>
     </ul>
   </section>
 
@@ -144,4 +134,3 @@ for index, row in suspicious_entries.iterrows():
     </ul>
   </section>
 </CaseStudyLayout>
-```

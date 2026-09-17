@@ -13,7 +13,7 @@ const stack = ['Python', 'FastAPI', 'Scikit-Learn', 'MLflow', 'Joblib', 'Pydanti
 
 <CaseStudyLayout
   title="FraudShield — API de Deteção de Fraude em Tempo Real"
-  description="Serviço MLOps de produção que combina Isolation Forest, reconstrução PCA e um Voting Ensemble para classificar transações financeiras quanto ao risco de fraude em menos de 5ms."
+  description="Serviço de pontuação de fraude ao estilo MLOps combinando Isolation Forest, reconstrução PCA e um Voting Ensemble, servido por uma camada FastAPI com inferência sub-5ms sobre um dataset público sintético."
   projectType="Machine Learning / MLOps / Engenharia Financeira"
   stack={stack}
   metrics={metrics}
@@ -34,9 +34,7 @@ const stack = ['Python', 'FastAPI', 'Scikit-Learn', 'MLflow', 'Joblib', 'Pydanti
       <li><strong>Requisitos de Latência:</strong> A classificação de fraude em produção tem de ocorrer em milissegundos — não em segundos — para evitar o bloqueio de pagamentos legítimos.</li>
       <li><strong>Lacuna de Explicabilidade:</strong> Um alerta de fraude sem nível de risco e pontuação de anomalia é operacionalmente inútil para analistas que precisam de triagem de alertas.</li>
     </ul>
-    <blockquote>
-      "Um modelo que prevê 'sem fraude' em todas as transações tem 99,87% de accuracy — e é completamente inútil."
-    </blockquote>
+    <p><em>Este é um projeto de estudo pessoal construído sobre o PaySim, um dataset público sintético — não o registo de transações de um processador de pagamentos real.</em></p>
   </section>
 
   <section>
@@ -137,13 +135,13 @@ curl -X POST http://localhost:8000/predict \
     <h3>Métricas Principais no Limiar Padrão</h3>
     <ul>
       <li><strong>Recall: 64,6%</strong> — capturou 318 dos 492 casos de fraude reais no conjunto de teste.</li>
-      <li><strong>Precisão: 8,3%</strong> — aceitável para um sistema não supervisionado com taxa base de 0,13%; cada lote sinalizado é revisto por um analista humano.</li>
-      <li><strong>Falsos Positivos: 3.516</strong> — transações legítimas incorretamente sinalizadas; filtradas a jusante pela camada de estratificação de risco (apenas alertas CRITICAL/HIGH para ação automática).</li>
+      <li><strong>Precisão: 8,3%</strong> — o que significa que cerca de 9 em cada 10 transações sinalizadas são falsos alarmes. Esta é uma limitação real de uma abordagem puramente não supervisionada sobre um dataset tão desequilibrado (0,13% de taxa de fraude), não um número que eu chamaria "pronto para produção" sem uma camada supervisionada ou revisão humana por cima.</li>
+      <li><strong>Falsos Positivos: 3.516</strong> — transações legítimas incorretamente sinalizadas. Numa implementação real, este volume exigiria que a camada de estratificação de risco (apenas alertas CRITICAL/HIGH acionados automaticamente) fosse suficiente para tornar isto utilizável.</li>
     </ul>
 
-    <h3>Porque o Recall É a Métrica Correta Aqui</h3>
+    <h3>Porque Priorizei o Recall em Detrimento da Precisão</h3>
     <p>
-      Na deteção de fraude, uma fraude não detetada (falso negativo) acarreta uma perda financeira direta. Um falso alarme (falso positivo) custa tempo do analista — muito mais barato. Otimizar o recall à custa da precisão é o trade-off de negócio correto, com a camada de estratificação de risco a servir como mecanismo de triagem.
+      Na deteção de fraude, não detetar fraude real (falso negativo) é normalmente mais caro do que rever um falso alarme. Por isso afinei o ensemble para favorecer capturar mais fraude mesmo à custa de mais falsos alarmes — um trade-off razoável em teoria, embora a precisão atual precisasse de melhorar antes de isto poder correr com automação total em vez de revisão por analista.
     </p>
   </section>
 

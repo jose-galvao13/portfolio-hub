@@ -2,16 +2,16 @@
 import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '🎯', value: '88%', label: 'Precisão MAPE' },
+  { icon: '🎯', value: '~12%', label: 'MAPE (Erro de Previsão)' },
   { icon: '📊', value: '6 meses', label: 'Horizonte de Previsão' },
-  { icon: '📈', value: '3 anos', label: 'Dados Históricos' },
-  { icon: '⚡', value: 'Diário', label: 'Atualizações do Modelo' }
+  { icon: '📈', value: '3 anos', label: 'Dados Históricos Usados' },
+  { icon: '⚡', value: 'Diária', label: 'Capacidade de Reaprendizagem' }
 ];
 ---
 
 <CaseStudyLayout
   title="Previsão de Vendas e Orçamentação com IA"
-  description="Modelo de séries temporais Facebook Prophet que prevê a procura com 88% de precisão, permitindo planeamento preciso de inventário e fluxo de caixa."
+  description="Modelo de séries temporais Facebook Prophet que prevê a procura com cerca de 12% de MAPE, explorando como a precisão de previsão poderia apoiar o planeamento de inventário e fluxo de caixa."
   projectType="Ciência de Dados & FP&A"
   stack={['Python', 'Prophet', 'Power BI', 'ML de Séries Temporais']}
   metrics={metrics}
@@ -19,14 +19,13 @@ const metrics = [
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      A equipa de finanças dependia de <strong>orçamentos anuais estáticos</strong> que ignoravam a sazonalidade, levando a:
+      Este é um projeto de estudo pessoal a praticar previsão de séries temporais sobre dados de vendas retalhistas, motivado por um problema comum em finanças/operações: um orçamento anual estático não tem em conta a sazonalidade, o que pode levar a stock excessivo nos meses lentos e a ruturas de stock na época alta.
     </p>
     <ul>
-      <li><strong>Desajustes de Inventário:</strong> Stock excessivo nos meses lentos, ruturas de stock na época alta.</li>
-      <li><strong>Surpresas no Fluxo de Caixa:</strong> Défices inesperados porque a procura não era prevista com precisão.</li>
-      <li><strong>Previsão Manual:</strong> Analistas a gastar 2 semanas a cada trimestre a ajustar folhas de cálculo Excel.</li>
+      <li><strong>Sazonalidade Ignorada:</strong> orçamentos planos não captam variações previsíveis de procura sazonal.</li>
+      <li><strong>Previsão Manual:</strong> construir uma previsão à mão numa folha de cálculo todos os trimestres é lento e não incorpora facilmente efeitos de feriados.</li>
     </ul>
   </section>
 
@@ -63,13 +62,13 @@ model.plot_components(forecast)  # Tendência, decomposição de sazonalidade</c
   </section>
 
   <section>
-    <h2>📈 Resultados Principais</h2>
+    <h2>📈 Desempenho do Modelo</h2>
     <ul>
-      <li><strong>88% de Precisão MAPE:</strong> Erro Percentual Absoluto Médio de 12% (referência da indústria: 20%).</li>
-      <li><strong>Otimização de Inventário:</strong> Redução dos custos de posse em 18% através de melhor planeamento da procura.</li>
-      <li><strong>Precisão do Fluxo de Caixa:</strong> Receita prevista com 5% de precisão permitiu melhor gestão do fundo de maneio.</li>
-      <li><strong>Poupança de Tempo:</strong> 2 semanas → 2 horas para atualizações de previsão trimestrais.</li>
+      <li><strong>~12% MAPE</strong> (Erro Percentual Absoluto Médio) no período de teste — quanto menor o MAPE, melhor, e este valor compara razoavelmente com benchmarks de previsão de retalho normalmente citados à volta de 20%.</li>
+      <li><strong>Sazonalidade Captada:</strong> o modelo apanhou padrões de procura semanais e anuais sem necessidade de regras manuais.</li>
+      <li><strong>Intervalos de Confiança:</strong> a previsão vem com limites superior/inferior, não só uma estimativa pontual, o que é mais honesto quanto à incerteza do que um número de orçamento fixo.</li>
     </ul>
+    <p><em>Afirmações como "redução de 18% nos custos de posse" ou "2 semanas → 2 horas" precisariam de ser medidas num contexto operacional real — aqui são o tipo de benefício a jusante que uma melhor precisão de previsão poderia plausivelmente permitir, não um resultado medido.</em></p>
   </section>
 
   <section>
@@ -78,7 +77,7 @@ model.plot_components(forecast)  # Tendência, decomposição de sazonalidade</c
       <li><strong>Deteção de Sazonalidade:</strong> Capturou automaticamente padrões semanais, mensais e anuais.</li>
       <li><strong>Efeitos de Feriados:</strong> Modelou picos de Black Friday e Natal sem regras manuais.</li>
       <li><strong>Intervalos de Confiança:</strong> Forneceu limites superior e inferior para planeamento de risco.</li>
-      <li><strong>Integração com Power BI:</strong> Previsões visualizadas em dashboards executivos.</li>
+      <li><strong>Integração com Power BI:</strong> previsões e intervalos de confiança visualizados num dashboard, mais fácil de rever do que o output bruto do modelo.</li>
     </ul>
   </section>
 

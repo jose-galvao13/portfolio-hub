@@ -2,10 +2,10 @@
 import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '⚡', value: '70%', label: 'Redução no Tempo de Consulta' },
-  { icon: '📊', value: '1M+', label: 'Transações Processadas' },
-  { icon: '🎯', value: '100%', label: 'Integridade dos Dados' },
-  { icon: '📈', value: '5', label: 'Fontes de Dados Integradas' }
+  { icon: '⚡', value: 'Mais Rápido', label: 'Consultas de Reporting' },
+  { icon: '📊', value: '1,2M', label: 'Transações Simuladas' },
+  { icon: '🎯', value: 'Star Schema', label: 'Fonte Única de Verdade' },
+  { icon: '📈', value: '5', label: 'Fontes de Dados Modeladas' }
 ];
 ---
 
@@ -19,19 +19,16 @@ const metrics = [
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      A equipa de finanças estava a afogar-se no <strong>caos de dados</strong>: 5 sistemas diferentes (ERP, CRM, Excel, bases de dados legadas) sem uma visão unificada, levando a:
+      Este é um projeto de estudo pessoal a modelar um problema comum em equipas de finanças: dados espalhados por vários sistemas (ERP, CRM, folhas de cálculo) sem uma única fonte de verdade, o que faz com que a mesma pergunta possa ter respostas diferentes consoante o sistema consultado.
     </p>
     <ul>
-      <li><strong>Números Conflituantes:</strong> O relatório de vendas do CRM mostrava €2,5M de receita, o sistema contabilístico mostrava €2,3M — qual é o correto?</li>
-      <li><strong>Reconciliação Manual:</strong> Analistas a gastar 10 horas/semana a cruzar dados entre sistemas no Excel.</li>
-      <li><strong>Consultas Lentas:</strong> Gerar relatórios de fim de mês demorava 45 minutos devido a joins complexos entre tabelas desnormalizadas.</li>
-      <li><strong>Sem Rastreamento Histórico:</strong> Impossível analisar tendências (ex.: "Como evoluiu a margem bruta ao longo de 3 anos?").</li>
+      <li><strong>Números Conflituantes:</strong> sistemas diferentes a reportar receitas ligeiramente diferentes para o mesmo período é um sintoma comum e real deste problema.</li>
+      <li><strong>Reconciliação Manual:</strong> sem um modelo unificado, reconciliar números entre sistemas à mão em Excel é lento e propenso a erros.</li>
+      <li><strong>Relatórios Lentos:</strong> joins complexos entre tabelas desnormalizadas e sem modelação tornam mesmo relatórios simples de fim de mês lentos de gerar.</li>
     </ul>
-    <blockquote>
-      "Tínhamos 5 versões da 'verdade'. O CFO fazia uma pergunta e recebia 3 respostas diferentes consoante quem respondia."
-    </blockquote>
+    <p>Desenhei um data warehouse em Star Schema para abordar estes padrões usando um dataset simulado multi-fonte.</p>
   </section>
 
   <section>
@@ -89,29 +86,15 @@ new_customers.to_sql('dim_customer', warehouse_engine, if_exists='append')</code
   </section>
 
   <section>
-    <h2>📈 Resultados e Impacto no Negócio</h2>
+    <h2>📈 Resultados no Dataset Simulado</h2>
     
-    <h3>Resultados Quantificados</h3>
+    <h3>O que o Warehouse Alcança</h3>
     <ul>
-      <li><strong>70% Consultas Mais Rápidas:</strong> Relatórios de fim de mês de 45min passaram para 13min (Star Schema otimizado).</li>
-      <li><strong>1M+ Transações:</strong> O warehouse processa 1,2M transações com resposta sub-segundo.</li>
-      <li><strong>100% Integridade dos Dados:</strong> Discrepâncias eliminadas através de fonte única de verdade.</li>
-      <li><strong>5 Fontes Unificadas:</strong> ERP, CRM, Excel, SQL Server legado, feeds bancários — tudo num só lugar.</li>
+      <li><strong>Consultas Mais Rápidas:</strong> o design em Star Schema torna consultas agregadas tipo fim de mês visivelmente mais rápidas do que consultar diretamente tabelas de origem desnormalizadas.</li>
+      <li><strong>1,2M Transações Simuladas:</strong> testei o desempenho do pipeline a esta escala para verificar que aguenta além de um dataset de brincar.</li>
+      <li><strong>Um Modelo, Um Conjunto de Números:</strong> assim que os dados passam pelo mesmo pipeline ETL para o mesmo schema, não há espaço para o problema de "qual número está certo" que isto pretende resolver.</li>
     </ul>
-
-    <h3>Métricas de Negócio Melhoradas</h3>
-    <ul>
-      <li><strong>Tempo de Reconciliação:</strong> 10 horas/semana → 1 hora/semana (redução de 90%).</li>
-      <li><strong>Precisão dos Relatórios:</strong> Zero "conflitos de versão" nos dashboards executivos.</li>
-      <li><strong>Analytics Self-Service:</strong> Utilizadores de negócio podem agora criar os seus próprios relatórios sem ajuda de TI.</li>
-    </ul>
-
-    <h3>Insights Estratégicos</h3>
-    <ul>
-      <li><strong>Análise de Tendências Históricas:</strong> Descoberta de um declínio de 15% na margem bruta ao longo de 2 anos devido ao aumento de preços dos fornecedores.</li>
-      <li><strong>Segmentação de Clientes:</strong> Identificados os 20% de clientes que geram 80% da receita.</li>
-      <li><strong>Otimização de Inventário:</strong> Detetadas SKUs de baixa rotação que imobilizavam €500k em fundo de maneio.</li>
-    </ul>
+    <p><em>Valores como "redução de 90% no tempo de reconciliação" descrevem o tipo de melhoria que esta arquitetura foi desenhada para produzir num ambiente real com múltiplos sistemas — não medi isto contra o fluxo de trabalho real de uma equipa.</em></p>
   </section>
 
   <section>
@@ -146,9 +129,8 @@ new_customers.to_sql('dim_customer', warehouse_engine, if_exists='append')</code
     
     <h3>O que Funcionou</h3>
     <ul>
-      <li><strong>Alinhamento com Stakeholders:</strong> Envolvimento dos utilizadores finais desde cedo para definir requisitos de negócio e métricas-chave.</li>
-      <li><strong>Desenvolvimento Incremental:</strong> Começou com dados de Vendas, depois adicionou Finanças, depois Inventário (abordagem iterativa).</li>
-      <li><strong>Documentação:</strong> Criado dicionário de dados a explicar cada campo (reduziu tickets de suporte em 80%).</li>
+      <li><strong>Desenvolvimento Incremental:</strong> começar com uma fonte (Vendas), acertá-la, e depois adicionar Finanças e Inventário tornou o schema mais fácil de raciocinar do que tentar modelar tudo de uma vez.</li>
+      <li><strong>Documentação:</strong> manter um dicionário de dados para cada campo tornou muito mais fácil, meses depois, lembrar-me porque é que uma tabela estava estruturada daquela forma.</li>
     </ul>
 
     <h3>Desafios Ultrapassados</h3>

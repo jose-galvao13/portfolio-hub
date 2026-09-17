@@ -21,21 +21,19 @@ const stack = ['Python', 'Scikit-Learn', 'Lifelines', 'Pandas', 'Matplotlib'];
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      A empresa estava a experienciar uma <strong>taxa anual de churn de 20%</strong>, mas o sistema CRM existente só sinalizava clientes <em>depois</em> de já terem cancelado. Esta abordagem reativa significava receitas perdidas e orçamentos de retenção desperdiçados em clientes que já tinham partido.
+      Este é um projeto de estudo pessoal construído sobre um <strong>dataset público de telecomunicações</strong> (~7.000 clientes, taxa de churn de 26,5%) para praticar um problema comum a muitos negócios de subscrição: os relatórios de churn tradicionais só sinalizam clientes <em>depois</em> de já terem cancelado, o que é tarde demais para qualquer campanha de retenção fazer diferença.
     </p>
     <p>
-      Os principais desafios incluíam:
+      Quis explorar:
     </p>
     <ul>
-      <li><strong>Cegueira Temporal do Churn:</strong> Não saber <em>quando</em> um cliente iria cancelar tornava impossível agendar campanhas de retenção eficazmente.</li>
-      <li><strong>Sobrecarga de Atributos:</strong> 80+ atributos de cliente sem indicação clara de quais previam realmente o churn.</li>
-      <li><strong>Problema de Dados Censurados:</strong> Muitos clientes ainda estavam ativos (ainda não tinham cancelado), tornando os modelos de classificação tradicionais incompletos.</li>
+      <li><strong>Tempo até ao Churn:</strong> não só <em>quem</em> está em risco de cancelar, mas <em>quando</em> — o que muda a forma como uma campanha de retenção poderia ser cronometrada.</li>
+      <li><strong>Seleção de Atributos:</strong> com mais de 20 atributos de cliente disponíveis, quais têm realmente sinal preditivo.</li>
+      <li><strong>Dados Censurados:</strong> como modelar o risco de churn para clientes ainda ativos que ainda não cancelaram.</li>
     </ul>
-    <blockquote>
-      "Estávamos a gastar €50k/mês em campanhas de retenção dirigidas a clientes que já tinham mentalmente desistido 6 meses antes."
-    </blockquote>
+    <p><em>Nota: os números abaixo vêm deste dataset e dos modelos que treinei sobre ele — são ilustrativos da abordagem, não resultados de uma implementação real em produção.</em></p>
   </section>
 
   <section>
@@ -83,21 +81,21 @@ data['churn_risk_90d'] = model.predict_proba(X)[:, 1]</code></pre>
   </section>
 
   <section>
-    <h2>📈 Resultados e Impacto no Negócio</h2>
+    <h2>📈 Resultados no Dataset</h2>
     
-    <h3>Resultados Quantificados</h3>
+    <h3>O que o Modelo Alcançou</h3>
     <ul>
-      <li><strong>30% de Receita em Risco:</strong> Identificados segmentos de clientes de alto risco representando €1,2M em receita recorrente anual.</li>
-      <li><strong>87% de Precisão de Previsão:</strong> Pontuação AUC de 0,87, superando significativamente o sistema anterior baseado em regras (0,62).</li>
-      <li><strong>Janela de Aviso de 3 Meses:</strong> Capacidade de prever churn com 90 dias de antecedência com 75% de precisão, permitindo intervenção proativa.</li>
-      <li><strong>€250k de Poupanças Anuais:</strong> Redução do desperdício em retenção ao direcionar apenas os casos de alta probabilidade de salvar.</li>
+      <li><strong>Identificação de Segmentos:</strong> o modelo sinalizou segmentos de clientes representando cerca de 30% da receita como alto risco — uma hipotética equipa de retenção poderia priorizar estes primeiro.</li>
+      <li><strong>87% AUC:</strong> o modelo de gradient boosting atingiu um AUC de 0,87 nos dados de teste, comparado com uma baseline simples de 0,62.</li>
+      <li><strong>Aviso de 90 Dias:</strong> o modelo de sobrevivência conseguiu estimar a probabilidade de churn com cerca de 90 dias de antecedência, que é o tipo de janela que uma campanha de retenção precisaria.</li>
     </ul>
+    <p><em>Os valores de €1,2M de receita e €250k de poupanças apresentados como métricas de destaque são estimativas ilustrativas escaladas a partir dos números do dataset — não são resultados de negócio auditados.</em></p>
 
-    <h3>Insights Estratégicos Descobertos</h3>
+    <h3>Padrões Dignos de Nota</h3>
     <ul>
-      <li><strong>Paradoxo dos Tickets de Suporte:</strong> Clientes com 0 tickets estavam em <em>maior</em> risco do que os com 1-2 (indicando desengajamento).</li>
-      <li><strong>Preditor do Método de Pagamento:</strong> Clientes que usavam transferências bancárias manuais tinham churn 3x superior aos utilizadores de débito automático.</li>
-      <li><strong>Janela Crítica de Integração:</strong> 80% dos cancelamentos ocorreram nos primeiros 6 meses, apontando para problemas de onboarding.</li>
+      <li><strong>Paradoxo dos Tickets de Suporte:</strong> clientes com 0 tickets mostraram risco de churn <em>maior</em> do que os com 1-2 — um possível sinal de desengajamento em vez de satisfação.</li>
+      <li><strong>Método de Pagamento:</strong> clientes com transferência bancária manual cancelaram a uma taxa notavelmente superior à dos utilizadores de débito automático.</li>
+      <li><strong>Risco na Antiguidade Inicial:</strong> uma grande parte do churn aconteceu nos primeiros 6 meses, o que apontaria para o onboarding como área a investigar numa implementação real.</li>
     </ul>
   </section>
 
@@ -119,22 +117,22 @@ data['churn_risk_90d'] = model.predict_proba(X)[:, 1]</code></pre>
       <li><strong>Validação Baseada em Tempo:</strong> Treinado nos meses 1-10, validado nos meses 11-12 para simular implementação real.</li>
     </ul>
 
-    <h3>Implementação</h3>
+    <h3>Como Isto Poderia Ser Implementado</h3>
     <ul>
-      <li>Pontuação batch semanal de toda a base de clientes (~50k clientes).</li>
-      <li>Top 500 clientes de maior risco sinalizados para revisão da equipa de CRM.</li>
-      <li>Pontuações de risco integradas nos dashboards Power BI para reporting executivo.</li>
+      <li>Desenhado para pontuação em batch semanal de toda a base de clientes (simulada aqui em ~50k clientes).</li>
+      <li>Os clientes de maior risco seriam sinalizados para revisão de uma equipa de retenção.</li>
+      <li>As pontuações de risco alimentariam um dashboard Power BI para acompanhamento ao longo do tempo.</li>
     </ul>
   </section>
 
   <section>
-    <h2>🎓 Lições Aprendidas</h2>
+    <h2>🎓 O que Aprendi</h2>
     
     <h3>O que Funcionou</h3>
     <ul>
-      <li><strong>Análise de Sobrevivência Primeiro:</strong> Compreender <em>quando</em> os clientes cancelam ajudou a priorizar a engenharia de features.</li>
-      <li><strong>Alinhamento com o Negócio:</strong> Colaboração com a equipa de retenção para definir limiares de risco "acionáveis" (top 10% vs. top 1%).</li>
-      <li><strong>Explicabilidade:</strong> Os valores SHAP ajudaram a explicar previsões individuais à equipa de CRM ("Este cliente está em alto risco porque...").</li>
+      <li><strong>Análise de Sobrevivência Primeiro:</strong> compreender <em>quando</em> os clientes cancelam ajudou a priorizar que features engenheirar.</li>
+      <li><strong>Definir Limiares:</strong> definir limiares de risco "acionáveis" (top 10% vs. top 1%) é uma decisão de design real, não só de modelação — molda quão utilizável seria o resultado.</li>
+      <li><strong>Explicabilidade:</strong> os valores SHAP tornaram possível explicar previsões individuais em termos simples ("este cliente está em alto risco porque...") em vez de apenas uma pontuação.</li>
     </ul>
 
     <h3>Desafios Ultrapassados</h3>

@@ -21,19 +21,18 @@ const stack = ['Python', 'LangChain', 'Llama 3', 'RAG', 'ChromaDB'];
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      Financial auditors and analysts were spending <strong>4-6 hours per week</strong> manually searching through dense PDF reports (10-Ks, earnings calls, audit reports) to answer stakeholder questions. This process was:
+      This is a self-directed project testing how far Retrieval-Augmented Generation (RAG) can go for a task I found genuinely tedious: manually searching dense financial PDFs (10-Ks, earnings reports) for a specific figure or statement.
+    </p>
+    <p>
+      Problems with the manual approach that motivated the project:
     </p>
     <ul>
-      <li><strong>Slow & Inefficient:</strong> Ctrl+F searches missed semantic matches ("revenue growth" vs "top-line expansion").</li>
-      <li><strong>Error-Prone:</strong> Copy-pasting snippets without context led to misinterpretation.</li>
-      <li><strong>Non-Verifiable:</strong> Answers lacked citations, making it hard to validate sources.</li>
-      <li><strong>Siloed Knowledge:</strong> Each analyst had their own "mental index" of where information lived in documents.</li>
+      <li><strong>Keyword Search Misses Meaning:</strong> Ctrl+F won't match "revenue growth" against "top-line expansion".</li>
+      <li><strong>No Source Tracking:</strong> copy-pasting snippets without a page reference makes it hard to double-check later.</li>
+      <li><strong>Long Documents:</strong> a 200-page earnings supplement is exactly the kind of document this should help with.</li>
     </ul>
-    <blockquote>
-      "We'd get questions like 'What was EBITDA margin in Q2 2023?' and it would take 20 minutes to find the answer buried in a 200-page earnings supplement."
-    </blockquote>
   </section>
 
   <section>
@@ -103,29 +102,21 @@ print(result["source_documents"])  # Citations</code></pre>
   </section>
 
   <section>
-    <h2>📈 Key Results & Business Impact</h2>
+    <h2>📈 Results on My Test Set</h2>
     
-    <h3>Quantified Outcomes</h3>
+    <h3>What Worked</h3>
     <ul>
-      <li><strong>95% Time Reduction:</strong> Queries that took 20 minutes now take 10 seconds.</li>
-      <li><strong>92% Accuracy:</strong> Validated against manual audit on 100 test questions.</li>
-      <li><strong>200+ Pages Indexed:</strong> Can handle dense financial documents (10-Ks, S-1s, audit reports).</li>
-      <li><strong>Verifiable Answers:</strong> Every answer includes page number citations for validation.</li>
+      <li><strong>92% Accuracy on 100 Test Questions:</strong> I wrote 100 questions with known answers from a sample 10-K and checked the model's answers against them by hand.</li>
+      <li><strong>Fast Retrieval:</strong> queries return in a few seconds once the document is indexed, versus the minutes it takes to search manually.</li>
+      <li><strong>Page-Level Citations:</strong> every answer links back to the source page, so it's easy to verify rather than take on faith.</li>
     </ul>
+    <p><em>The "95% time reduction" figure on the summary card is an estimate comparing this to my own manual search time on the same questions — not a measurement from real analyst usage.</em></p>
 
-    <h3>Use Cases Unlocked</h3>
+    <h3>What It's Good At</h3>
     <ul>
-      <li><strong>Due Diligence:</strong> "What are the top 5 risk factors mentioned in the 10-K?"</li>
-      <li><strong>Comparative Analysis:</strong> "Compare EBITDA margins across Q1, Q2, Q3, Q4."</li>
-      <li><strong>Regulatory Compliance:</strong> "Does the MD&A section discuss climate-related risks?"</li>
-      <li><strong>Executive Briefings:</strong> "Summarize key changes in accounting policies this year."</li>
-    </ul>
-
-    <h3>Strategic Insights</h3>
-    <ul>
-      <li><strong>Semantic Search Power:</strong> Found relevant information even when exact keywords didn't match (e.g., "revenue" vs "sales").</li>
-      <li><strong>Cross-Document Synthesis:</strong> Could compare metrics across multiple years' reports.</li>
-      <li><strong>Audit Trail:</strong> Citations provide an audit trail for compliance teams.</li>
+      <li>Finding a specific figure or statement buried in a long document ("what was EBITDA margin in Q2?").</li>
+      <li>Semantic matching — finding "revenue growth" even when the document says "top-line expansion".</li>
+      <li>Comparing the same metric across sections of one document.</li>
     </ul>
   </section>
 

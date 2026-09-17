@@ -2,9 +2,9 @@
 import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '⚡', value: '95%', label: 'Redução do Tempo de Pesquisa' },
-  { icon: '📄', value: '200+', label: 'Páginas por Documento' },
-  { icon: '🎯', value: '92%', label: 'Precisão das Respostas' },
+  { icon: '⚡', value: 'Segundos', label: 'Por Consulta' },
+  { icon: '📄', value: 'Multi-página', label: 'Documentos Densos' },
+  { icon: '🎯', value: '92%', label: 'Precisão no Meu Teste (100 perguntas)' },
   { icon: '⏱️', value: '<10s', label: 'Tempo Médio de Consulta' }
 ];
 
@@ -21,19 +21,18 @@ const stack = ['Python', 'LangChain', 'Llama 3', 'RAG', 'ChromaDB'];
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      Auditores e analistas financeiros gastavam <strong>4-6 horas por semana</strong> a pesquisar manualmente em densos relatórios PDF (10-Ks, chamadas de resultados, relatórios de auditoria) para responder a perguntas dos stakeholders. Este processo era:
+      Este é um projeto de estudo pessoal a testar até onde a Geração Aumentada por Recuperação (RAG) consegue ir numa tarefa genuinamente tediosa: procurar manualmente uma figura ou afirmação específica em PDFs financeiros densos (10-Ks, relatórios de resultados).
+    </p>
+    <p>
+      Problemas da abordagem manual que motivaram o projeto:
     </p>
     <ul>
-      <li><strong>Lento e Ineficiente:</strong> Pesquisas com Ctrl+F perdiam correspondências semânticas ("crescimento de receita" vs. "expansão da linha de topo").</li>
-      <li><strong>Propenso a Erros:</strong> Copiar trechos sem contexto levava a interpretações erradas.</li>
-      <li><strong>Não Verificável:</strong> As respostas não tinham citações, tornando difícil validar as fontes.</li>
-      <li><strong>Conhecimento em Silos:</strong> Cada analista tinha o seu próprio "índice mental" de onde a informação estava nos documentos.</li>
+      <li><strong>Ctrl+F Perde o Significado:</strong> não faz correspondência entre "crescimento de receita" e "expansão da linha de topo".</li>
+      <li><strong>Sem Rastreio de Fonte:</strong> copiar trechos sem referência de página torna difícil verificar mais tarde.</li>
+      <li><strong>Documentos Longos:</strong> um suplemento de resultados com 200 páginas é exatamente o tipo de documento onde isto devia ajudar.</li>
     </ul>
-    <blockquote>
-      "Recebíamos perguntas como 'Qual foi a margem EBITDA no T2 2023?' e demorava 20 minutos a encontrar a resposta enterrada num suplemento de resultados de 200 páginas."
-    </blockquote>
   </section>
 
   <section>
@@ -103,29 +102,21 @@ print(result["source_documents"])  # Citações</code></pre>
   </section>
 
   <section>
-    <h2>📈 Resultados e Impacto no Negócio</h2>
+    <h2>📈 Resultados no Meu Conjunto de Teste</h2>
     
-    <h3>Resultados Quantificados</h3>
+    <h3>O que Funcionou</h3>
     <ul>
-      <li><strong>95% de Redução de Tempo:</strong> Consultas que demoravam 20 minutos agora demoram 10 segundos.</li>
-      <li><strong>92% de Precisão:</strong> Validado por auditoria manual em 100 perguntas de teste.</li>
-      <li><strong>200+ Páginas Indexadas:</strong> Capaz de lidar com documentos financeiros densos (10-Ks, S-1s, relatórios de auditoria).</li>
-      <li><strong>Respostas Verificáveis:</strong> Cada resposta inclui citações de números de página para validação.</li>
+      <li><strong>92% de Precisão em 100 Perguntas de Teste:</strong> escrevi 100 perguntas com respostas conhecidas de um 10-K de exemplo e comparei as respostas do modelo à mão.</li>
+      <li><strong>Recuperação Rápida:</strong> as consultas devolvem resposta em poucos segundos depois de o documento estar indexado, comparado com os minutos que a pesquisa manual demora.</li>
+      <li><strong>Citações ao Nível da Página:</strong> cada resposta remete para a página fonte, o que facilita a verificação em vez de aceitar por fé.</li>
     </ul>
+    <p><em>O valor de "95% de redução de tempo" apresentado como métrica de destaque é uma estimativa que compara isto com o meu próprio tempo de pesquisa manual nas mesmas perguntas — não uma medição de uso real por analistas.</em></p>
 
-    <h3>Casos de Uso Desbloqueados</h3>
+    <h3>Onde é Mais Útil</h3>
     <ul>
-      <li><strong>Due Diligence:</strong> "Quais são os 5 principais fatores de risco mencionados no 10-K?"</li>
-      <li><strong>Análise Comparativa:</strong> "Comparar margens EBITDA no T1, T2, T3, T4."</li>
-      <li><strong>Conformidade Regulatória:</strong> "A secção MD&A discute riscos relacionados com o clima?"</li>
-      <li><strong>Briefings Executivos:</strong> "Resumir as principais alterações nas políticas contabilísticas este ano."</li>
-    </ul>
-
-    <h3>Insights Estratégicos</h3>
-    <ul>
-      <li><strong>Poder da Pesquisa Semântica:</strong> Encontrou informação relevante mesmo quando as palavras-chave exatas não correspondiam (ex.: "receita" vs. "vendas").</li>
-      <li><strong>Síntese Entre Documentos:</strong> Conseguiu comparar métricas em relatórios de vários anos.</li>
-      <li><strong>Trilha de Auditoria:</strong> As citações proporcionam uma trilha de auditoria para equipas de conformidade.</li>
+      <li>Encontrar uma figura ou afirmação específica enterrada num documento longo ("qual foi a margem EBITDA no T2?").</li>
+      <li>Correspondência semântica — encontrar "crescimento de receita" mesmo quando o documento diz "expansão da linha de topo".</li>
+      <li>Comparar a mesma métrica entre secções de um documento.</li>
     </ul>
   </section>
 

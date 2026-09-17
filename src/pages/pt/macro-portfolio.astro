@@ -2,9 +2,9 @@
 import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '📊', value: '1,87', label: 'Sharpe Ratio Obtido' },
-  { icon: '📉', value: '-12%', label: 'Drawdown Máximo (vs -22% mercado)' },
-  { icon: '⚡', value: 'Tempo Real', label: 'Taxa de Atualização de Dados' },
+  { icon: '📊', value: '1,87', label: 'Sharpe Ratio (backtest)' },
+  { icon: '📉', value: '-12%', label: 'Drawdown Máximo (backtest, vs -22% S&P)' },
+  { icon: '⚡', value: 'Tempo Real', label: 'Dados de Preço' },
   { icon: '💰', value: '3', label: 'Classes de Ativos Monitorizadas' }
 ];
 
@@ -22,22 +22,15 @@ const stack = ['Python', 'Streamlit', 'Plotly', 'yfinance API', 'Pandas'];
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      Investidores individuais que gerem portfólios multi-ativos (ações, cripto, commodities) enfrentavam um <strong>ponto cego crítico</strong>: os rastreadores em Excel eram estáticos, perdendo movimentos de preços em tempo real e falhando no cálculo de métricas de risco sofisticadas.
-    </p>
-    <p>
-      Os principais pontos de dor incluíam:
+      Este é um projeto de dashboard de estudo pessoal a resolver uma lacuna comum para investidores individuais que acompanham um portfólio multi-ativos (ações, cripto, commodities) numa folha de cálculo estática: sem preços ao vivo, e sem cálculo automático de métricas de risco standard.
     </p>
     <ul>
-      <li><strong>Dados Desatualizados:</strong> Atualizações manuais de preços à sexta-feira significavam decisões baseadas em informação com uma semana de atraso.</li>
-      <li><strong>Sem Métricas de Risco:</strong> Nenhum cálculo automático de Sharpe Ratio, Drawdown Máximo ou Value-at-Risk (VaR).</li>
-      <li><strong>Rebalanceamento à Intuição:</strong> Sem sinal sistemático para quando rebalancear (ex.: quando um ativo deriva mais de 5% do peso alvo).</li>
-      <li><strong>Cegueira de Correlação:</strong> Impossível ver quando ativos "diversificados" começavam a mover-se em sincronia (quebra de correlação).</li>
+      <li><strong>Dados Desatualizados:</strong> uma folha de cálculo atualizada manualmente está desatualizada assim que os preços se mexem.</li>
+      <li><strong>Sem Métricas de Risco:</strong> Sharpe Ratio, Drawdown Máximo e correlação entre posições normalmente nem são calculados num tracker simples.</li>
+      <li><strong>Cegueira de Correlação:</strong> ativos que parecem diversificados no papel podem começar a mover-se em conjunto durante stress de mercado, algo que um tracker estático não revela.</li>
     </ul>
-    <blockquote>
-      "Pensei que o meu portfólio estava equilibrado até o Bitcoin e as ações tecnológicas caírem 30% na mesma semana. Afinal, a sua correlação tinha subido para 0,85."
-    </blockquote>
   </section>
 
   <section>
@@ -105,21 +98,18 @@ st.plotly_chart(fig)</code></pre>
   </section>
 
   <section>
-    <h2>📈 Resultados e Impacto no Negócio</h2>
+    <h2>📈 O que o Backtest Mostra</h2>
     
-    <h3>Resultados Quantificados</h3>
-    <ul>
-      <li><strong>Sharpe Ratio de 1,87:</strong> Retornos ajustados ao risco 87% acima da taxa sem risco (vs 1,2 do S&P 500).</li>
-      <li><strong>Drawdown Máximo de -12%:</strong> O portfólio caiu apenas 12% vs -22% do S&P durante o mercado em baixa de 2022 (diversificação a funcionar).</li>
-      <li><strong>Alertas em Tempo Real:</strong> Oportunidades de rebalanceamento detetadas em 15 minutos após movimentos de preço.</li>
-      <li><strong>Configuração em 30 Minutos:</strong> Tempo de revisão do portfólio reduzido de 2 horas (Excel) para 5 minutos (dashboard).</li>
-    </ul>
+    <h3>Números de uma Janela Histórica Específica</h3>
+    <p>
+      Correr as métricas do dashboard sobre uma alocação e um período histórico específicos e ilustrativos produziu um Sharpe Ratio de 1,87 e um drawdown máximo de -12%, contra cerca de 1,2 e -22% para o S&P 500 no mesmo período. Estes números são <strong>resultados de backtest para um período e alocação escolhidos</strong> — um Sharpe Ratio real tão alto sustentado ao longo do tempo seria invulgar, e isto não deve ser lido como um track record real ou repetível.
+    </p>
 
-    <h3>Insights Estratégicos Descobertos</h3>
+    <h3>O que o Dashboard Revela</h3>
     <ul>
-      <li><strong>Divergência Ouro-BTC:</strong> Durante picos de inflação, o Ouro e o BTC moveram-se em direções opostas (correlação -0,4), proporcionando uma cobertura natural.</li>
-      <li><strong>Disciplina de Rebalanceamento:</strong> Os sinais automáticos evitaram a tomada de decisões emocionais ("manter os vencedores demasiado tempo").</li>
-      <li><strong>Clustering de Volatilidade:</strong> Os picos de volatilidade do BTC precederam a volatilidade do S&P em 2-3 dias (sinal de aviso antecipado).</li>
+      <li><strong>Mudanças de Correlação:</strong> a ferramenta torna fácil ver quando dois ativos "diversificados" começam a mover-se em conjunto, algo que uma folha de cálculo estática não apanharia.</li>
+      <li><strong>Sinais de Rebalanceamento:</strong> sinaliza quando um ativo derivou significativamente do seu peso alvo.</li>
+      <li><strong>Revisão Rápida:</strong> verificar as métricas de risco de um portfólio demora alguns minutos em vez de reconstruir cálculos numa folha de cálculo de cada vez.</li>
     </ul>
   </section>
 

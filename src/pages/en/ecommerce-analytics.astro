@@ -19,14 +19,14 @@ const metrics = [
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      E-commerce business saw <strong>flat revenue</strong> despite growing traffic, hiding a dangerous reality: high-value customers were churning silently while low-value bargain hunters inflated transaction counts.
+      This is a self-directed project on a public Brazilian e-commerce transaction dataset (~100k orders), built to practice a common pattern: aggregate revenue can look healthy while hiding churn among high-value customers, because a flat top-line number doesn't show who's actually still buying.
     </p>
     <ul>
-      <li><strong>Aggregate Blindness:</strong> Total revenue looked stable, masking 15% churn in top customers.</li>
-      <li><strong>No Customer Segmentation:</strong> Treating €5 buyer same as €500 buyer (inefficient marketing spend).</li>
-      <li><strong>Missed Cross-Sell:</strong> No visibility into product affinity (what products are bought together?).</li>
+      <li><strong>Aggregate Blindness:</strong> total revenue trends can mask churn happening within specific customer segments.</li>
+      <li><strong>No Segmentation:</strong> treating every customer the same hides where marketing spend would be best targeted.</li>
+      <li><strong>Missed Cross-Sell:</strong> without looking at product affinity, it's easy to miss which products are commonly bought together.</li>
     </ul>
   </section>
 
@@ -66,13 +66,13 @@ FROM rfm_base</code></pre>
   </section>
 
   <section>
-    <h2>📈 Key Results</h2>
+    <h2>📈 What the Data Shows</h2>
     <ul>
-      <li><strong>€96k at Risk:</strong> Identified 200 "Champions" customers (RFM=555) who hadn't purchased in 60+ days.</li>
-      <li><strong>€42k Cross-Sell:</strong> Found customers buying Product A but never Product B (high affinity pairing).</li>
-      <li><strong>Cohort Retention Tracking:</strong> Discovered Month-1 retention was only 15% (onboarding problem).</li>
-      <li><strong>Marketing ROI:</strong> Re-engagement campaign targeting "At-Risk" segment achieved 3:1 ROI.</li>
+      <li><strong>~€96k in Revenue at Risk:</strong> a segment of previously high-value ("Champion") customers who hadn't purchased in 60+ days — this is the revenue tied to those customers' historical spend, not a guaranteed loss.</li>
+      <li><strong>~€42k Cross-Sell Signal:</strong> customer groups who buy one product category but not a commonly-paired one, flagged as a candidate for a cross-sell campaign.</li>
+      <li><strong>Cohort Retention:</strong> month-1 retention in the cohort analysis came out low, which would be worth investigating as a possible onboarding issue in a real business.</li>
     </ul>
+    <p><em>These are patterns surfaced in the dataset, not measured outcomes from an actual retention or marketing campaign — no campaign was run against this data.</em></p>
   </section>
 
   <section>

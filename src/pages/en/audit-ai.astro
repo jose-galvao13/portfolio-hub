@@ -21,22 +21,19 @@ const stack = ['Python', 'LangChain', 'OpenAI API', 'Pandas', 'Isolation Forest'
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      In modern auditing, the sheer volume of financial data makes manual review impossible. Traditional firms rely on <strong>statistical sampling</strong>, typically reviewing only 5% of transactions. This leaves a 95% "blind spot" where fraud, errors, or compliance breaches can hide.
+      This is a self-directed project exploring a well-known limitation in traditional auditing: firms typically rely on <strong>statistical sampling</strong>, reviewing only a small fraction of transactions, which leaves most of the data unchecked. I wanted to see how far Isolation Forest plus an LLM layer could go toward reviewing 100% of a transaction ledger instead.
     </p>
     <p>
-      Key challenges included:
+      Questions I set out to explore:
     </p>
     <ul>
-      <li><strong>Sampling Risk:</strong> Critical errors often occur in the 95% of data that is never looked at.</li>
-      <li><strong>Manual Review Fatigue:</strong> Auditors spend weeks looking at "clean" transactions, leading to burnout and oversight.</li>
-      <li><strong>Lack of Context:</strong> Traditional rule-based software flags many "false positives" that are actually normal business operations.</li>
-      <li><strong>Regulatory Pressure:</strong> Increasing demand for 100% data integrity and real-time compliance monitoring.</li>
+      <li><strong>Sampling Risk:</strong> Could unsupervised anomaly detection catch issues that a 5% sample would miss?</li>
+      <li><strong>False Positives:</strong> Could adding an LLM "explanation" layer reduce the noise that pure rule-based flags produce?</li>
+      <li><strong>Explainability:</strong> Could a natural-language note make a flagged transaction easier to triage than a raw risk score?</li>
     </ul>
-    <blockquote>
-      "We weren't finding the needle in the haystack because we were only looking at a handful of hay."
-    </blockquote>
+    <p><em>Note: this was built and tested on a synthetic/sample ledger, not live audit data from a real firm.</em></p>
   </section>
 
   <section>
@@ -109,22 +106,15 @@ anomalies['audit_note'] = anomalies.apply(generate_audit_note, axis=1)</code></p
   </section>
 
   <section>
-    <h2>📈 Key Results & Business Impact</h2>
+    <h2>📈 Results on the Test Data</h2>
     
-    <h3>Quantified Outcomes</h3>
+    <h3>What the Pipeline Achieved</h3>
     <ul>
-      <li><strong>100% Coverage:</strong> The system analyzes every single journal entry, eliminating sampling risk entirely.</li>
-      <li><strong>70% Time Savings:</strong> Auditors no longer search for errors; they only review a curated list of high-risk flags with AI-generated notes.</li>
-      <li><strong>92% Detection Rate:</strong> In back-testing, the model caught 11 out of 12 known historical reporting errors.</li>
-      <li><strong>Instant Reporting:</strong> Compliance reports that used to take 2 weeks are now generated in 4 hours.</li>
+      <li><strong>100% Coverage:</strong> Every transaction in the dataset is scored — no sampling step.</li>
+      <li><strong>Curated Flag List:</strong> Instead of a raw risk score, each flagged transaction comes with a short AI-generated note explaining why it looks unusual.</li>
+      <li><strong>92% Detection Rate (on injected test cases):</strong> The model caught 11 of 12 anomalies I deliberately inserted into the test set to check recall.</li>
     </ul>
-
-    <h3>Business Metrics Improved</h3>
-    <ul>
-      <li><strong>Audit Fees:</strong> Reduced external audit hours by providing clean, pre-analyzed datasets to partners.</li>
-      <li><strong>Risk Mitigation:</strong> Identified a €45k double-payment error within the first 2 hours of deployment.</li>
-      <li><strong>Continuous Monitoring:</strong> Shifted from "Year-end Audit" to "Monthly Health Checks."</li>
-    </ul>
+    <p><em>Time-savings figures (e.g. "70% faster", "€45k caught") on the site's summary card are illustrative projections based on how the pipeline performs on the test data — not measured results from a real audit engagement.</em></p>
   </section>
 
   <section>
@@ -146,18 +136,18 @@ anomalies['audit_note'] = anomalies.apply(generate_audit_note, axis=1)</code></p
   </section>
 
   <section>
-    <h2>🎓 Lessons Learned</h2>
+    <h2>🎓 What I Learned</h2>
     
     <h3>What Worked</h3>
     <ul>
-      <li><strong>LLM Interpretability:</strong> Auditors didn't trust a "Risk Score of 0.89," but they did trust the AI when it explained *why* it gave that score.</li>
-      <li><strong>Automation of Routine:</strong> Automating the checking of "Sunday postings" (a classic audit red flag) saved hours of manual filtering.</li>
+      <li><strong>Explanations Over Scores:</strong> A raw "Risk Score of 0.89" is hard to act on. Having the LLM explain *why* it flagged a transaction made the output far more usable, even to me during testing.</li>
+      <li><strong>Rule-of-Thumb Checks:</strong> Automating known audit red flags (like weekend postings) is a cheap first filter before anything statistical.</li>
     </ul>
 
-    <h3>Challenges Overcome</h3>
+    <h3>Challenges I Ran Into</h3>
     <ul>
-      <li><strong>Data Quality:</strong> ERP descriptions are often messy. Used Python's `fuzzywuzzy` and LLMs to clean and categorize vendor names.</li>
-      <li><strong>Initial Skepticism:</strong> Overcame the "Black Box" fear by showing side-by-side comparisons of manual vs. AI findings.</li>
+      <li><strong>Data Quality:</strong> Synthetic ERP-style descriptions are messy by design. I used `fuzzywuzzy` and the LLM itself to clean and categorize vendor names.</li>
+      <li><strong>Trusting a "Black Box":</strong> Even for myself, it took building side-by-side comparisons of manual vs. AI-flagged transactions to feel confident the model wasn't just flagging noise.</li>
     </ul>
   </section>
 

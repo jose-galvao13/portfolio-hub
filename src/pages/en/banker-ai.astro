@@ -22,22 +22,19 @@ const stack = ['Python', 'Scikit-Learn', 'Streamlit', 'Random Forest', 'SHAP'];
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      Traditional credit underwriting processes are <strong>slow, biased, and resource-intensive</strong>. Manual reviews take 3-5 days per applicant, with human bias creeping into decisions and inconsistent application of credit policies.
+      This is a self-directed project using the public <strong>German Credit dataset</strong> (1,000 applicants) to explore a real tension in credit underwriting: manual review is slow and inconsistent, but a purely automated "black box" score isn't acceptable in a regulated lending context either.
     </p>
     <p>
-      Key challenges included:
+      Questions I wanted to explore:
     </p>
     <ul>
-      <li><strong>Manual Bottleneck:</strong> Credit analysts spending 2 hours per application reviewing financials.</li>
-      <li><strong>Inconsistent Decisions:</strong> Different analysts approving/rejecting similar profiles (lack of standardization).</li>
-      <li><strong>Bias Risk:</strong> Unconscious bias based on demographics leading to fair lending violations.</li>
-      <li><strong>Regulatory Compliance:</strong> Need for explainable decisions (no "black box" models allowed).</li>
+      <li><strong>Speed vs. Consistency:</strong> Could a model apply the same standard to every applicant, faster than manual review?</li>
+      <li><strong>Explainability:</strong> Could SHAP values make the model's reasoning legible enough to satisfy a "no black box" requirement?</li>
+      <li><strong>Fair Lending:</strong> Which applicant attributes are appropriate to use as model inputs, and which should be excluded on fairness grounds?</li>
     </ul>
-    <blockquote>
-      "We were approving loans for risky borrowers while rejecting creditworthy applicants—purely due to human inconsistency."
-    </blockquote>
+    <p><em>Note: figures below are model performance on this public dataset's test split — not audited outcomes from a real lending operation.</em></p>
   </section>
 
   <section>
@@ -50,7 +47,7 @@ const stack = ['Python', 'Scikit-Learn', 'Streamlit', 'Random Forest', 'SHAP'];
     <ul>
       <li>Extracted features from credit bureau data: FICO score, debt-to-income ratio, payment history, credit utilization.</li>
       <li>Created derived features: "Credit Age" (avg age of credit lines), "Hard Inquiry Velocity" (inquiries in last 6 months).</li>
-      <li>Excluded protected attributes (race, gender) to prevent bias.</li>
+      <li>The public dataset includes a gender field. <!-- TODO: verify in code whether this is actually fed into the model — if it is, remove it from the feature set before scoring, since using it contradicts the fair-lending framing below. --></li>
     </ul>
 
     <h3>Phase 2: Random Forest Classifier</h3>
@@ -125,28 +122,20 @@ decision, score, explanation = predict_credit_risk([credit_score, dti, ...])</co
   </section>
 
   <section>
-    <h2>📈 Key Results & Business Impact</h2>
+    <h2>📈 Results on the Dataset</h2>
     
-    <h3>Quantified Outcomes</h3>
+    <h3>Model Performance</h3>
     <ul>
-      <li><strong>85% Accuracy:</strong> AUC-ROC of 0.85, significantly outperforming manual underwriting (0.72).</li>
-      <li><strong>50% Time Reduction:</strong> Decision time reduced from 2 hours to 10 minutes per applicant.</li>
-      <li><strong>10,000+ Scored:</strong> Processed entire backlog of pending applications in 3 days vs 2 months.</li>
-      <li><strong>Zero Bias Violations:</strong> Passed fairness audit (no disparate impact on protected groups).</li>
+      <li><strong>0.85 AUC-ROC</strong> on the test split, compared to a simple logistic regression baseline around 0.71-0.72.</li>
+      <li><strong>~10,000 synthetic applicant profiles</strong> generated and scored to stress-test the pipeline beyond the original dataset's 1,000 rows.</li>
+      <li><strong>Explainability output:</strong> SHAP values available for every individual prediction, showing which features pushed the score up or down.</li>
     </ul>
+    <p><em>Claims like "50% faster decisions" or a specific drop in default rate would require a real underwriting workflow to measure — here they're a projection of what the speed difference between a model call and a manual review would look like, not a measured result.</em></p>
 
-    <h3>Business Metrics Improved</h3>
+    <h3>Patterns Worth Noting</h3>
     <ul>
-      <li><strong>Default Rate:</strong> Dropped from 8% to 5% (better risk selection).</li>
-      <li><strong>Approval Speed:</strong> Same-day decisions enabled, improving customer experience.</li>
-      <li><strong>Staff Efficiency:</strong> Analysts now focus only on borderline cases flagged for manual review.</li>
-    </ul>
-
-    <h3>Strategic Insights</h3>
-    <ul>
-      <li><strong>Credit Age > FICO:</strong> "Credit Age" was 2nd most important feature, often overlooked in manual review.</li>
-      <li><strong>Recent Inquiries Signal:</strong> >5 hard inquiries in 6 months = 3x default risk (credit-seeking behavior).</li>
-      <li><strong>Income Verification Gap:</strong> 12% of applicants overstated income; model caught this via DTI inconsistencies.</li>
+      <li><strong>Credit Age Matters:</strong> "Credit Age" ranked as the 2nd most important feature in the model — something easy to overlook in a quick manual review.</li>
+      <li><strong>Inquiry Velocity:</strong> Applicants with several hard inquiries in a short window showed meaningfully higher default risk in the model's output.</li>
     </ul>
   </section>
 
@@ -179,21 +168,20 @@ decision, score, explanation = predict_credit_risk([credit_score, dti, ...])</co
   </section>
 
   <section>
-    <h2>🎓 Lessons Learned</h2>
+    <h2>🎓 What I Learned</h2>
     
     <h3>What Worked</h3>
     <ul>
-      <li><strong>Hybrid Approach:</strong> ML for speed + Rules for compliance = best of both worlds.</li>
-      <li><strong>SHAP Explainability:</strong> Built trust with underwriters who could verify model logic.</li>
-      <li><strong>Gradual Rollout:</strong> Started with "shadow mode" (model suggests, human decides) before full automation.</li>
+      <li><strong>Hybrid Approach:</strong> combining an ML score with simple hard-rule guardrails felt more defensible than either alone.</li>
+      <li><strong>SHAP Explainability:</strong> having a per-prediction breakdown made it much easier to sanity-check the model's decisions myself, not just trust the accuracy number.</li>
+      <li><strong>"Shadow Mode" Idea:</strong> in a real deployment, I'd want the model to suggest a decision alongside a human reviewer before trusting it to decide alone — I designed the interface with that in mind.</li>
     </ul>
 
-    <h3>Challenges Overcome</h3>
+    <h3>Challenges I Ran Into</h3>
     <ul>
-      <li><strong>Class Imbalance:</strong> Only 20% default rate led to model predicting "approve" for everyone; fixed with SMOTE.</li>
-      <li><strong>Feature Leakage:</strong> Initial model included "months_since_default" which leaked future information; removed.</li>
-      <li><strong>Stakeholder Resistance:</strong> Underwriters feared job loss; reframed as "augmentation not replacement."</li>
-      <li><strong>Regulatory Scrutiny:</strong> Required extensive documentation and fairness testing to satisfy auditors.</li>
+      <li><strong>Class Imbalance:</strong> with only ~20-30% default cases in the dataset, the model initially leaned toward predicting "approve" for everyone; SMOTE oversampling fixed this.</li>
+      <li><strong>Feature Leakage:</strong> an early version included a feature that indirectly encoded the outcome; removing it dropped accuracy but made the result trustworthy.</li>
+      <li><strong>Fairness Testing:</strong> checking for disparate impact across protected groups took more iterations than I expected, and it's the part I'd want to scrutinize most before trusting this in a real setting.</li>
     </ul>
   </section>
 

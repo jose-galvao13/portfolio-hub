@@ -3,9 +3,9 @@ import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
 
 const metrics = [
   { icon: '⚡', value: '<5 seg', label: 'Tempo de Processamento' },
-  { icon: '✅', value: '100%', label: 'Precisão Matemática' },
+  { icon: '✅', value: 'Automática', label: 'Validação Débito=Crédito' },
   { icon: '📊', value: '12', label: 'Demonstrações Financeiras' },
-  { icon: '🎯', value: '0', label: 'Erros Manuais' }
+  { icon: '🎯', value: 'Consistente', label: 'Output em Cada Execução' }
 ];
 ---
 
@@ -19,15 +19,14 @@ const metrics = [
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      O fecho financeiro de fim de mês era um <strong>pesadelo de 2 dias</strong>: contabilistas a copiar e colar dados manualmente entre 12 templates Excel, a validar Balancetes contra normas contabilísticas (SNC), e a torcer para que nenhuma fórmula falhasse.
+      Vi este padrão durante o meu estágio de contabilidade: o fecho mensal envolve copiar manualmente dados do Balancete entre vários templates Excel e verificar tudo contra as normas contabilísticas (SNC) à mão, o que é lento e deixa espaço para erros de copiar/colar. Construí esta automação para ver quanto desse processo podia ser automatizado com segurança.
     </p>
     <ul>
-      <li><strong>Risco de Erro Humano:</strong> Erros de cópia levaram a uma discrepância de €50k num mês (detetada pelos auditores).</li>
-      <li><strong>Demorado:</strong> 2 dias completos de trabalho que impediam os analistas de atividades de valor acrescentado.</li>
-      <li><strong>Sem Validação:</strong> Nenhuma verificação automática de débitos = créditos ou saldos balanceados.</li>
-      <li><strong>Caos de Versões:</strong> "Relatorio_Final_v3_FINAL_FINAL.xlsx"</li>
+      <li><strong>Processo Manual:</strong> copiar valores entre templates à mão é repetitivo e propenso a erros.</li>
+      <li><strong>Sem Validação Automática:</strong> verificar que débitos = créditos, ou que as contas reconciliam, é normalmente feito a olho.</li>
+      <li><strong>Custo em Tempo:</strong> um processo destes pode facilmente ocupar um dia ou dois inteiros todos os meses.</li>
     </ul>
   </section>
 
@@ -68,13 +67,13 @@ wb.save('Balance_Sheet_Final.xlsx')</code></pre>
   </section>
 
   <section>
-    <h2>📈 Resultados Principais</h2>
+    <h2>📈 O que o Script Faz</h2>
     <ul>
-      <li><strong>&lt;5 Segundos:</strong> Processo que demorava 2 dias agora demora 5 segundos.</li>
-      <li><strong>100% de Precisão:</strong> Zero erros matemáticos (validado por auditores).</li>
-      <li><strong>€50k Poupados:</strong> Evitou a repetição da discrepância de reconciliação de €50k.</li>
-      <li><strong>Tempo de Analistas Libertado:</strong> 16 horas/mês redirecionadas para análise financeira.</li>
+      <li><strong>~5 Segundos:</strong> a versão automatizada corre em segundos, comparado com as horas que passar pelos mesmos templates à mão levaria.</li>
+      <li><strong>Validação Incorporada:</strong> verifica que débitos = créditos e que não faltam códigos de conta, antes de escrever seja o que for nos templates de saída.</li>
+      <li><strong>Output Consistente:</strong> o mesmo script produz sempre a mesma estrutura, eliminando o problema de "qual é a versão final" que vem com folhas de cálculo editadas manualmente.</li>
     </ul>
+    <p><em>Os valores de "€50k poupados" e "validado por auditores" no cartão de resumo descrevem o tipo de erro que este passo de validação foi desenhado para apanhar — não são um incidente real que tenha resolvido.</em></p>
   </section>
 
   <section>

@@ -4,8 +4,8 @@ import CaseStudyLayout from '../../layouts/en/CaseStudyLayout.astro';
 const metrics = [
   { icon: '🏘️', value: '95,000+', label: 'Properties Analyzed' },
   { icon: '📍', value: '308', label: 'Municipalities Covered' },
-  { icon: '💎', value: '€420/m²', label: 'Max Price Arbitrage Found' },
-  { icon: '📊', value: '15%', label: 'Avg. Undervaluation Gap' }
+  { icon: '💎', value: '€420/m²', label: 'Max Price Gap vs. Neighbors' },
+  { icon: '📊', value: '15%', label: 'Avg. Regional Price Variance' }
 ];
 
 const stack = ['Power BI', 'Python', 'Web Scraping', 'GeoPandas', 'DAX'];
@@ -21,22 +21,15 @@ const stack = ['Power BI', 'Python', 'Web Scraping', 'GeoPandas', 'DAX'];
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      Real estate investors in Portugal faced a critical information asymmetry problem: <strong>hyperlocal pricing data was scattered across dozens of platforms</strong>, making it impossible to identify arbitrage opportunities without manual research taking weeks.
-    </p>
-    <p>
-      The core challenges were:
+      I built this to see whether scraping and structuring listing data from Portuguese real estate platforms could surface price patterns that national-level statistics hide — for example, whether price per m² varies meaningfully between neighboring municipalities that get lumped together in aggregate reports.
     </p>
     <ul>
-      <li><strong>Data Fragmentation:</strong> Listings spread across 5+ platforms (Idealista, Imovirtual, Casa Sapo) with no unified view.</li>
-      <li><strong>Geographic Blind Spots:</strong> Price/m² could vary by 40% between neighboring municipalities, hidden in aggregate national statistics.</li>
-      <li><strong>Market Timing:</strong> No way to track how long properties stayed on market or detect price reductions.</li>
-      <li><strong>Investment Targeting:</strong> Investors needed to know <em>where</em> to buy, not just <em>what</em> to buy.</li>
+      <li><strong>Data Fragmentation:</strong> listings are spread across several platforms with no unified view of the whole market.</li>
+      <li><strong>Geographic Blind Spots:</strong> national or district-level averages can hide large price differences between nearby municipalities.</li>
+      <li><strong>Market Timing:</strong> aggregate stats don't show how long properties actually stay on market.</li>
     </ul>
-    <blockquote>
-      "We found properties in Santarém listed at €1,200/m² while identical units 15km away in Cartaxo sold for €800/m². That's a €120k arbitrage on a 300m² property."
-    </blockquote>
   </section>
 
   <section>
@@ -104,22 +97,20 @@ df['arbitrage_gap'] = df['municipality'].map(municipality_avg) - df['price_per_m
   </section>
 
   <section>
-    <h2>📈 Key Results & Business Impact</h2>
+    <h2>📈 What the Data Shows</h2>
     
-    <h3>Quantified Outcomes</h3>
+    <h3>Coverage</h3>
     <ul>
-      <li><strong>95,000+ Properties:</strong> Comprehensive coverage of Portuguese market across all 308 municipalities.</li>
-      <li><strong>€420/m² Max Arbitrage:</strong> Identified municipalities with price gaps of up to €420/m² vs neighbors.</li>
-      <li><strong>15% Avg Undervaluation:</strong> Found systematic underpricing in inland regions (Beja, Castelo Branco) compared to coastal equivalents.</li>
-      <li><strong>Investment Pipeline:</strong> Generated list of 200+ "buy-and-hold" opportunities in high-growth corridors.</li>
+      <li><strong>~95,000 Listings</strong> scraped across Portugal's municipalities, giving a large enough sample to look at regional patterns rather than just national averages.</li>
+      <li><strong>Price Gaps Between Neighbors:</strong> the data shows municipalities with meaningfully different average price/m² than their immediate neighbors — up to roughly €420/m² in some cases.</li>
     </ul>
+    <p><em>Framing a price gap as an "arbitrage opportunity" or "buy-and-hold pipeline" implies investment-grade due diligence I haven't done — the dashboard highlights statistical patterns in listing prices, not vetted investment recommendations.</em></p>
 
-    <h3>Strategic Insights Uncovered</h3>
+    <h3>Patterns Worth Investigating Further</h3>
     <ul>
-      <li><strong>Coastal Premium Decay:</strong> Price/m² drops 60% within 30km of the coast, but amenities only drop 20%.</li>
-      <li><strong>Train Station Effect:</strong> Properties within 1km of train stations command a 25% premium.</li>
-      <li><strong>Construction Year Bias:</strong> Pre-1970 properties systematically undervalued despite renovation potential.</li>
-      <li><strong>Inventory Velocity:</strong> Properties in Porto stayed on market 18 days vs 65 days in Lisboa (oversupply signal).</li>
+      <li><strong>Coastal Price Gradient:</strong> price/m² drops noticeably moving inland from the coast in the dataset.</li>
+      <li><strong>Transit Proximity:</strong> properties near train stations show a price premium in the data.</li>
+      <li><strong>Days on Market:</strong> the dataset shows differences in how long listings stay active between cities like Porto and Lisbon — worth digging into, though listing data isn't the same as confirmed sale data.</li>
     </ul>
   </section>
 
@@ -155,7 +146,7 @@ df['arbitrage_gap'] = df['municipality'].map(municipality_avg) - df['price_per_m
     
     <h3>What Worked</h3>
     <ul>
-      <li><strong>Geospatial Visualization:</strong> Maps were 10x more effective than tables for communicating arbitrage opportunities to investors.</li>
+      <li><strong>Geospatial Visualization:</strong> a map made regional price differences far easier to spot at a glance than the equivalent table of numbers.</li>
       <li><strong>Incremental Refresh:</strong> Power BI's incremental load kept dashboard performance fast even with 95k rows.</li>
       <li><strong>Data Validation:</strong> Cross-referencing with official census data caught scraping errors early.</li>
     </ul>

@@ -2,10 +2,10 @@
 import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '⏱️', value: '2 min', label: 'Tempo de Geração de Relatório' },
-  { icon: '📊', value: '98%', label: 'Precisão de Cálculo' },
-  { icon: '💰', value: 'Tempo Real', label: 'Atualizações de Dados Financeiros' },
-  { icon: '📈', value: '50+', label: 'Empresas Analisadas' }
+  { icon: '⏱️', value: '~2 min', label: 'Tempo de Geração de Relatório' },
+  { icon: '📊', value: 'Tempo Real', label: 'Fonte de Dados Financeiros' },
+  { icon: '💰', value: 'DCF', label: 'Método de Avaliação' },
+  { icon: '📈', value: 'Multi-Empresa', label: 'Funciona em Várias Empresas' }
 ];
 
 const stack = ['Python', 'Financial Modeling API', 'Pandas', 'Avaliação DCF'];
@@ -21,19 +21,15 @@ const stack = ['Python', 'Financial Modeling API', 'Pandas', 'Avaliação DCF'];
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      Analistas de research de equity gastam <strong>4-6 horas</strong> a construir modelos DCF (Fluxo de Caixa Descontado) para cada avaliação de empresa — um processo que é:
+      Construir um modelo DCF (Fluxo de Caixa Descontado) à mão em Excel é um exercício clássico de finanças — mas também é lento e repetitivo se quiseres avaliar mais do que uma empresa. Construí isto para ver quanto de um DCF standard (recolha de dados, WACC, projeção de FCF, valor terminal) poderia ser automatizado com dados ao vivo via API.
     </p>
     <ul>
-      <li><strong>Tedioso e Propenso a Erros:</strong> A introdução manual de dados das demonstrações financeiras leva a erros de cálculo.</li>
-      <li><strong>Demorado:</strong> Recolher histórico financeiro, calcular o WACC, projetar fluxos de caixa — tudo feito no Excel.</li>
-      <li><strong>Dados Desatualizados:</strong> Os relatórios ficam obsoletos em semanas à medida que novos resultados são divulgados.</li>
-      <li><strong>Falta de Padronização:</strong> Cada analista tem o seu próprio template, dificultando a revisão por pares.</li>
+      <li><strong>DCF Manual é Tedioso:</strong> recolher demonstrações financeiras, calcular o WACC e projetar fluxos de caixa à mão é fácil de errar.</li>
+      <li><strong>Os Dados Ficam Desatualizados Depressa:</strong> um modelo construído numa semana pode já estar desatualizado na seguinte, após novos resultados.</li>
+      <li><strong>Consistência:</strong> usar as mesmas fórmulas e estrutura entre empresas torna as comparações mais significativas.</li>
     </ul>
-    <blockquote>
-      "Passávamos uma tarde inteira a construir um DCF, só para os resultados saírem na semana seguinte e invalidarem todos os nossos pressupostos."
-    </blockquote>
   </section>
 
   <section>
@@ -127,29 +123,21 @@ print(f"Valor Intrínseco: ${intrinsic_value_per_share:.2f}")</code></pre>
   </section>
 
   <section>
-    <h2>📈 Resultados e Impacto no Negócio</h2>
+    <h2>📈 Resultados</h2>
     
-    <h3>Resultados Quantificados</h3>
+    <h3>O que Faz</h3>
     <ul>
-      <li><strong>Geração em 2 Minutos:</strong> Relatório de avaliação completo gerado em 2 minutos vs. 4 horas manualmente.</li>
-      <li><strong>98% de Precisão:</strong> Validado cruzado com avaliações do Bloomberg Terminal (erro mediano &lt;2%).</li>
-      <li><strong>50+ Empresas:</strong> Analisado setor completo (ex.: todas as tecnológicas do S&P 500) em menos de 2 horas.</li>
-      <li><strong>Atualizações em Tempo Real:</strong> Atualiza automaticamente quando são divulgados novos resultados trimestrais.</li>
+      <li><strong>Geração em ~2 Minutos:</strong> obtém dados financeiros ao vivo e produz um relatório DCF completo, comparado com as horas que uma construção manual levaria.</li>
+      <li><strong>Comparado com Estimativas Públicas:</strong> comparei os outputs para algumas tickers de grande capitalização com estimativas de analistas publicamente disponíveis como verificação de sanidade — não com um Bloomberg Terminal, ao qual não tenho acesso.</li>
+      <li><strong>Repetível:</strong> a mesma metodologia aplica-se de forma consistente entre diferentes empresas, o que torna as comparações lado a lado mais significativas do que folhas de cálculo ad-hoc.</li>
     </ul>
+    <p><em>Avaliações DCF são inerentemente sensíveis a pressupostos (taxa de crescimento, WACC, valor terminal) — trata qualquer output individual como ponto de partida para mais análise, não como um preço-alvo definitivo.</em></p>
 
-    <h3>Casos de Uso Habilitados</h3>
+    <h3>Para que é Útil</h3>
     <ul>
-      <li><strong>Triagem Setorial:</strong> "Que ações tecnológicas estão subvalorizadas em mais de 20%?"</li>
-      <li><strong>Comparação de Pares:</strong> Comparar avaliações da AAPL vs. MSFT vs. GOOGL lado a lado.</li>
-      <li><strong>Análise de Sensibilidade:</strong> Testar como a avaliação muda em diferentes cenários de WACC/crescimento.</li>
-      <li><strong>Memorandos de Investimento:</strong> Gerar automaticamente resumos de 1 página para revisão pelo comité de investimento.</li>
-    </ul>
-
-    <h3>Insights Estratégicos</h3>
-    <ul>
-      <li><strong>Sensibilidade ao WACC:</strong> Uma variação de 1% no WACC pode alterar a avaliação em ±15% (gestão de risco crítica).</li>
-      <li><strong>Pressupostos de Crescimento:</strong> Empresas com crescimento de FCF em declínio são frequentemente sobreavaliadas pelo mercado (oportunidade de reversão à média).</li>
-      <li><strong>Impacto da Dívida:</strong> Dívidas elevadas aumentam o WACC, reduzindo o valor intrínseco (risco de alavancagem).</li>
+      <li>Gerar rapidamente uma primeira avaliação para comparar com o preço de mercado.</li>
+      <li>Testar quão sensível é uma avaliação aos pressupostos de WACC e crescimento através da grelha de sensibilidade.</li>
+      <li>Comparar a mesma métrica entre um grupo de empresas semelhantes.</li>
     </ul>
   </section>
 
@@ -183,21 +171,19 @@ print(f"Valor Intrínseco: ${intrinsic_value_per_share:.2f}")</code></pre>
   </section>
 
   <section>
-    <h2>🎓 Lições Aprendidas</h2>
+    <h2>🎓 O que Aprendi</h2>
     
     <h3>O que Funcionou</h3>
     <ul>
-      <li><strong>Fiabilidade da API:</strong> A API Financial Modeling Prep tinha 99,9% de disponibilidade com cobertura abrangente.</li>
-      <li><strong>Padronização:</strong> Metodologia consistente em todas as avaliações permitiu comparações equitativas.</li>
-      <li><strong>ROI da Automação:</strong> 4 horas → 2 minutos = poupança de tempo de 120x por empresa.</li>
+      <li><strong>Fiabilidade da API:</strong> a API Financial Modeling Prep foi fiável e teve boa cobertura para tickers de grande capitalização durante os testes.</li>
+      <li><strong>Padronização:</strong> usar uma metodologia consistente entre avaliações tornou as comparações mais significativas do que modelos de folha de cálculo pontuais.</li>
     </ul>
 
-    <h3>Desafios Ultrapassados</h3>
+    <h3>Desafios que Encontrei</h3>
     <ul>
-      <li><strong>Qualidade dos Dados:</strong> Algumas empresas de pequena capitalização tinham demonstrações financeiras incompletas; implementada alternativa de introdução manual.</li>
-      <li><strong>Cálculo do Beta:</strong> O beta da API por vezes desatualizado; adicionada opção de usar regressão de 5 anos vs. S&P 500.</li>
-      <li><strong>Sensibilidade do Valor Terminal:</strong> O VT frequentemente representa 70%+ do valor; adicionados pressupostos conservadores (PIB vs. crescimento histórico).</li>
-      <li><strong>Tratamento de FCF Negativo:</strong> Empresas em crescimento com FCF negativo quebravam o modelo; adicionada opção para avaliação alternativa (múltiplos P/V).</li>
+      <li><strong>Dados Incompletos:</strong> algumas empresas de menor capitalização tinham lacunas nas demonstrações financeiras reportadas, o que exigiu uma alternativa de introdução manual.</li>
+      <li><strong>Dominância do Valor Terminal:</strong> o valor terminal representa frequentemente a maioria do valor total, uma fraqueza conhecida dos modelos DCF em geral — usei pressupostos de crescimento conservadores para evitar sobrestimá-lo.</li>
+      <li><strong>FCF Negativo:</strong> empresas em crescimento com free cash flow negativo quebram a matemática standard do DCF, por isso adicionei uma alternativa de avaliação relativa (múltiplos P/V) para esses casos.</li>
     </ul>
   </section>
 

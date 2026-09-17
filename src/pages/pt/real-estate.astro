@@ -4,8 +4,8 @@ import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
 const metrics = [
   { icon: '🏘️', value: '95.000+', label: 'Imóveis Analisados' },
   { icon: '📍', value: '308', label: 'Municípios Abrangidos' },
-  { icon: '💎', value: '€420/m²', label: 'Maior Arbitragem de Preço Encontrada' },
-  { icon: '📊', value: '15%', label: 'Gap Médio de Subvalorização' }
+  { icon: '💎', value: '€420/m²', label: 'Maior Diferença de Preço vs. Vizinhos' },
+  { icon: '📊', value: '15%', label: 'Variação Média de Preço Regional' }
 ];
 
 const stack = ['Power BI', 'Python', 'Web Scraping', 'GeoPandas', 'DAX'];
@@ -21,22 +21,15 @@ const stack = ['Power BI', 'Python', 'Web Scraping', 'GeoPandas', 'DAX'];
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      Os investidores imobiliários em Portugal enfrentavam um problema crítico de assimetria de informação: <strong>os dados de preços hiperlocais estavam dispersos por dezenas de plataformas</strong>, tornando impossível identificar oportunidades de arbitragem sem semanas de pesquisa manual.
-    </p>
-    <p>
-      Os principais desafios eram:
+      Fiz este projeto para ver se recolher e estruturar dados de anúncios de plataformas imobiliárias portuguesas conseguia revelar padrões de preço que as estatísticas nacionais escondem — por exemplo, se o preço por m² varia de forma significativa entre municípios vizinhos que ficam agrupados em relatórios agregados.
     </p>
     <ul>
-      <li><strong>Fragmentação de Dados:</strong> Anúncios distribuídos por 5+ plataformas (Idealista, Imovirtual, Casa Sapo) sem visão unificada.</li>
-      <li><strong>Pontos Cegos Geográficos:</strong> O preço/m² podia variar 40% entre municípios vizinhos, escondido nas estatísticas nacionais agregadas.</li>
-      <li><strong>Timing de Mercado:</strong> Sem forma de monitorizar há quanto tempo os imóveis estavam no mercado ou detetar reduções de preço.</li>
-      <li><strong>Targeting de Investimento:</strong> Os investidores precisavam de saber <em>onde</em> comprar, não apenas <em>o quê</em> comprar.</li>
+      <li><strong>Fragmentação de Dados:</strong> os anúncios estão espalhados por várias plataformas sem visão unificada de todo o mercado.</li>
+      <li><strong>Pontos Cegos Geográficos:</strong> médias nacionais ou distritais podem esconder grandes diferenças de preço entre municípios vizinhos.</li>
+      <li><strong>Timing de Mercado:</strong> estatísticas agregadas não mostram quanto tempo os imóveis ficam realmente no mercado.</li>
     </ul>
-    <blockquote>
-      "Encontrámos imóveis em Santarém listados a €1.200/m² enquanto unidades idênticas a 15km, no Cartaxo, se vendiam a €800/m². É uma arbitragem de €120k num imóvel de 300m²."
-    </blockquote>
   </section>
 
   <section>
@@ -104,22 +97,20 @@ df['arbitrage_gap'] = df['municipality'].map(municipality_avg) - df['price_per_m
   </section>
 
   <section>
-    <h2>📈 Resultados e Impacto no Negócio</h2>
+    <h2>📈 O que os Dados Mostram</h2>
     
-    <h3>Resultados Quantificados</h3>
+    <h3>Cobertura</h3>
     <ul>
-      <li><strong>95.000+ Imóveis:</strong> Cobertura abrangente do mercado português em todos os 308 municípios.</li>
-      <li><strong>Arbitragem Máxima de €420/m²:</strong> Identificados municípios com diferenças de preço até €420/m² face a vizinhos.</li>
-      <li><strong>15% de Subvalorização Média:</strong> Encontrada subvalorização sistemática em regiões do interior (Beja, Castelo Branco) comparado com equivalentes costeiros.</li>
-      <li><strong>Pipeline de Investimento:</strong> Gerada lista de 200+ oportunidades "comprar e manter" em corredores de alto crescimento.</li>
+      <li><strong>~95.000 Anúncios</strong> recolhidos em municípios de Portugal, dando uma amostra suficientemente grande para olhar para padrões regionais em vez de apenas médias nacionais.</li>
+      <li><strong>Diferenças de Preço Entre Vizinhos:</strong> os dados mostram municípios com preço/m² médio significativamente diferente dos vizinhos imediatos — até cerca de €420/m² nalguns casos.</li>
     </ul>
+    <p><em>Descrever uma diferença de preço como "oportunidade de arbitragem" ou "pipeline de comprar e manter" implicaria um nível de due diligence de investimento que não fiz — o dashboard destaca padrões estatísticos em preços de anúncios, não recomendações de investimento validadas.</em></p>
 
-    <h3>Insights Estratégicos Descobertos</h3>
+    <h3>Padrões que Vale a Pena Investigar Mais</h3>
     <ul>
-      <li><strong>Decaimento do Prémio Costeiro:</strong> O preço/m² cai 60% a 30km da costa, mas as comodidades só caem 20%.</li>
-      <li><strong>Efeito das Estações de Comboio:</strong> Imóveis a menos de 1km de estações de comboio têm um prémio de 25%.</li>
-      <li><strong>Preconceito pelo Ano de Construção:</strong> Imóveis anteriores a 1970 sistematicamente subvalorizados apesar do potencial de renovação.</li>
-      <li><strong>Velocidade do Inventário:</strong> Imóveis no Porto ficaram no mercado 18 dias vs 65 dias em Lisboa (sinal de excesso de oferta).</li>
+      <li><strong>Gradiente de Preço Costeiro:</strong> o preço/m² desce de forma notória ao afastar-se da costa no dataset.</li>
+      <li><strong>Proximidade a Transportes:</strong> imóveis perto de estações de comboio mostram um prémio de preço nos dados.</li>
+      <li><strong>Dias no Mercado:</strong> o dataset mostra diferenças em quanto tempo os anúncios ficam ativos entre cidades como Porto e Lisboa — vale a pena aprofundar, embora dados de anúncio não sejam o mesmo que dados de venda confirmada.</li>
     </ul>
   </section>
 
@@ -155,7 +146,7 @@ df['arbitrage_gap'] = df['municipality'].map(municipality_avg) - df['price_per_m
     
     <h3>O que Funcionou</h3>
     <ul>
-      <li><strong>Visualização Geoespacial:</strong> Os mapas foram 10x mais eficazes do que tabelas para comunicar oportunidades de arbitragem a investidores.</li>
+      <li><strong>Visualização Geoespacial:</strong> um mapa tornou as diferenças de preço regionais muito mais fáceis de identificar à primeira vista do que a tabela de números equivalente.</li>
       <li><strong>Atualização Incremental:</strong> A carga incremental do Power BI manteve o desempenho do dashboard rápido mesmo com 95k linhas.</li>
       <li><strong>Validação de Dados:</strong> O cruzamento com dados censitários oficiais detetou erros de scraping precocemente.</li>
     </ul>

@@ -19,14 +19,14 @@ const metrics = [
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Desafio de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      O negócio de e-commerce tinha uma <strong>receita estagnada</strong> apesar do crescimento do tráfego, escondendo uma realidade perigosa: clientes de alto valor estavam a cancelar silenciosamente enquanto compradores de baixo valor à procura de promoções inflacionavam as contagens de transações.
+      Este é um projeto de estudo pessoal sobre um dataset público de transações de e-commerce brasileiro (~100 mil encomendas), feito para praticar um padrão comum: a receita agregada pode parecer saudável enquanto esconde churn em clientes de alto valor, porque um número total plano não mostra quem continua efetivamente a comprar.
     </p>
     <ul>
-      <li><strong>Cegueira Agregada:</strong> A receita total parecia estável, mascarando 15% de churn nos clientes principais.</li>
-      <li><strong>Sem Segmentação de Clientes:</strong> Tratar o comprador de €5 da mesma forma que o de €500 (gasto de marketing ineficiente).</li>
-      <li><strong>Cross-Sell Perdido:</strong> Sem visibilidade sobre afinidade de produtos (que produtos são comprados juntos?).</li>
+      <li><strong>Cegueira Agregada:</strong> tendências de receita total podem mascarar churn a acontecer em segmentos específicos.</li>
+      <li><strong>Sem Segmentação:</strong> tratar todos os clientes da mesma forma esconde onde o gasto de marketing seria melhor direcionado.</li>
+      <li><strong>Cross-Sell Perdido:</strong> sem olhar para afinidade de produtos, é fácil não perceber que produtos são normalmente comprados juntos.</li>
     </ul>
   </section>
 
@@ -66,13 +66,13 @@ FROM rfm_base</code></pre>
   </section>
 
   <section>
-    <h2>📈 Resultados Principais</h2>
+    <h2>📈 O que os Dados Mostram</h2>
     <ul>
-      <li><strong>€96k em Risco:</strong> Identificados 200 clientes "Campeões" (RFM=555) que não compravam há 60+ dias.</li>
-      <li><strong>€42k de Cross-Sell:</strong> Encontrados clientes a comprar Produto A mas nunca o Produto B (par de alta afinidade).</li>
-      <li><strong>Rastreamento de Retenção por Coorte:</strong> Descoberto que a retenção no Mês 1 era apenas 15% (problema de onboarding).</li>
-      <li><strong>ROI de Marketing:</strong> Campanha de reengajamento dirigida ao segmento "Em Risco" atingiu ROI de 3:1.</li>
+      <li><strong>~€96k em Receita em Risco:</strong> um segmento de clientes anteriormente de alto valor ("Campeões") que não compravam há 60+ dias — este valor é o histórico de gasto desses clientes, não uma perda garantida.</li>
+      <li><strong>~€42k de Sinal de Cross-Sell:</strong> grupos de clientes que compram uma categoria de produto mas não outra normalmente associada, sinalizados como candidatos a uma campanha de cross-sell.</li>
+      <li><strong>Retenção por Coorte:</strong> a retenção no Mês 1 na análise de coorte saiu baixa, o que valeria a pena investigar como possível problema de onboarding num negócio real.</li>
     </ul>
+    <p><em>Estes são padrões encontrados no dataset, não resultados medidos de uma campanha de retenção ou marketing real — nenhuma campanha foi executada sobre estes dados.</em></p>
   </section>
 
   <section>

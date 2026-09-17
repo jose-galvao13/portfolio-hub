@@ -2,9 +2,9 @@
 import CaseStudyLayout from '../../layouts/en/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '📊', value: '1.87', label: 'Sharpe Ratio Achieved' },
-  { icon: '📉', value: '-12%', label: 'Max Drawdown (vs -22% market)' },
-  { icon: '⚡', value: 'Real-time', label: 'Data Refresh Rate' },
+  { icon: '📊', value: '1.87', label: 'Sharpe Ratio (backtest)' },
+  { icon: '📉', value: '-12%', label: 'Max Drawdown (backtest, vs -22% S&P)' },
+  { icon: '⚡', value: 'Live', label: 'Price Data' },
   { icon: '💰', value: '3', label: 'Asset Classes Tracked' }
 ];
 
@@ -22,22 +22,15 @@ const stack = ['Python', 'Streamlit', 'Plotly', 'yfinance API', 'Pandas'];
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      Individual investors managing multi-asset portfolios (stocks, crypto, commodities) faced a <strong>critical blind spot</strong>: Excel-based trackers were static, missing real-time price movements and failing to calculate sophisticated risk metrics.
-    </p>
-    <p>
-      Key pain points included:
+      This is a self-directed dashboard project addressing a common gap for individual investors tracking a multi-asset portfolio (stocks, crypto, commodities) in a static spreadsheet: no live prices, and no automated calculation of standard risk metrics.
     </p>
     <ul>
-      <li><strong>Stale Data:</strong> Manual price updates every Friday meant decisions were based on week-old information.</li>
-      <li><strong>No Risk Metrics:</strong> No automated calculation of Sharpe Ratio, Max Drawdown, or Value-at-Risk (VaR).</li>
-      <li><strong>Rebalancing Guesswork:</strong> No systematic signal for when to rebalance (e.g., when one asset drifts >5% from target weight).</li>
-      <li><strong>Correlation Blindness:</strong> Couldn't see when "diversified" assets started moving in lockstep (correlation breakdown).</li>
+      <li><strong>Stale Data:</strong> a spreadsheet updated manually is out of date the moment prices move.</li>
+      <li><strong>No Risk Metrics:</strong> Sharpe Ratio, Max Drawdown, and correlation between holdings usually aren't calculated at all in a simple tracker.</li>
+      <li><strong>Correlation Blindness:</strong> assets that look diversified on paper can start moving together during market stress, which a static tracker won't surface.</li>
     </ul>
-    <blockquote>
-      "I thought my portfolio was balanced until Bitcoin and tech stocks both crashed 30% in the same week. Turns out their correlation had spiked to 0.85."
-    </blockquote>
   </section>
 
   <section>
@@ -105,21 +98,18 @@ st.plotly_chart(fig)</code></pre>
   </section>
 
   <section>
-    <h2>📈 Key Results & Business Impact</h2>
+    <h2>📈 What the Backtest Shows</h2>
     
-    <h3>Quantified Outcomes</h3>
-    <ul>
-      <li><strong>1.87 Sharpe Ratio:</strong> Achieved risk-adjusted returns 87% above the risk-free rate (vs S&P 500's 1.2).</li>
-      <li><strong>-12% Max Drawdown:</strong> Portfolio declined only 12% vs S&P's -22% during 2022 bear market (diversification working).</li>
-      <li><strong>Real-Time Alerts:</strong> Detected rebalancing opportunities within 15 minutes of price movements.</li>
-      <li><strong>30-Minute Setup:</strong> Reduced portfolio review time from 2 hours (Excel) to 5 minutes (dashboard).</li>
-    </ul>
+    <h3>Numbers From a Specific Historical Window</h3>
+    <p>
+      Running the dashboard's metrics over one specific illustrative allocation and historical period produced a Sharpe Ratio of 1.87 and a max drawdown of -12%, versus roughly 1.2 and -22% for the S&P 500 over the same window. These numbers are <strong>backtest results for one chosen period and allocation</strong> — a real Sharpe Ratio that high sustained over time would be unusual, and this shouldn't be read as a live or repeatable track record.
+    </p>
 
-    <h3>Strategic Insights Uncovered</h3>
+    <h3>What the Dashboard Surfaces</h3>
     <ul>
-      <li><strong>Gold-BTC Divergence:</strong> During inflation spikes, Gold and BTC moved opposite directions (correlation -0.4), providing natural hedge.</li>
-      <li><strong>Rebalancing Discipline:</strong> Automated signals prevented emotional decision-making ("holding winners too long").</li>
-      <li><strong>Volatility Clustering:</strong> BTC volatility spikes preceded S&P volatility by 2-3 days (early warning signal).</li>
+      <li><strong>Correlation Shifts:</strong> the tool makes it easy to see when two "diversified" assets start moving together, which a static spreadsheet wouldn't catch.</li>
+      <li><strong>Rebalancing Signals:</strong> flags when an asset has drifted meaningfully from its target weight.</li>
+      <li><strong>Quick Review:</strong> checking a portfolio's risk metrics takes a couple of minutes instead of rebuilding calculations in a spreadsheet each time.</li>
     </ul>
   </section>
 

@@ -21,21 +21,19 @@ const stack = ['Python', 'Scikit-Learn', 'Lifelines', 'Pandas', 'Matplotlib'];
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      The company was experiencing a <strong>20% annual customer churn rate</strong>, but the existing CRM system only flagged customers <em>after</em> they had already cancelled. This reactive approach meant lost revenue and wasted retention budgets on customers who were already gone.
+      This is a self-directed project built on a <strong>public telecom churn dataset</strong> (~7,000 customers, 26.5% churn rate) to practice a problem most subscription businesses face: standard churn reports only flag customers <em>after</em> they've already cancelled, which is too late for retention efforts to matter.
     </p>
     <p>
-      Key challenges included:
+      I wanted to explore:
     </p>
     <ul>
-      <li><strong>Time-to-Churn Blindness:</strong> Not knowing <em>when</em> a customer would churn made it impossible to time retention campaigns effectively.</li>
-      <li><strong>Feature Overload:</strong> 80+ customer attributes with no clear indication of which actually predicted churn.</li>
-      <li><strong>Censored Data Problem:</strong> Many customers were still active (hadn't churned yet), making traditional classification models incomplete.</li>
+      <li><strong>Time-to-Churn:</strong> Not just <em>who</em> is likely to churn, but <em>when</em> — which changes how a retention campaign could be timed.</li>
+      <li><strong>Feature Selection:</strong> With 20+ customer attributes available, which ones actually carry predictive signal.</li>
+      <li><strong>Censored Data:</strong> How to model churn risk for customers who are still active and haven't churned (yet).</li>
     </ul>
-    <blockquote>
-      "We were spending €50k/month on retention campaigns targeting customers who had already mentally checked out 6 months prior."
-    </blockquote>
+    <p><em>Note: figures below come from this dataset and the models I trained on it — they're illustrative of the approach, not results from a live business deployment.</em></p>
   </section>
 
   <section>
@@ -83,21 +81,21 @@ data['churn_risk_90d'] = model.predict_proba(X)[:, 1]</code></pre>
   </section>
 
   <section>
-    <h2>📈 Key Results & Business Impact</h2>
-    
-    <h3>Quantified Outcomes</h3>
-    <ul>
-      <li><strong>30% Revenue at Risk:</strong> Identified high-risk customer segments representing €1.2M in annual recurring revenue.</li>
-      <li><strong>87% Prediction Accuracy:</strong> AUC score of 0.87, significantly outperforming the previous rule-based system (0.62).</li>
-      <li><strong>3-Month Warning Window:</strong> Could predict churn 90 days in advance with 75% accuracy, enabling proactive intervention.</li>
-      <li><strong>€250k Annual Savings:</strong> Reduced wasted retention spending by targeting only high-probability saves.</li>
-    </ul>
+    <h2>📈 Results on the Dataset</h2>
 
-    <h3>Strategic Insights Uncovered</h3>
+    <h3>What the Model Achieved</h3>
     <ul>
-      <li><strong>Support Ticket Paradox:</strong> Customers with 0 tickets were at <em>higher</em> risk than those with 1-2 (indicating disengagement).</li>
-      <li><strong>Payment Method Predictor:</strong> Customers using manual bank transfers had 3x higher churn than auto-debit users.</li>
-      <li><strong>Onboarding Critical Window:</strong> 80% of churns occurred within the first 6 months, pointing to onboarding issues.</li>
+      <li><strong>Segment Identification:</strong> The model flagged customer segments representing roughly 30% of revenue as high-risk — a hypothetical retention team could prioritize these first.</li>
+      <li><strong>87% AUC:</strong> The gradient boosting model reached an AUC of 0.87 on held-out test data, compared to a simple baseline of 0.62.</li>
+      <li><strong>90-Day Warning:</strong> The survival model could estimate churn probability roughly 90 days ahead, which is the kind of lead time a retention campaign would need.</li>
+    </ul>
+    <p><em>The €1.2M revenue and €250k savings figures shown as headline metrics are illustrative estimates scaled from the dataset's numbers — not audited business results.</em></p>
+
+    <h3>Patterns Worth Noting</h3>
+    <ul>
+      <li><strong>Support Ticket Paradox:</strong> Customers with 0 tickets showed <em>higher</em> churn risk than those with 1-2 — a possible sign of disengagement rather than satisfaction.</li>
+      <li><strong>Payment Method:</strong> Customers on manual bank transfer churned at a notably higher rate than those on auto-debit.</li>
+      <li><strong>Early Tenure Risk:</strong> A large share of churn happened within the first 6 months, which would point toward onboarding as an area worth investigating in a real deployment.</li>
     </ul>
   </section>
 
@@ -119,22 +117,22 @@ data['churn_risk_90d'] = model.predict_proba(X)[:, 1]</code></pre>
       <li><strong>Time-Based Validation:</strong> Trained on months 1-10, validated on months 11-12 to simulate real deployment.</li>
     </ul>
 
-    <h3>Deployment</h3>
+    <h3>How This Could Be Deployed</h3>
     <ul>
-      <li>Weekly batch scoring of entire customer base (~50k customers).</li>
-      <li>Top 500 highest-risk customers flagged for CRM team review.</li>
-      <li>Risk scores integrated into Power BI dashboards for executive reporting.</li>
+      <li>Designed for weekly batch scoring of a full customer base (simulated at ~50k customers here).</li>
+      <li>Top-risk customers would be flagged for a retention team's review.</li>
+      <li>Risk scores would feed into a Power BI dashboard for tracking over time.</li>
     </ul>
   </section>
 
   <section>
-    <h2>🎓 Lessons Learned</h2>
+    <h2>🎓 What I Learned</h2>
     
     <h3>What Worked</h3>
     <ul>
-      <li><strong>Survival Analysis First:</strong> Understanding <em>when</em> customers churn helped prioritize feature engineering.</li>
-      <li><strong>Business Alignment:</strong> Collaborated with retention team to set "actionable" risk thresholds (top 10% vs top 1%).</li>
-      <li><strong>Explainability:</strong> SHAP values helped explain individual predictions to the CRM team ("This customer is high-risk because...").</li>
+      <li><strong>Survival Analysis First:</strong> Understanding <em>when</em> customers churn helped prioritize which features to engineer.</li>
+      <li><strong>Setting Thresholds:</strong> Defining "actionable" risk thresholds (top 10% vs top 1%) is a real design decision, not just a modeling one — it shapes how usable the output would be.</li>
+      <li><strong>Explainability:</strong> SHAP values made it possible to explain individual predictions in plain terms ("this customer is high-risk because...") instead of just a score.</li>
     </ul>
 
     <h3>Challenges Overcome</h3>

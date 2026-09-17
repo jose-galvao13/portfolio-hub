@@ -2,10 +2,10 @@
 import CaseStudyLayout from '../../layouts/en/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '⏱️', value: '2 min', label: 'Report Generation Time' },
-  { icon: '📊', value: '98%', label: 'Calculation Accuracy' },
-  { icon: '💰', value: 'Live', label: 'Financial Data Updates' },
-  { icon: '📈', value: '50+', label: 'Companies Analyzed' }
+  { icon: '⏱️', value: '~2 min', label: 'Report Generation Time' },
+  { icon: '📊', value: 'Live', label: 'Financial Data Source' },
+  { icon: '💰', value: 'DCF', label: 'Valuation Method' },
+  { icon: '📈', value: 'Multi-Ticker', label: 'Works Across Companies' }
 ];
 
 const stack = ['Python', 'Financial Modeling API', 'Pandas', 'DCF Valuation'];
@@ -21,19 +21,15 @@ const stack = ['Python', 'Financial Modeling API', 'Pandas', 'DCF Valuation'];
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      Equity research analysts spend <strong>4-6 hours</strong> building DCF (Discounted Cash Flow) models for each company valuation—a process that's:
+      Building a DCF (Discounted Cash Flow) model by hand in Excel is a classic finance exercise — but it's also slow and repetitive if you want to value more than one company. I built this to see how much of a standard DCF (data pull, WACC, FCF projection, terminal value) could be automated with live data via an API.
     </p>
     <ul>
-      <li><strong>Tedious & Error-Prone:</strong> Manual data entry from financial statements leads to calculation mistakes.</li>
-      <li><strong>Time-Intensive:</strong> Fetching historical financials, calculating WACC, projecting cash flows—all done in Excel.</li>
-      <li><strong>Stale Data:</strong> Reports become outdated within weeks as new earnings are released.</li>
-      <li><strong>Lack of Standardization:</strong> Each analyst has their own template, making peer review difficult.</li>
+      <li><strong>Manual DCF is tedious:</strong> pulling financials, computing WACC, and projecting cash flows by hand is easy to get wrong.</li>
+      <li><strong>Data goes stale fast:</strong> a model built one week can be outdated the next after new earnings.</li>
+      <li><strong>Consistency:</strong> using the same formulas and structure across companies makes comparisons more meaningful.</li>
     </ul>
-    <blockquote>
-      "We'd spend an entire afternoon building a DCF, only to have earnings come out the next week and invalidate all our assumptions."
-    </blockquote>
   </section>
 
   <section>
@@ -127,29 +123,21 @@ print(f"Intrinsic Value: $&#123;intrinsic_value_per_share:.2f&#125;")</code></pr
   </section>
 
   <section>
-    <h2>📈 Key Results & Business Impact</h2>
+    <h2>📈 Results</h2>
     
-    <h3>Quantified Outcomes</h3>
+    <h3>What It Does</h3>
     <ul>
-      <li><strong>2-Minute Generation:</strong> Complete valuation report generated in 2 minutes vs 4 hours manually.</li>
-      <li><strong>98% Accuracy:</strong> Cross-validated against Bloomberg Terminal valuations (median error &lt;2%).</li>
-      <li><strong>50+ Companies:</strong> Analyzed entire sector (e.g., all S&P 500 tech stocks) in under 2 hours.</li>
-      <li><strong>Live Updates:</strong> Automatically refreshes when new quarterly earnings are released.</li>
+      <li><strong>~2-Minute Generation:</strong> pulls live financials and produces a full DCF report, compared to the hours a manual build would take.</li>
+      <li><strong>Cross-Checked Against Public Estimates:</strong> I compared outputs for a handful of large-cap tickers against publicly available analyst estimates as a sanity check — not against a Bloomberg Terminal, which I don't have access to.</li>
+      <li><strong>Repeatable:</strong> the same methodology applies consistently across different companies, which makes side-by-side comparisons more meaningful than ad-hoc spreadsheets.</li>
     </ul>
+    <p><em>DCF valuations are inherently sensitive to assumptions (growth rate, WACC, terminal value) — treat any single output as a starting point for further analysis, not a definitive price target.</em></p>
 
-    <h3>Use Cases Enabled</h3>
+    <h3>What It's Useful For</h3>
     <ul>
-      <li><strong>Sector Screening:</strong> "Which tech stocks are undervalued by &gt;20%?"</li>
-      <li><strong>Peer Comparison:</strong> Compare AAPL vs MSFT vs GOOGL valuations side-by-side.</li>
-      <li><strong>Sensitivity Analysis:</strong> Test how valuation changes under different WACC/growth scenarios.</li>
-      <li><strong>Investment Memos:</strong> Auto-generate 1-page summaries for investment committee review.</li>
-    </ul>
-
-    <h3>Strategic Insights</h3>
-    <ul>
-      <li><strong>WACC Sensitivity:</strong> A 1% change in WACC can swing valuation by ±15% (risk management critical).</li>
-      <li><strong>Growth Assumptions:</strong> Companies with declining FCF growth often overvalued by the market (mean reversion opportunity).</li>
-      <li><strong>Debt Impact:</strong> High debt loads increase WACC, reducing intrinsic value (leverage risk).</li>
+      <li>Quickly generating a first-pass valuation to sanity-check against the market price.</li>
+      <li>Testing how sensitive a valuation is to WACC and growth assumptions via the sensitivity grid.</li>
+      <li>Comparing the same metric across a handful of similar companies.</li>
     </ul>
   </section>
 
@@ -183,21 +171,19 @@ print(f"Intrinsic Value: $&#123;intrinsic_value_per_share:.2f&#125;")</code></pr
   </section>
 
   <section>
-    <h2>🎓 Lessons Learned</h2>
+    <h2>🎓 What I Learned</h2>
     
     <h3>What Worked</h3>
     <ul>
-      <li><strong>API Reliability:</strong> Financial Modeling Prep API had 99.9% uptime with comprehensive coverage.</li>
-      <li><strong>Standardization:</strong> Consistent methodology across all valuations enabled apples-to-apples comparisons.</li>
-      <li><strong>Automation ROI:</strong> 4 hours → 2 minutes = 120x time savings per company.</li>
+      <li><strong>API Reliability:</strong> the Financial Modeling Prep API was reliable and had solid coverage for large-cap tickers during testing.</li>
+      <li><strong>Standardization:</strong> using one consistent methodology across valuations made comparisons more meaningful than one-off spreadsheet models.</li>
     </ul>
 
-    <h3>Challenges Overcome</h3>
+    <h3>Challenges I Ran Into</h3>
     <ul>
-      <li><strong>Data Quality:</strong> Some small-cap companies had incomplete financials; implemented fallback to manual input.</li>
-      <li><strong>Beta Calculation:</strong> API beta sometimes stale; added option to use 5-year regression vs S&P 500.</li>
-      <li><strong>Terminal Value Sensitivity:</strong> TV often represents 70%+ of value; added conservative assumptions (GDP vs historical growth).</li>
-      <li><strong>Negative FCF Handling:</strong> Growth companies with negative FCF broke model; added option for alternative valuation (P/S multiples).</li>
+      <li><strong>Incomplete Data:</strong> some smaller-cap companies had gaps in their reported financials, which needed a fallback for manual input.</li>
+      <li><strong>Terminal Value Dominance:</strong> terminal value often makes up the majority of the total valuation, which is a known weakness of DCF models generally — I used conservative growth assumptions to avoid overstating it.</li>
+      <li><strong>Negative FCF:</strong> growth companies with negative free cash flow break the standard DCF math, so I added a fallback to relative valuation (P/S multiples) for those cases.</li>
     </ul>
   </section>
 

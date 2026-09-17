@@ -2,16 +2,16 @@
 import CaseStudyLayout from '../../layouts/en/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '🎯', value: '88%', label: 'MAPE Accuracy' },
+  { icon: '🎯', value: '~12%', label: 'MAPE (Forecast Error)' },
   { icon: '📊', value: '6 months', label: 'Forecast Horizon' },
-  { icon: '📈', value: '3 years', label: 'Historical Data' },
-  { icon: '⚡', value: 'Daily', label: 'Model Updates' }
+  { icon: '📈', value: '3 years', label: 'Historical Data Used' },
+  { icon: '⚡', value: 'Daily', label: 'Retraining Capability' }
 ];
 ---
 
 <CaseStudyLayout
   title="AI Sales Forecasting & Budgeting"
-  description="Facebook Prophet time-series model predicting demand with 88% accuracy, enabling precise inventory and cash flow planning."
+  description="Facebook Prophet time-series model forecasting demand with roughly 12% MAPE, exploring how forecast accuracy could support inventory and cash flow planning."
   projectType="Data Science & FP&A"
   stack={['Python', 'Prophet', 'Power BI', 'Time-Series ML']}
   metrics={metrics}
@@ -19,14 +19,13 @@ const metrics = [
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      Finance team relied on <strong>static annual budgets</strong> that ignored seasonality, leading to:
+      This is a self-directed project practicing time-series forecasting on retail sales data, motivated by a common finance/operations problem: a static annual budget doesn't account for seasonality, which can lead to overstocking in slow months and stockouts during peak season.
     </p>
     <ul>
-      <li><strong>Inventory Mismatches:</strong> Overstocked in slow months, stockouts in peak season.</li>
-      <li><strong>Cash Flow Surprises:</strong> Unexpected shortfalls because demand wasn't accurately predicted.</li>
-      <li><strong>Manual Forecasting:</strong> Analysts spending 2 weeks each quarter adjusting Excel spreadsheets.</li>
+      <li><strong>Seasonality Ignored:</strong> flat budgets don't capture predictable seasonal demand swings.</li>
+      <li><strong>Manual Forecasting:</strong> building a forecast by hand in a spreadsheet each quarter is slow and doesn't easily incorporate holiday effects.</li>
     </ul>
   </section>
 
@@ -63,13 +62,13 @@ model.plot_components(forecast)  # Trend, seasonality breakdown</code></pre>
   </section>
 
   <section>
-    <h2>📈 Key Results</h2>
+    <h2>📈 Model Performance</h2>
     <ul>
-      <li><strong>88% MAPE Accuracy:</strong> Mean Absolute Percentage Error of 12% (industry benchmark: 20%).</li>
-      <li><strong>Inventory Optimization:</strong> Reduced holding costs by 18% through better demand planning.</li>
-      <li><strong>Cash Flow Precision:</strong> Forecasted revenue within 5% accuracy enabled better working capital management.</li>
-      <li><strong>Time Savings:</strong> 2 weeks → 2 hours for quarterly forecast updates.</li>
+      <li><strong>~12% MAPE</strong> (Mean Absolute Percentage Error) on the test period — lower MAPE is better, and this compares reasonably against commonly-cited retail forecasting benchmarks around 20%.</li>
+      <li><strong>Seasonality Captured:</strong> the model picked up weekly and yearly demand patterns without manual rule-writing.</li>
+      <li><strong>Confidence Intervals:</strong> the forecast comes with upper/lower bounds, not just a single point estimate, which is more honest about uncertainty than a flat budget number.</li>
     </ul>
+    <p><em>Claims like "18% lower holding costs" or "2 weeks → 2 hours" would need to be measured in a real operational setting — here they're the kind of downstream benefit better forecasting accuracy could plausibly enable, not a measured result.</em></p>
   </section>
 
   <section>
@@ -78,7 +77,7 @@ model.plot_components(forecast)  # Trend, seasonality breakdown</code></pre>
       <li><strong>Seasonality Detection:</strong> Automatically captured weekly, monthly, yearly patterns.</li>
       <li><strong>Holiday Effects:</strong> Modeled Black Friday, Christmas spikes without manual rules.</li>
       <li><strong>Confidence Intervals:</strong> Provided upper/lower bounds for risk planning.</li>
-      <li><strong>Power BI Integration:</strong> Forecasts visualized in executive dashboards.</li>
+      <li><strong>Power BI Integration:</strong> forecasts and confidence intervals visualized in a dashboard for easier review than raw model output.</li>
     </ul>
   </section>
 

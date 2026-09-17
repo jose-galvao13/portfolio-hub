@@ -2,10 +2,10 @@
 import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '🎯', value: '0,17%', label: 'Anomalias Detetadas' },
-  { icon: '🛡️', value: '40%', label: 'Acima das Regras Tradicionais' },
-  { icon: '⚡', value: '<2s', label: 'Latência de Deteção' },
-  { icon: '💰', label: 'Proteção Zero-Day' }
+  { icon: '🎯', value: '0,17%', label: 'Taxa de Sinalização' },
+  { icon: '🛡️', value: '2', label: 'Detetores Combinados' },
+  { icon: '⚡', value: '<2s', label: 'Latência de Pontuação' },
+  { icon: '💰', value: 'Não Supervisionado', label: 'Sem Necessidade de Rótulos' }
 ];
 
 const stack = ['Python', 'Scikit-Learn', 'Isolation Forest', 'PCA', 'Matplotlib'];
@@ -21,26 +21,15 @@ const stack = ['Python', 'Scikit-Learn', 'Isolation Forest', 'PCA', 'Matplotlib'
   currentLang="pt"
 >
   <section>
-    <h2>🎯 Problema de Negócio</h2>
+    <h2>🎯 Porque Fiz Este Projeto</h2>
     <p>
-      Os sistemas tradicionais de deteção de fraude baseados em regras têm uma limitação fundamental: só conseguem detetar padrões de fraude para os quais foram explicitamente programados. Isto cria uma vulnerabilidade crítica a <strong>ataques zero-day</strong> — técnicas de fraude novas que contornam os conjuntos de regras existentes.
+      Este é um projeto de estudo pessoal a explorar uma limitação bem conhecida da deteção de fraude baseada em regras: as regras só conseguem apanhar padrões para os quais foram explicitamente escritas, o que as torna estruturalmente cegas a novas técnicas de fraude ("zero-day").
     </p>
     
-    <h3>A Lacuna de Deteção</h3>
+    <h3>A Ideia que Quis Testar</h3>
     <p>
-      A análise de casos históricos de fraude revelou um padrão preocupante:
+      Usando números da indústria publicamente documentados como ponto de partida de referência (sistemas baseados em regras costumam falhar uma parte significativa da fraude que mais tarde é confirmada, e gerar um volume elevado de falsos positivos), quis ver até que ponto uma abordagem de deteção de anomalias não supervisionada conseguiria melhorar isto, sem precisar de dados de fraude rotulados para treinar.
     </p>
-    <ul>
-      <li><strong>40% das fraudes confirmadas</strong> passaram por todas as regras de validação existentes</li>
-      <li><strong>Desfasamento de 6-8 semanas</strong> entre a primeira ocorrência e a criação de uma regra</li>
-      <li><strong>Perda média de €180K</strong> por padrão de fraude não detetado</li>
-      <li><strong>Sobrecarga de revisão manual:</strong> 85% das transações sinalizadas eram falsos positivos</li>
-    </ul>
-
-    <blockquote>
-      "Estávamos sempre um passo atrás dos burlões. Quando escrevíamos regras para o último ataque, eles já tinham passado para a técnica seguinte."
-      <br><em>— Responsável de Gestão de Risco</em>
-    </blockquote>
   </section>
 
   <section>
@@ -99,44 +88,23 @@ final_anomalies = (iso_scores == -1) & (reconstruction_error > anomaly_threshold
   </section>
 
   <section>
-    <h2>📊 Resultados e Impacto</h2>
+    <h2>📊 Resultados no Dataset</h2>
 
     <h3>Desempenho de Deteção</h3>
     <ul>
-      <li><strong>Taxa de Anomalia de 0,17%:</strong> Sinalizadas 850 transações suspeitas de um total de 500.000</li>
-      <li><strong>40% Acima das Regras:</strong> Detetadas 340 anomalias que passaram por todas as verificações de validação existentes</li>
-      <li><strong>68% de Precisão:</strong> A revisão manual confirmou 578 das 850 sinalizações como fraude/erros genuínos</li>
-      <li><strong>Latência Inferior a 2 Segundos:</strong> Pontuação em tempo real para transações recebidas</li>
+      <li><strong>Taxa de Sinalização de 0,17%:</strong> sinalizou ~850 transações de um total de 500.000 como anómalas.</li>
+      <li><strong>Ensemble vs. Modelo Único:</strong> combinar Isolation Forest com o erro de reconstrução PCA apanhou mais anomalias em conjunto do que qualquer um isoladamente.</li>
+      <li><strong>Pontuação Sub-2-Segundos:</strong> o pipeline pontua uma transação suficientemente rápido para ser utilizável num contexto próximo de tempo real.</li>
     </ul>
+    <p><em>A precisão foi verificada inspecionando manualmente uma amostra das transações sinalizadas, e não contra uma etiqueta de fraude real e verificada de forma independente — por isso o valor de "68% confirmado" é uma estimativa aproximada dessa verificação manual, não um resultado de produção validado.</em></p>
 
-    <h3>Novos Padrões de Fraude Descobertos</h3>
+    <h3>Tipos de Anomalias que o Modelo Encontrou</h3>
     <ol>
-      <li><strong>Sondagem por Micro-Transação:</strong> 
-        <ul>
-          <li>Detetados bots automatizados a fazer 50+ pequenas transações para testar validade de cartões roubados</li>
-          <li>Padrão: alta velocidade de transação + valores baixos + IDs de comerciante sequenciais</li>
-        </ul>
-      </li>
-      <li><strong>Violações de Velocidade Geográfica:</strong>
-        <ul>
-          <li>Mesmo cartão usado em Portugal e no Brasil numa janela de 2 horas (fisicamente impossível)</li>
-          <li>As regras só verificavam incompatibilidades de país, não a viabilidade temporal-geográfica</li>
-        </ul>
-      </li>
-      <li><strong>Desvio Comportamental:</strong>
-        <ul>
-          <li>Clientes de longa data a comprar subitamente eletrónica de alto valor (indicador de tomada de conta)</li>
-          <li>O modelo aprendeu as categorias de despesa típicas por segmento de cliente</li>
-        </ul>
-      </li>
+      <li><strong>Rajadas de Micro-Transações:</strong> sequências de muitas transações pequenas e rápidas — um padrão consistente com comportamento automatizado de teste de cartões descrito na literatura sobre fraude.</li>
+      <li><strong>Impossibilidades Geográficas:</strong> a mesma conta usada em dois locais distantes numa janela de tempo demasiado curta para viagem física.</li>
+      <li><strong>Mudanças Comportamentais:</strong> uma alteração súbita na categoria de despesa típica de um cliente, que o modelo detetou sem lhe ser dito o que era "típico" à partida.</li>
     </ol>
-
-    <h3>Impacto no Negócio</h3>
-    <ul>
-      <li><strong>€420K em Perdas Evitadas:</strong> Valor estimado de fraude bloqueado nos primeiros 6 meses</li>
-      <li><strong>72% de Investigação Mais Rápida:</strong> Níveis de risco pré-calculados reduziram o tempo de revisão manual</li>
-      <li><strong>Ganho de Conformidade:</strong> Melhoria das pontuações de auditoria PCI-DSS através de controlos proativos de fraude</li>
-    </ul>
+    <p><em>Estes são os padrões que desenhei as features para conseguir apanhar. Os números específicos de prevenção de perdas e velocidade de investigação frequentemente citados para este tipo de sistema (ex.: "€420K evitados") exigiriam uma implementação real em produção para medir, e não são reivindicados aqui.</em></p>
   </section>
 
   <section>
@@ -196,8 +164,8 @@ final_anomalies = (iso_scores == -1) & (reconstruction_error > anomaly_threshold
     <p><strong>Solução:</strong> Janela de treino rotativa de 90 dias com reaprendizagem semanal do modelo</p>
 
     <h3>Desafio 3: Lacuna de Explicabilidade</h3>
-    <p><strong>Problema:</strong> A equipa de conformidade precisava de explicar por que as transações eram sinalizadas</p>
-    <p><strong>Solução:</strong> Adicionados valores SHAP para mostrar as principais features contributivas de cada anomalia</p>
+    <p><strong>Problema:</strong> uma pontuação de anomalia em bruto não diz <em>porquê</em> uma transação parece suspeita, o que importaria para quem revisse os alertas na prática</p>
+    <p><strong>Solução:</strong> adicionei valores SHAP para mostrar as principais features contributivas de cada anomalia</p>
 
     <pre is:raw><code>import shap
 
@@ -213,22 +181,18 @@ feature_importance = pd.DataFrame({
   </section>
 
   <section>
-    <h2>📈 Monitorização e Melhoria Contínua</h2>
+    <h2>📈 Se Isto Fosse para Produção</h2>
+    <p>Este projeto fica pela avaliação do modelo sobre dados históricos. Aqui fica como pensaria em correr isto a sério, como exercício de design e não como algo que implementei:</p>
 
-    <h3>Dashboard de Métricas em Produção</h3>
+    <h3>O que Quereria Monitorizar</h3>
     <ul>
-      <li><strong>Taxa de Anomalia Diária:</strong> Acompanhar picos súbitos (campanhas de fraude) ou quedas (degradação do modelo)</li>
-      <li><strong>Ciclo de Feedback de Falsos Positivos:</strong> Revisores manuais rotulam transações sinalizadas → reaprendizagem mensal do modelo</li>
-      <li><strong>Deteção de Deriva de Features:</strong> Alerta quando as distribuições de features desviam mais de 2 desvios padrão</li>
+      <li><strong>Taxa de Anomalia Diária:</strong> para apanhar picos súbitos (possíveis campanhas de fraude) ou quedas (possível degradação do modelo).</li>
+      <li><strong>Um Ciclo de Feedback:</strong> ter revisores a rotular transações sinalizadas para reaprender o modelo periodicamente.</li>
+      <li><strong>Deriva de Features:</strong> alertar quando as distribuições de features desviam significativamente da baseline de treino.</li>
     </ul>
 
-    <h3>Resultados de Testes A/B</h3>
-    <p>Experiência controlada: 50% das transações pontuadas pelo ensemble, 50% apenas por regras</p>
-    <ul>
-      <li><strong>28% mais fraude detetada</strong> no grupo ensemble</li>
-      <li><strong>Redução de 15%</strong> nas revisões manuais de falsos positivos</li>
-      <li><strong>Custo-benefício:</strong> €4,20 poupados por €1 investido no desenvolvimento do sistema</li>
-    </ul>
+    <h3>Como Validaria Isto Corretamente</h3>
+    <p>Idealmente com um teste A/B — encaminhando uma parte das transações pelo ensemble e o resto apenas por regras, e depois comparando a fraude apanhada e o volume de falsos positivos entre os dois grupos ao longo do tempo. Não corri isto, porque exige um fluxo de transações ao vivo que este projeto não tem.</p>
   </section>
 
   <section>
@@ -236,16 +200,14 @@ feature_importance = pd.DataFrame({
 
     <h3>O que Funcionou</h3>
     <ul>
-      <li><strong>Abordagem Ensemble:</strong> Combinar Isolation Forest + PCA detetou 23% mais anomalias do que cada um isoladamente</li>
-      <li><strong>A Engenharia de Features Importa:</strong> As métricas de velocidade foram 3x mais preditivas do que o montante da transação</li>
-      <li><strong>Integração Operacional:</strong> Incorporado no fluxo de aprovação de transações (não análise post-hoc)</li>
+      <li><strong>Abordagem Ensemble:</strong> combinar Isolation Forest e PCA apanhou mais anomalias em conjunto do que qualquer um isoladamente.</li>
+      <li><strong>A Engenharia de Features Importou:</strong> features baseadas em velocidade (transações por hora/dia) pareceram mais preditivas do que o montante bruto da transação.</li>
     </ul>
 
     <h3>O que Faria Diferente</h3>
     <ul>
-      <li><strong>Começar com Modelo Mais Simples:</strong> A tentativa inicial com Random Forest era excessiva — o Isolation Forest é mais simples e rápido</li>
-      <li><strong>Envolver a Equipa de Fraude Mais Cedo:</strong> O seu conhecimento de domínio melhorou significativamente a seleção de features</li>
-      <li><strong>Automatizar o Ciclo de Feedback:</strong> A rotulagem manual é um estrangulamento — deve integrar com o sistema de gestão de casos</li>
+      <li><strong>Começar Mais Simples:</strong> o meu instinto inicial foi um Random Forest, que era excessivo para um problema não supervisionado — o Isolation Forest foi um melhor ajuste desde o início.</li>
+      <li><strong>Melhor Validação:</strong> sem dados reais de fraude rotulados, avaliar a precisão de forma honesta é difícil. Se voltasse a este projeto, procuraria um dataset público de fraude rotulado para validar de forma mais rigorosa.</li>
     </ul>
   </section>
 

@@ -2,10 +2,10 @@
 import CaseStudyLayout from '../../layouts/en/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '⚡', value: '70%', label: 'Query Time Reduction' },
-  { icon: '📊', value: '1M+', label: 'Transactions Processed' },
-  { icon: '🎯', value: '100%', label: 'Data Integrity' },
-  { icon: '📈', value: '5', label: 'Data Sources Integrated' }
+  { icon: '⚡', value: 'Faster', label: 'Reporting Queries' },
+  { icon: '📊', value: '1.2M', label: 'Simulated Transactions' },
+  { icon: '🎯', value: 'Star Schema', label: 'Single Source of Truth' },
+  { icon: '📈', value: '5', label: 'Data Sources Modeled' }
 ];
 ---
 
@@ -19,19 +19,16 @@ const metrics = [
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      The finance team was drowning in <strong>data chaos</strong>: 5 different systems (ERP, CRM, Excel, legacy databases) with no unified view, leading to:
+      This is a self-directed project modeling a common finance-team problem: data spread across several systems (ERP, CRM, spreadsheets) with no single source of truth, so the same question can get different answers depending on which system you query.
     </p>
     <ul>
-      <li><strong>Conflicting Numbers:</strong> Sales report from CRM showed €2.5M revenue, accounting system showed €2.3M—which is correct?</li>
-      <li><strong>Manual Reconciliation:</strong> Analysts spending 10 hours/week joining data across systems in Excel.</li>
-      <li><strong>Slow Queries:</strong> Generating month-end reports took 45 minutes due to complex joins across denormalized tables.</li>
-      <li><strong>No Historical Tracking:</strong> Couldn't analyze trends (e.g., "How has gross margin changed over 3 years?").</li>
+      <li><strong>Conflicting Numbers:</strong> different systems reporting slightly different revenue figures for the same period is a common, real symptom of this problem.</li>
+      <li><strong>Manual Reconciliation:</strong> without a unified model, reconciling numbers across systems by hand in Excel is slow and error-prone.</li>
+      <li><strong>Slow Reporting:</strong> complex joins across un-modeled, denormalized tables make even simple month-end reports slow to generate.</li>
     </ul>
-    <blockquote>
-      "We had 5 versions of 'the truth'. The CFO would ask a question and get 3 different answers depending on who responded."
-    </blockquote>
+    <p>I designed a Star Schema warehouse to address these patterns using a simulated multi-source dataset.</p>
   </section>
 
   <section>
@@ -89,29 +86,15 @@ new_customers.to_sql('dim_customer', warehouse_engine, if_exists='append')</code
   </section>
 
   <section>
-    <h2>📈 Key Results & Business Impact</h2>
+    <h2>📈 Results on the Simulated Dataset</h2>
     
-    <h3>Quantified Outcomes</h3>
+    <h3>What the Warehouse Achieves</h3>
     <ul>
-      <li><strong>70% Faster Queries:</strong> Month-end reports down from 45min to 13min (optimized Star Schema).</li>
-      <li><strong>1M+ Transactions:</strong> Warehouse handles 1.2M transactions with sub-second query response.</li>
-      <li><strong>100% Data Integrity:</strong> Eliminated discrepancies through single source of truth.</li>
-      <li><strong>5 Sources Unified:</strong> ERP, CRM, Excel, legacy SQL Server, bank feeds—all in one place.</li>
+      <li><strong>Faster Queries:</strong> the Star Schema design makes month-end style aggregate queries noticeably faster than querying denormalized source tables directly.</li>
+      <li><strong>1.2M Simulated Transactions:</strong> tested the pipeline's performance at this scale to check it holds up beyond a toy dataset.</li>
+      <li><strong>One Model, One Set of Numbers:</strong> once data passes through the same ETL pipeline into the same schema, there's no room for the "which number is right" problem this is meant to solve.</li>
     </ul>
-
-    <h3>Business Metrics Improved</h3>
-    <ul>
-      <li><strong>Reconciliation Time:</strong> 10 hours/week → 1 hour/week (90% reduction).</li>
-      <li><strong>Report Accuracy:</strong> Zero "version conflicts" in executive dashboards.</li>
-      <li><strong>Self-Service Analytics:</strong> Business users can now build their own reports without IT help.</li>
-    </ul>
-
-    <h3>Strategic Insights</h3>
-    <ul>
-      <li><strong>Historical Trend Analysis:</strong> Discovered 15% decline in gross margin over 2 years due to supplier price increases.</li>
-      <li><strong>Customer Segmentation:</strong> Identified top 20% of customers generating 80% of revenue.</li>
-      <li><strong>Inventory Optimization:</strong> Detected slow-moving SKUs tying up €500k in working capital.</li>
-    </ul>
+    <p><em>Figures like "90% reduction in reconciliation time" describe the kind of improvement this architecture is designed to produce in a real multi-system environment — I haven't measured this against a real team's actual workflow.</em></p>
   </section>
 
   <section>
@@ -146,9 +129,8 @@ new_customers.to_sql('dim_customer', warehouse_engine, if_exists='append')</code
     
     <h3>What Worked</h3>
     <ul>
-      <li><strong>Stakeholder Alignment:</strong> Involved end-users early to define business requirements and key metrics.</li>
-      <li><strong>Incremental Development:</strong> Started with Sales data, then added Finance, then Inventory (iterative approach).</li>
-      <li><strong>Documentation:</strong> Created data dictionary explaining every field (reduced support tickets by 80%).</li>
+      <li><strong>Incremental Development:</strong> starting with one source (Sales), getting it right, then adding Finance and Inventory made the schema easier to reason about than trying to model everything at once.</li>
+      <li><strong>Documentation:</strong> keeping a data dictionary for every field made it much easier for me to remember why a table was structured the way it was, months later.</li>
     </ul>
 
     <h3>Challenges Overcome</h3>

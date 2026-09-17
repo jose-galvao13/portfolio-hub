@@ -3,9 +3,9 @@ import CaseStudyLayout from '../../layouts/en/CaseStudyLayout.astro';
 
 const metrics = [
   { icon: '⚡', value: '<5 sec', label: 'Processing Time' },
-  { icon: '✅', value: '100%', label: 'Mathematical Accuracy' },
+  { icon: '✅', value: 'Automated', label: 'Debit=Credit Validation' },
   { icon: '📊', value: '12', label: 'Financial Statements' },
-  { icon: '🎯', value: '0', label: 'Manual Errors' }
+  { icon: '🎯', value: 'Consistent', label: 'Output Every Run' }
 ];
 ---
 
@@ -19,15 +19,14 @@ const metrics = [
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Challenge</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      Month-end financial close was a <strong>2-day nightmare</strong>: accountants manually copy-pasting data across 12 Excel templates, validating Trial Balances against accounting standards (SNC), and praying no formula broke.
+      I saw this pattern during my accounting internship: month-end close involves manually copying trial balance data across multiple Excel templates and checking it against accounting standards (SNC) by hand, which is slow and leaves room for copy-paste errors. I built this automation to see how much of that could be scripted safely.
     </p>
     <ul>
-      <li><strong>Human Error Risk:</strong> Copy-paste mistakes led to €50k discrepancy in one month (caught by auditors).</li>
-      <li><strong>Time-Intensive:</strong> 2 full days of work preventing analysts from value-add activities.</li>
-      <li><strong>No Validation:</strong> No automated check that debits = credits or accounts balanced.</li>
-      <li><strong>Version Control Chaos:</strong> "Final_Report_v3_FINAL_FINAL.xlsx"</li>
+      <li><strong>Manual Process:</strong> copying figures across templates by hand is repetitive and error-prone.</li>
+      <li><strong>No Automated Validation:</strong> checking that debits equal credits, or that accounts reconcile, is usually done by eye.</li>
+      <li><strong>Time Cost:</strong> a process like this can easily take a full day or two each month.</li>
     </ul>
   </section>
 
@@ -68,13 +67,13 @@ wb.save('Balance_Sheet_Final.xlsx')</code></pre>
   </section>
 
   <section>
-    <h2>📈 Key Results</h2>
+    <h2>📈 What the Script Does</h2>
     <ul>
-      <li><strong><5 Seconds:</strong> Process that took 2 days now takes 5 seconds.</li>
-      <li><strong>100% Accuracy:</strong> Zero math errors (validated by auditors).</li>
-      <li><strong>€50k Saved:</strong> Prevented repeat of €50k reconciliation discrepancy.</li>
-      <li><strong>Analyst Time Freed:</strong> 16 hours/month redirected to financial analysis.</li>
+      <li><strong>~5 Seconds:</strong> the automated version runs in seconds versus the hours a manual pass through the same templates would take.</li>
+      <li><strong>Built-in Validation:</strong> checks that debits equal credits and that account codes aren't missing, before anything gets written to the output templates.</li>
+      <li><strong>Consistent Output:</strong> the same script produces the same structure every time, removing the "which version is final" problem that comes with manually-edited spreadsheets.</li>
     </ul>
+    <p><em>The "€50k saved" and "validated by auditors" figures on the summary card describe the kind of error this validation step is designed to catch — they aren't a real incident I resolved.</em></p>
   </section>
 
   <section>

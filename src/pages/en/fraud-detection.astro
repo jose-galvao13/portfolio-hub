@@ -2,10 +2,10 @@
 import CaseStudyLayout from '../../layouts/en/CaseStudyLayout.astro';
 
 const metrics = [
-  { icon: '🎯', value: '0.17%', label: 'Anomalies Detected' },
-  { icon: '🛡️', value: '40%', label: 'More Than Rules' },
-  { icon: '⚡', value: '<2s', label: 'Detection Latency' },
-  { icon: '💰', label: 'Zero-Day Protection' }
+  { icon: '🎯', value: '0.17%', label: 'Flag Rate' },
+  { icon: '🛡️', value: '2', label: 'Detectors Combined' },
+  { icon: '⚡', value: '<2s', label: 'Scoring Latency' },
+  { icon: '💰', value: 'Unsupervised', label: 'No Fraud Labels Needed' }
 ];
 
 const stack = ['Python', 'Scikit-Learn', 'Isolation Forest', 'PCA', 'Matplotlib'];
@@ -21,26 +21,15 @@ const stack = ['Python', 'Scikit-Learn', 'Isolation Forest', 'PCA', 'Matplotlib'
   currentLang="en"
 >
   <section>
-    <h2>🎯 Business Problem</h2>
+    <h2>🎯 Why I Built This</h2>
     <p>
-      Traditional rule-based fraud detection systems face a fundamental limitation: they can only catch fraud patterns they've been explicitly programmed to recognize. This creates a critical vulnerability to <strong>zero-day attacks</strong>—novel fraud techniques that bypass existing rule sets.
+      This is a self-directed project exploring a well-known limitation of rule-based fraud detection: rules can only catch patterns they were explicitly written for, which makes them structurally blind to new ("zero-day") fraud techniques.
     </p>
     
-    <h3>The Detection Gap</h3>
+    <h3>The Idea I Wanted to Test</h3>
     <p>
-      Analysis of historical fraud cases revealed a disturbing pattern:
+      Using publicly documented industry figures as a starting reference point (rule-based systems commonly missing a large share of fraud that later gets confirmed, and generating heavy false-positive volumes), I wanted to see how much an unsupervised anomaly detection approach could improve on that, without needing labeled fraud data to train on.
     </p>
-    <ul>
-      <li><strong>40% of confirmed fraud</strong> passed all existing validation rules</li>
-      <li><strong>6-8 week lag</strong> between first occurrence and rule creation</li>
-      <li><strong>€180K average loss</strong> per undetected fraud pattern</li>
-      <li><strong>Manual review overload:</strong> 85% of flagged transactions were false positives</li>
-    </ul>
-
-    <blockquote>
-      "We were always one step behind fraudsters. By the time we wrote rules for the last attack, they'd already moved to the next technique."
-      <br><em>— Head of Risk Management</em>
-    </blockquote>
   </section>
 
   <section>
@@ -99,44 +88,23 @@ final_anomalies = (iso_scores == -1) & (reconstruction_error &gt; anomaly_thresh
   </section>
 
   <section>
-    <h2>📊 Results & Impact</h2>
+    <h2>📊 Results on the Dataset</h2>
 
     <h3>Detection Performance</h3>
     <ul>
-      <li><strong>0.17% Anomaly Rate:</strong> Flagged 850 suspicious transactions from 500,000 total</li>
-      <li><strong>40% Lift Over Rules:</strong> Caught 340 anomalies that passed all existing validation checks</li>
-      <li><strong>68% Precision:</strong> Manual review confirmed 578 of 850 flags as genuine fraud/errors</li>
-      <li><strong>Sub-2-Second Latency:</strong> Real-time scoring for incoming transactions</li>
+      <li><strong>0.17% Flag Rate:</strong> flagged ~850 transactions out of 500,000 as anomalous.</li>
+      <li><strong>Ensemble vs. Single Model:</strong> combining Isolation Forest and PCA reconstruction error caught more anomalies than either method alone.</li>
+      <li><strong>Sub-2-Second Scoring:</strong> the pipeline scores a transaction fast enough to be usable in a near-real-time setting.</li>
     </ul>
+    <p><em>Precision was checked by manually inspecting a sample of the flagged transactions rather than against a real, independently-verified fraud label — so the "68% confirmed" figure is a rough estimate from that manual spot-check, not a validated production result.</em></p>
 
-    <h3>Novel Fraud Patterns Discovered</h3>
+    <h3>Types of Anomalies the Model Surfaced</h3>
     <ol>
-      <li><strong>Micro-Transaction Probing:</strong> 
-        <ul>
-          <li>Detected automated bots making 50+ small transactions to test stolen card validity</li>
-          <li>Pattern: High transaction velocity + low amounts + sequential merchant IDs</li>
-        </ul>
-      </li>
-      <li><strong>Geographic Velocity Violations:</strong>
-        <ul>
-          <li>Same card used in Portugal and Brazil within 2-hour window (physically impossible)</li>
-          <li>Rules only checked country mismatches, not time-distance feasibility</li>
-        </ul>
-      </li>
-      <li><strong>Behavioral Deviation:</strong>
-        <ul>
-          <li>Long-term customers suddenly purchasing high-value electronics (account takeover indicator)</li>
-          <li>Model learned typical spending categories per customer segment</li>
-        </ul>
-      </li>
+      <li><strong>Micro-Transaction Bursts:</strong> sequences of many small, rapid transactions — a pattern consistent with automated card-testing behavior described in fraud literature.</li>
+      <li><strong>Geographic Impossibilities:</strong> the same account used in two distant locations within a window too short for physical travel.</li>
+      <li><strong>Behavioral Shifts:</strong> a sudden change in a customer's typical spending category, which the model picked up without being told what "typical" meant in advance.</li>
     </ol>
-
-    <h3>Business Impact</h3>
-    <ul>
-      <li><strong>€420K Prevented Loss:</strong> Estimated fraud value blocked in first 6 months</li>
-      <li><strong>72% Faster Investigation:</strong> Pre-scored risk levels reduced manual review time</li>
-      <li><strong>Compliance Win:</strong> Enhanced PCI-DSS audit scores through proactive fraud controls</li>
-    </ul>
+    <p><em>These are the patterns I designed the features to be capable of catching. The specific loss-prevention and investigation-speed figures often quoted for this kind of system (e.g. "€420K prevented") would require a real production deployment to measure and aren't claimed here.</em></p>
   </section>
 
   <section>
@@ -196,8 +164,8 @@ final_anomalies = (iso_scores == -1) & (reconstruction_error &gt; anomaly_thresh
     <p><strong>Solution:</strong> Rolling 90-day training window with weekly model retraining</p>
 
     <h3>Challenge 3: Explainability Gap</h3>
-    <p><strong>Problem:</strong> Compliance team needed to explain why transactions were flagged</p>
-    <p><strong>Solution:</strong> Added SHAP values to show top contributing features for each anomaly</p>
+    <p><strong>Problem:</strong> a raw anomaly score doesn't say <em>why</em> a transaction looks suspicious, which would matter for anyone reviewing the flags in practice</p>
+    <p><strong>Solution:</strong> added SHAP values to show the top contributing features for each anomaly</p>
 
     <pre is:raw><code>import shap
 
@@ -213,22 +181,18 @@ feature_importance = pd.DataFrame(&#123;
   </section>
 
   <section>
-    <h2>📈 Monitoring & Continuous Improvement</h2>
+    <h2>📈 If This Went Into Production</h2>
+    <p>This project stops at model evaluation on historical data. Here's how I'd think about running it for real, as a design exercise rather than something I've implemented:</p>
 
-    <h3>Production Metrics Dashboard</h3>
+    <h3>What I'd Want to Monitor</h3>
     <ul>
-      <li><strong>Daily Anomaly Rate:</strong> Track for sudden spikes (fraud campaigns) or drops (model degradation)</li>
-      <li><strong>False Positive Feedback Loop:</strong> Manual reviewers label flagged transactions → retrain model monthly</li>
-      <li><strong>Feature Drift Detection:</strong> Alert when feature distributions shift >2 standard deviations</li>
+      <li><strong>Daily Anomaly Rate:</strong> to catch sudden spikes (possible fraud campaigns) or drops (possible model degradation).</li>
+      <li><strong>A Feedback Loop:</strong> having reviewers label flagged transactions to periodically retrain the model.</li>
+      <li><strong>Feature Drift:</strong> alerting when feature distributions shift significantly from the training baseline.</li>
     </ul>
 
-    <h3>A/B Testing Results</h3>
-    <p>Controlled experiment: 50% of transactions scored by ensemble, 50% by rules-only</p>
-    <ul>
-      <li><strong>28% more fraud caught</strong> in ensemble group</li>
-      <li><strong>15% reduction</strong> in false positive manual reviews</li>
-      <li><strong>Cost-benefit:</strong> €4.20 saved per €1 invested in system development</li>
-    </ul>
+    <h3>How I'd Validate It Properly</h3>
+    <p>Ideally with an A/B test — routing some share of transactions through the ensemble and the rest through rules-only, then comparing fraud caught and false-positive volume between the two groups over time. I haven't run this, since it requires a live transaction stream this project doesn't have.</p>
   </section>
 
   <section>
@@ -236,16 +200,14 @@ feature_importance = pd.DataFrame(&#123;
 
     <h3>What Worked</h3>
     <ul>
-      <li><strong>Ensemble Approach:</strong> Combining Isolation Forest + PCA caught 23% more anomalies than either alone</li>
-      <li><strong>Feature Engineering Matters:</strong> Velocity metrics were 3x more predictive than transaction amount</li>
-      <li><strong>Operational Integration:</strong> Embedded in transaction approval flow (not post-hoc analysis)</li>
+      <li><strong>Ensemble Approach:</strong> combining Isolation Forest and PCA reconstruction caught more anomalies together than either did alone.</li>
+      <li><strong>Feature Engineering Mattered:</strong> velocity-based features (transactions per hour/day) seemed more predictive than raw transaction amount.</li>
     </ul>
 
     <h3>What I'd Do Differently</h3>
     <ul>
-      <li><strong>Start with Simpler Model:</strong> Initial Random Forest attempt was overkill—Isolation Forest simpler and faster</li>
-      <li><strong>Involve Fraud Team Earlier:</strong> Their domain knowledge improved feature selection significantly</li>
-      <li><strong>Automate Feedback Loop:</strong> Manual labeling is bottleneck—should integrate with case management system</li>
+      <li><strong>Start Simpler:</strong> my first instinct was a Random Forest, which was overkill for an unsupervised problem — Isolation Forest was a better fit from the start.</li>
+      <li><strong>Better Validation:</strong> without real labeled fraud data, evaluating precision honestly is hard. If I revisit this, I'd look for a labeled public fraud dataset to validate against more rigorously.</li>
     </ul>
   </section>
 
