@@ -9,7 +9,7 @@ Operating at the intersection of **Financial Analysis** and **Data Engineering**
 *   **200h+** of manual work eliminated through intelligent automation.
 *   **500k+** data rows processed via custom ETL pipelines.
 *   **90%** average accuracy in predictive Machine Learning models.
-*   **11+** End-to-end projects delivered (from Data Engineering to BI).
+*   **10+** End-to-end projects delivered (from Data Engineering to BI).
 
 ---
 
