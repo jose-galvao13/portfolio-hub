@@ -14,7 +14,7 @@ const stack = ['Node.js', 'Express', 'React', 'PostgreSQL', 'Tailwind CSS', 'Vit
 ---
 
 <CaseStudyLayout
-  title="DecisionOS — Decision Intelligence Platform"
+  title="DecisionOS - Decision Intelligence Platform"
   description="A multi-tenant web platform that turns Excel and PostgreSQL data into evidence-backed business decisions, simulates their impact, tracks each one to a measured outcome, and exposes an AI advisor that can only quote numbers the server computed itself."
   projectType="Full-Stack Data Product / AI / Decision Intelligence"
   stack={stack}
@@ -25,7 +25,7 @@ const stack = ['Node.js', 'Express', 'React', 'PostgreSQL', 'Tailwind CSS', 'Vit
   <section>
     <h2>🎯 Business Challenge</h2>
     <p>
-      Most analytics tools stop at the chart. A dashboard tells a manager that margin fell 3 points, but nobody records <strong>what was decided, who owned it, what impact was expected, or whether it actually worked</strong>. At the same time, generic "chat with your data" tools have a subtler flaw: they will happily explain — or even confirm — whatever numbers they were handed, including wrong ones.
+      Most analytics tools stop at the chart. A dashboard tells a manager that margin fell 3 points, but nobody records <strong>what was decided, who owned it, what impact was expected, or whether it actually worked</strong>. At the same time, generic "chat with your data" tools have a subtler flaw: they will happily explain - or even confirm - whatever numbers they were handed, including wrong ones.
     </p>
     <p>
       I built DecisionOS to close that loop end to end. The core challenges were:
@@ -36,25 +36,25 @@ const stack = ['Node.js', 'Express', 'React', 'PostgreSQL', 'Tailwind CSS', 'Vit
       <li><strong>Decisions With Accountability:</strong> Insights are only useful if they become owned, approved, tracked decisions with a measurable result.</li>
       <li><strong>Multi-Tenant Safety:</strong> One deployment, many organisations, each with strictly isolated data and role-based permissions.</li>
     </ul>
-    <p><em>DecisionOS is a self-directed project. It was validated on a synthetic demo company ("Nortica Demo S.A.": 14 months of transactions, 5 products, regions and channels, with a deliberately planted churn and margin-decline story) — not on a real customer's data or in a live production environment.</em></p>
+    <p><em>DecisionOS is a self-directed project. It was validated on a synthetic demo company ("Nortica Demo S.A.": 14 months of transactions, 5 products, regions and channels, with a deliberately planted churn and margin-decline story) - not on a real customer's data or in a live production environment.</em></p>
   </section>
 
   <section>
     <h2>💡 Solution Architecture</h2>
     <p>
-      The platform is a Node.js/Express API on PostgreSQL with a React front end. Every stage of the pipeline is a separate module with its own tests, so structure, meaning, analytics, decisions and AI can each be reasoned about — and broken — independently.
+      The platform is a Node.js/Express API on PostgreSQL with a React front end. Every stage of the pipeline is a separate module with its own tests, so structure, meaning, analytics, decisions and AI can each be reasoned about - and broken - independently.
     </p>
 
     <figure style="margin: 2rem 0;">
       <img src={archImg.src} alt="DecisionOS system architecture: data sources, Data Understanding engine, unified data model, analytics, decision engine, simulator, AI advisor and decision log" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);" loading="lazy" />
-      <figcaption style="text-align: center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.5rem;">System architecture — from raw files to auditable decisions.</figcaption>
+      <figcaption style="text-align: center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.5rem;">System architecture - from raw files to auditable decisions.</figcaption>
     </figure>
 
     <h3>Layers at a Glance</h3>
     <ul>
       <li><strong>Ingestion:</strong> Excel/CSV upload with a column-mapping wizard, a guarded connector for a customer's own PostgreSQL, and a separate import path for stock portfolios.</li>
       <li><strong>Data Understanding Engine:</strong> detects where the table starts and what each column means, with an explicit confidence score.</li>
-      <li><strong>Unified Data Model:</strong> one tenant-scoped PostgreSQL schema (19 tables) — a transactions fact table plus customer, product, region and channel dimensions.</li>
+      <li><strong>Unified Data Model:</strong> one tenant-scoped PostgreSQL schema (19 tables) - a transactions fact table plus customer, product, region and channel dimensions.</li>
       <li><strong>Engines:</strong> Analytics, Decision, Simulation and the AI Advisor, all reading from the same analytics object.</li>
       <li><strong>Decision Log:</strong> the persisted lifecycle of every decision, from proposal to measured outcome.</li>
     </ul>
@@ -72,9 +72,9 @@ const stack = ['Node.js', 'Express', 'React', 'PostgreSQL', 'Tailwind CSS', 'Vit
     <ul>
       <li><strong>Structure discovery:</strong> finds the real header row inside a raw sheet, skipping title rows and blank lines.</li>
       <li><strong>Profiling:</strong> infers each column's data type and distribution.</li>
-      <li><strong>Semantic detection:</strong> scores every column against each semantic type (revenue, customer, product…) using four independent signals — header text (weight 0.40), data type (0.20), value distribution (0.25) and relationships (0.15) — instead of trusting the header alone. Portuguese and English synonyms are both supported.</li>
+      <li><strong>Semantic detection:</strong> scores every column against each semantic type (revenue, customer, product…) using four independent signals - header text (weight 0.40), data type (0.20), value distribution (0.25) and relationships (0.15) - instead of trusting the header alone. Portuguese and English synonyms are both supported.</li>
       <li><strong>Candidate competition:</strong> the ranked list is kept, not just the winner.</li>
-      <li><strong>Confidence:</strong> a high score alone is not enough — the winner must also beat the runner-up by a margin.</li>
+      <li><strong>Confidence:</strong> a high score alone is not enough - the winner must also beat the runner-up by a margin.</li>
     </ul>
 
     <pre is:raw><code>DEFAULT_THRESHOLDS = { auto: 0.95, review: 0.75, minMargin: 0.12 }
@@ -129,7 +129,7 @@ Revenue 97% / Cost 41%  → margin 56% → AUTO    (unambiguous)</code></pre>
     <ul>
       <li>What-if levers for price, marketing spend, churn, cost and volume, plus "discontinue this product".</li>
       <li>Every scenario returns its assumptions and a risk label derived from the months of history and the series volatility.</li>
-      <li>Ranges are presented as estimates — never labelled as a statistical confidence interval.</li>
+      <li>Ranges are presented as estimates - never labelled as a statistical confidence interval.</li>
     </ul>
 
     <h3>Stock Portfolio Module</h3>
@@ -155,14 +155,14 @@ Revenue 97% / Cost 41%  → margin 56% → AUTO    (unambiguous)</code></pre>
       <li><strong>Statuses:</strong> proposed → pending approval → approved → in progress → completed → archived, with a rejected branch. Every transition is written to the audit log.</li>
       <li><strong>Role-gated approval:</strong> approving, rejecting, reassigning an owner and recording an outcome require the manager role or higher.</li>
       <li><strong>Expected vs. actual:</strong> the expected impact range is frozen at creation, then compared against the recorded outcome as a variance.</li>
-      <li><strong>No fake ROI:</strong> ROI is computed only once a real outcome exists — never estimated or back-filled from the expected impact.</li>
-      <li><strong>Automated measurement:</strong> for revenue and gross-profit decisions, a background loop compares a baseline window (captured when the decision moved to in progress) against an equal-length window after the measurement period. It never overwrites a manual outcome, measures each decision only once, and writes a note on every result that this is a before/after delta — <strong>not a causal claim</strong>.</li>
+      <li><strong>No fake ROI:</strong> ROI is computed only once a real outcome exists - never estimated or back-filled from the expected impact.</li>
+      <li><strong>Automated measurement:</strong> for revenue and gross-profit decisions, a background loop compares a baseline window (captured when the decision moved to in progress) against an equal-length window after the measurement period. It never overwrites a manual outcome, measures each decision only once, and writes a note on every result that this is a before/after delta - <strong>not a causal claim</strong>.</li>
       <li><strong>Derived notifications:</strong> the bell in the header stores nothing except what was read; every alert (pending approvals, failed imports, poor data quality, concentrated portfolio…) is derived on request from current data, so it disappears by itself once the reason is gone.</li>
     </ul>
   </section>
 
   <section>
-    <h2>🤖 AI Advisor — Guardrails by Design</h2>
+    <h2>🤖 AI Advisor - Guardrails by Design</h2>
     <p>
       The advisor runs a tool-calling loop on the server. The browser sends only a question; <strong>the server computes analytics from the authenticated organisation's own data</strong> and gives the model 23 tools to query it (overview, revenue, profit, period comparison, products, regions, channels, customers, profit leaks, forecasts, six simulators, anomalies, portfolio and decisions).
     </p>
@@ -175,7 +175,7 @@ Revenue 97% / Cost 41%  → margin 56% → AUTO    (unambiguous)</code></pre>
   }
 });</code></pre>
     <ul>
-      <li><strong>No client-supplied numbers:</strong> an earlier design accepted an analytics payload from the browser. Removing it means nobody can get the model to "confirm" fabricated figures — it is never given the chance to receive any.</li>
+      <li><strong>No client-supplied numbers:</strong> an earlier design accepted an analytics payload from the browser. Removing it means nobody can get the model to "confirm" fabricated figures - it is never given the chance to receive any.</li>
       <li><strong>Server-enforced rules:</strong> portfolio guardrails are appended to the system prompt on the server so they cannot be dropped by whoever calls the endpoint.</li>
       <li><strong>Cost and abuse control:</strong> a bounded number of tool rounds and a stricter per-user rate limit on AI routes.</li>
       <li><strong>Provider-agnostic:</strong> a small client for any OpenAI-compatible API (Groq by default, or OpenRouter, Cerebras, Ollama), converting the tool schema on the way out.</li>
@@ -190,7 +190,7 @@ Revenue 97% / Cost 41%  → margin 56% → AUTO    (unambiguous)</code></pre>
       <li><strong>Session revocation on stateless JWTs:</strong> deactivating a user or changing a password or role invalidates tokens issued before that moment, checked synchronously from a small in-memory registry so no route pays a database round trip.</li>
       <li><strong>Password policy that tells the truth:</strong> bcrypt only reads the first 72 bytes, so longer passwords are rejected rather than silently truncated.</li>
       <li><strong>Encrypted credentials:</strong> connector passwords are stored with AES-256-GCM using a dedicated key, never reused from the JWT or LLM secrets.</li>
-      <li><strong>SSRF guard:</strong> the database connector resolves the host once, blocks loopback, private, link-local and cloud-metadata ranges, then connects to the already-validated IP — which defeats DNS rebinding. Schema and table names are validated against <code>information_schema</code> before being used as quoted identifiers.</li>
+      <li><strong>SSRF guard:</strong> the database connector resolves the host once, blocks loopback, private, link-local and cloud-metadata ranges, then connects to the already-validated IP - which defeats DNS rebinding. Schema and table names are validated against <code>information_schema</code> before being used as quoted identifiers.</li>
       <li><strong>Abuse controls:</strong> general and AI-specific rate limits, a CORS allow-list and an audit log on user, data-source and decision changes.</li>
     </ul>
     <pre is:raw><code>export function requireMinRole(minRole) {

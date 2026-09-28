@@ -14,7 +14,7 @@ const stack = ['Node.js', 'Express', 'React', 'PostgreSQL', 'Tailwind CSS', 'Vit
 ---
 
 <CaseStudyLayout
-  title="DecisionOS — Plataforma de Decision Intelligence"
+  title="DecisionOS - Plataforma de Decision Intelligence"
   description="Plataforma web multi-tenant que transforma dados de Excel e PostgreSQL em decisões de negócio baseadas em evidência, simula o seu impacto, acompanha cada uma até um resultado medido e disponibiliza um assistente de IA que só pode citar números calculados pelo próprio servidor."
   projectType="Produto de Dados Full-Stack / IA / Decision Intelligence"
   stack={stack}
@@ -25,7 +25,7 @@ const stack = ['Node.js', 'Express', 'React', 'PostgreSQL', 'Tailwind CSS', 'Vit
   <section>
     <h2>🎯 Desafio de Negócio</h2>
     <p>
-      A maioria das ferramentas de analítica fica-se pelo gráfico. Um dashboard diz ao gestor que a margem caiu 3 pontos, mas ninguém regista <strong>o que foi decidido, quem ficou responsável, que impacto se esperava, nem se realmente funcionou</strong>. Ao mesmo tempo, as ferramentas genéricas de "conversar com os dados" têm uma falha mais subtil: explicam — ou até confirmam — quaisquer números que lhes entreguem, incluindo números errados.
+      A maioria das ferramentas de analítica fica-se pelo gráfico. Um dashboard diz ao gestor que a margem caiu 3 pontos, mas ninguém regista <strong>o que foi decidido, quem ficou responsável, que impacto se esperava, nem se realmente funcionou</strong>. Ao mesmo tempo, as ferramentas genéricas de "conversar com os dados" têm uma falha mais subtil: explicam - ou até confirmam - quaisquer números que lhes entreguem, incluindo números errados.
     </p>
     <p>
       Construí o DecisionOS para fechar este ciclo de ponta a ponta. Os principais desafios foram:
@@ -36,25 +36,25 @@ const stack = ['Node.js', 'Express', 'React', 'PostgreSQL', 'Tailwind CSS', 'Vit
       <li><strong>Decisões com Responsabilização:</strong> os insights só servem se se transformarem em decisões com dono, aprovação, acompanhamento e resultado mensurável.</li>
       <li><strong>Segurança Multi-Tenant:</strong> uma instalação, várias organizações, cada uma com dados rigorosamente isolados e permissões por papel.</li>
     </ul>
-    <p><em>O DecisionOS é um projeto de estudo pessoal. Foi validado numa empresa de demonstração sintética ("Nortica Demo S.A.": 14 meses de transações, 5 produtos, regiões e canais, com uma história de churn e queda de margem plantada de propósito) — não em dados reais de um cliente nem num ambiente de produção.</em></p>
+    <p><em>O DecisionOS é um projeto de estudo pessoal. Foi validado numa empresa de demonstração sintética ("Nortica Demo S.A.": 14 meses de transações, 5 produtos, regiões e canais, com uma história de churn e queda de margem plantada de propósito) - não em dados reais de um cliente nem num ambiente de produção.</em></p>
   </section>
 
   <section>
     <h2>💡 Arquitetura da Solução</h2>
     <p>
-      A plataforma é uma API Node.js/Express sobre PostgreSQL com um front end em React. Cada fase do pipeline é um módulo separado, com testes próprios, por isso estrutura, significado, analítica, decisões e IA podem ser analisados — e quebrados — de forma independente.
+      A plataforma é uma API Node.js/Express sobre PostgreSQL com um front end em React. Cada fase do pipeline é um módulo separado, com testes próprios, por isso estrutura, significado, analítica, decisões e IA podem ser analisados - e quebrados - de forma independente.
     </p>
 
     <figure style="margin: 2rem 0;">
       <img src={archImg.src} alt="Arquitetura do DecisionOS: fontes de dados, motor de Data Understanding, modelo de dados unificado, analítica, motor de decisões, simulador, assistente de IA e registo de decisões" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);" loading="lazy" />
-      <figcaption style="text-align: center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.5rem;">Arquitetura do sistema — dos ficheiros em bruto a decisões auditáveis.</figcaption>
+      <figcaption style="text-align: center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.5rem;">Arquitetura do sistema - dos ficheiros em bruto a decisões auditáveis.</figcaption>
     </figure>
 
     <h3>As Camadas em Resumo</h3>
     <ul>
       <li><strong>Ingestão:</strong> upload de Excel/CSV com assistente de mapeamento de colunas, um conector protegido para a base PostgreSQL do próprio cliente e um circuito de importação separado para carteiras de ações.</li>
       <li><strong>Data Understanding Engine:</strong> deteta onde a tabela começa e o que significa cada coluna, com um score de confiança explícito.</li>
-      <li><strong>Modelo de Dados Unificado:</strong> um esquema PostgreSQL único e isolado por organização (19 tabelas) — uma tabela de factos de transações mais dimensões de clientes, produtos, regiões e canais.</li>
+      <li><strong>Modelo de Dados Unificado:</strong> um esquema PostgreSQL único e isolado por organização (19 tabelas) - uma tabela de factos de transações mais dimensões de clientes, produtos, regiões e canais.</li>
       <li><strong>Motores:</strong> Analítica, Decisões, Simulação e o Assistente de IA, todos a ler do mesmo objeto de analítica.</li>
       <li><strong>Registo de Decisões:</strong> o ciclo de vida persistido de cada decisão, da proposta ao resultado medido.</li>
     </ul>
@@ -72,9 +72,9 @@ const stack = ['Node.js', 'Express', 'React', 'PostgreSQL', 'Tailwind CSS', 'Vit
     <ul>
       <li><strong>Descoberta de estrutura:</strong> encontra a verdadeira linha de cabeçalho dentro de uma folha em bruto, ignorando linhas de título e linhas em branco.</li>
       <li><strong>Profiling:</strong> infere o tipo de dados e a distribuição de cada coluna.</li>
-      <li><strong>Deteção semântica:</strong> pontua cada coluna face a cada tipo semântico (receita, cliente, produto…) com quatro sinais independentes — texto do cabeçalho (peso 0,40), tipo de dados (0,20), distribuição dos valores (0,25) e relações (0,15) — em vez de confiar apenas no nome. São suportados sinónimos em português e inglês.</li>
+      <li><strong>Deteção semântica:</strong> pontua cada coluna face a cada tipo semântico (receita, cliente, produto…) com quatro sinais independentes - texto do cabeçalho (peso 0,40), tipo de dados (0,20), distribuição dos valores (0,25) e relações (0,15) - em vez de confiar apenas no nome. São suportados sinónimos em português e inglês.</li>
       <li><strong>Competição de candidatos:</strong> a lista ordenada é mantida, não apenas o vencedor.</li>
-      <li><strong>Confiança:</strong> um score alto não basta — o vencedor tem também de superar o segundo classificado por uma margem.</li>
+      <li><strong>Confiança:</strong> um score alto não basta - o vencedor tem também de superar o segundo classificado por uma margem.</li>
     </ul>
 
     <pre is:raw><code>DEFAULT_THRESHOLDS = { auto: 0.95, review: 0.75, minMargin: 0.12 }
@@ -129,7 +129,7 @@ Receita 97% / Custo 41%  → margem 56% → AUTO    (sem ambiguidade)</code></pr
     <ul>
       <li>Alavancas "e se…" para preço, investimento em marketing, churn, custo e volume, mais "descontinuar este produto".</li>
       <li>Cada cenário devolve os seus pressupostos e uma etiqueta de risco derivada dos meses de histórico e da volatilidade da série.</li>
-      <li>Os intervalos são apresentados como estimativas — nunca rotulados como intervalo de confiança estatístico.</li>
+      <li>Os intervalos são apresentados como estimativas - nunca rotulados como intervalo de confiança estatístico.</li>
     </ul>
 
     <h3>Módulo de Carteira de Ações</h3>
@@ -155,14 +155,14 @@ Receita 97% / Custo 41%  → margem 56% → AUTO    (sem ambiguidade)</code></pr
       <li><strong>Estados:</strong> proposta → pendente de aprovação → aprovada → em curso → concluída → arquivada, com um ramo de rejeição. Cada transição fica escrita no audit log.</li>
       <li><strong>Aprovação por papel:</strong> aprovar, rejeitar, reatribuir responsável e registar um resultado exigem o papel de manager ou superior.</li>
       <li><strong>Esperado vs. real:</strong> o intervalo de impacto esperado é congelado na criação e depois comparado com o resultado registado, como variância.</li>
-      <li><strong>Sem ROI inventado:</strong> o ROI só é calculado quando existe um resultado real — nunca estimado nem preenchido retroativamente a partir do impacto esperado.</li>
-      <li><strong>Medição automática:</strong> para decisões de receita e lucro bruto, um ciclo em segundo plano compara uma janela de referência (capturada quando a decisão passou a "em curso") com uma janela do mesmo tamanho depois do período de medição. Nunca sobrescreve um resultado manual, mede cada decisão apenas uma vez e escreve em cada resultado uma nota a dizer que é uma variação antes/depois — <strong>não uma afirmação de causalidade</strong>.</li>
+      <li><strong>Sem ROI inventado:</strong> o ROI só é calculado quando existe um resultado real - nunca estimado nem preenchido retroativamente a partir do impacto esperado.</li>
+      <li><strong>Medição automática:</strong> para decisões de receita e lucro bruto, um ciclo em segundo plano compara uma janela de referência (capturada quando a decisão passou a "em curso") com uma janela do mesmo tamanho depois do período de medição. Nunca sobrescreve um resultado manual, mede cada decisão apenas uma vez e escreve em cada resultado uma nota a dizer que é uma variação antes/depois - <strong>não uma afirmação de causalidade</strong>.</li>
       <li><strong>Notificações derivadas:</strong> o sino no cabeçalho não guarda nada além do que foi lido; cada alerta (aprovações pendentes, importações falhadas, má qualidade de dados, carteira concentrada…) é derivado a pedido a partir dos dados atuais, e desaparece sozinho quando a razão deixa de existir.</li>
     </ul>
   </section>
 
   <section>
-    <h2>🤖 Assistente de IA — Salvaguardas por Design</h2>
+    <h2>🤖 Assistente de IA - Salvaguardas por Design</h2>
     <p>
       O assistente corre um ciclo de tool-calling no servidor. O browser envia apenas uma pergunta; <strong>o servidor calcula a analítica a partir dos dados da organização autenticada</strong> e dá ao modelo 23 ferramentas para os consultar (visão geral, receita, lucro, comparação de períodos, produtos, regiões, canais, clientes, fugas de lucro, previsões, seis simuladores, anomalias, carteira e decisões).
     </p>
@@ -175,7 +175,7 @@ Receita 97% / Custo 41%  → margem 56% → AUTO    (sem ambiguidade)</code></pr
   }
 });</code></pre>
     <ul>
-      <li><strong>Sem números fornecidos pelo cliente:</strong> um desenho anterior aceitava um payload de analítica vindo do browser. Removê-lo significa que ninguém consegue fazer o modelo "confirmar" valores inventados — nunca lhe é dada essa possibilidade.</li>
+      <li><strong>Sem números fornecidos pelo cliente:</strong> um desenho anterior aceitava um payload de analítica vindo do browser. Removê-lo significa que ninguém consegue fazer o modelo "confirmar" valores inventados - nunca lhe é dada essa possibilidade.</li>
       <li><strong>Regras aplicadas no servidor:</strong> as salvaguardas de carteira são acrescentadas ao prompt de sistema no servidor, para não poderem ser retiradas por quem chama o endpoint.</li>
       <li><strong>Controlo de custo e abuso:</strong> número limitado de rondas de ferramentas e um rate limit por utilizador mais apertado nas rotas de IA.</li>
       <li><strong>Agnóstico ao fornecedor:</strong> um pequeno cliente para qualquer API compatível com OpenAI (Groq por defeito, ou OpenRouter, Cerebras, Ollama), que converte o esquema de ferramentas à saída.</li>
@@ -190,7 +190,7 @@ Receita 97% / Custo 41%  → margem 56% → AUTO    (sem ambiguidade)</code></pr
       <li><strong>Revogação de sessões com JWTs sem estado:</strong> desativar um utilizador ou mudar a password ou o papel invalida os tokens emitidos antes desse momento, verificado de forma síncrona num pequeno registo em memória, para nenhuma rota pagar uma ida à base de dados.</li>
       <li><strong>Política de passwords que diz a verdade:</strong> o bcrypt só lê os primeiros 72 bytes, por isso passwords mais longas são rejeitadas em vez de truncadas em silêncio.</li>
       <li><strong>Credenciais cifradas:</strong> as passwords dos conectores são guardadas com AES-256-GCM, usando uma chave dedicada, nunca reutilizada dos segredos do JWT ou do LLM.</li>
-      <li><strong>Proteção contra SSRF:</strong> o conector de base de dados resolve o host uma só vez, bloqueia intervalos de loopback, privados, link-local e de metadados cloud, e liga-se depois ao IP já validado — o que derrota o DNS rebinding. Os nomes de schemas e tabelas são validados contra o <code>information_schema</code> antes de serem usados como identificadores entre aspas.</li>
+      <li><strong>Proteção contra SSRF:</strong> o conector de base de dados resolve o host uma só vez, bloqueia intervalos de loopback, privados, link-local e de metadados cloud, e liga-se depois ao IP já validado - o que derrota o DNS rebinding. Os nomes de schemas e tabelas são validados contra o <code>information_schema</code> antes de serem usados como identificadores entre aspas.</li>
       <li><strong>Controlo de abuso:</strong> rate limits gerais e específicos de IA, uma lista de origens CORS permitidas e um audit log nas alterações a utilizadores, fontes de dados e decisões.</li>
     </ul>
     <pre is:raw><code>export function requireMinRole(minRole) {
