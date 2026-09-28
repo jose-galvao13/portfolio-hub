@@ -2021,123 +2021,8 @@ select.calc-input option {
 }
 
 /* ============================================
-   RECOMMENDATION SECTION
+   RECOMMENDATION LETTER BUTTON (inside experience items)
    ============================================ */
-.recommendation-section {
-  padding: clamp(60px, 12vw, 100px) 0;
-}
-
-.endorsement-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 24px;
-  padding: clamp(40px, 8vw, 60px) clamp(25px, 5vw, 50px) clamp(30px, 6vw, 40px);
-  max-width: 850px;
-  margin: 0 auto;
-  position: relative;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-
-.quote-mark {
-  position: absolute;
-  top: 20px;
-  left: clamp(20px, 4vw, 40px);
-  font-family: 'Lora', serif;
-  font-size: clamp(50px, 10vw, 80px);
-  line-height: 1;
-  color: var(--accent-cyan);
-  opacity: 0.2;
-}
-
-.endorsement-text {
-  font-size: clamp(1rem, 2.2vw, 1.2rem);
-  line-height: 1.8;
-  color: var(--text-primary);
-  margin-bottom: clamp(30px, 6vw, 40px);
-  position: relative;
-  z-index: 1;
-}
-
-.endorsement-text b {
-  color: var(--accent-cyan);
-  font-weight: 700;
-}
-
-.endorsement-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding-top: clamp(20px, 4vw, 30px);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-@media (min-width: 769px) {
-  .endorsement-footer {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-
-.author-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.author-name {
-  display: block;
-  font-weight: 800;
-  font-size: clamp(1rem, 2vw, 1.1rem);
-  color: #fff;
-}
-
-.author-role {
-  font-size: clamp(0.75rem, 1.5vw, 0.85rem);
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.author-box {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* Espaço entre o logo e o texto */
-  }
-
-  .company-logo {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: whitesmoke;
-    padding: 8px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  .company-logo img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain; /* Garante que o logo não fique distorcido */
-  }
-
-  /* Ajuste responsivo para mobile */
-  @media (max-width: 480px) {
-    .author-box {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 15px;
-    }
-    
-    .company-logo {
-      width: 50px;
-      height: 50px;
-    }
-  }
-
-  
 .letter-btn {
   display: inline-flex;
   align-items: center;
@@ -2180,6 +2065,12 @@ select.calc-input option {
   color: var(--accent-cyan);
   transform: translateY(-2px);
   background: rgba(0, 201, 255, 0.05);
+}
+
+.timeline-item .letter-btn {
+  margin-top: 14px;
+  padding: 8px 16px;
+  font-size: clamp(0.75rem, 1.5vw, 0.85rem);
 }
 
 /* ============================================
@@ -3800,7 +3691,6 @@ footer {
   --input-border: #30363D;
   --timeline-border: #30363D;
   --code-bg: #080808;
-  --endorsement-bg: rgba(255, 255, 255, 0.02);
   --efficiency-bg: rgba(255, 255, 255, 0.01);
   --contact-bg: rgba(28, 33, 40, 0.4);
   --filter-select-bg: rgba(255, 255, 255, 0.03);
@@ -3826,7 +3716,6 @@ footer {
   --input-border: #d0d7e0;
   --timeline-border: #d0d7e0;
   --code-bg: #f0f4f8;
-  --endorsement-bg: rgba(255, 255, 255, 0.9);
   --efficiency-bg: rgba(255, 255, 255, 0.6);
   --contact-bg: rgba(255, 255, 255, 0.7);
   --filter-select-bg: rgba(255, 255, 255, 0.8);
@@ -4023,16 +3912,7 @@ footer {
 [data-theme="light"] .metrics-grid { border-top-color: rgba(0,0,0,0.07); }
 [data-theme="light"] .m-label { color: var(--text-secondary); }
 
-/* Endorsement */
-[data-theme="light"] .endorsement-card {
-  background: var(--endorsement-bg);
-  border-color: var(--border-color);
-  box-shadow: 0 8px 30px var(--shadow-color);
-}
-[data-theme="light"] .endorsement-text { color: var(--text-primary); }
-[data-theme="light"] .endorsement-footer { border-top-color: rgba(0,0,0,0.07); }
-[data-theme="light"] .author-name { color: #1a1f2e; }
-[data-theme="light"] .author-role { color: var(--text-secondary); }
+/* Recommendation letter button */
 [data-theme="light"] .letter-btn {
   background: rgba(255,255,255,0.8);
   border-color: var(--input-border);

@@ -2,8 +2,6 @@
   import Layout from '../layouts/Layout.astro';
   import ProjectCard from '../components/ProjectCard.astro';
   import profileImage from '../assets/images/profile.png';
-  import liquilentesLogo from '../assets/images/liquilentes.png';
-  import sonhotocLogo from '../assets/images/sonhotoc.png';
   import { getProjects } from '../data/projects';
   import CategoryFilter from '../components/CategoryFilter.astro';
 
@@ -216,6 +214,13 @@
                 <li>Reorganized <b>document filing structure</b> to improve team accessibility and streamline daily workflow.</li>
                 <li>Cross-checked <b>financial data in Excel</b> to identify and resolve discrepancies across records.</li>
               </ul>
+              <a href={`${import.meta.env.BASE_URL}/Jose_Galvao_Recommendation2.pdf`} target="_blank" rel="noopener noreferrer" class="letter-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+                Recommendation Letter (PT)
+              </a>
             </div>
           <div class="timeline-item">
             <div class="timeline-date">Mar 2024 - Aug 2024</div>
@@ -226,6 +231,13 @@
             <li>Conducted <b>supplier reconciliations</b>, auditing records to ensure alignment between physical stock and system data.</li>
             <li>Supported warehouse operations through <b>regular stock counts</b> and organized reporting logs for management.</li>
            </ul>
+              <a href={`${import.meta.env.BASE_URL}/Jose_Galvao_Recommendation.pdf`} target="_blank" rel="noopener noreferrer" class="letter-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+                Recommendation Letter (PT)
+              </a>
           </div>
         </div>
       </div>
@@ -465,79 +477,7 @@
 
     <div class="divider"></div>
 
-    <!-- RECOMMENDATION SECTION -->
-    <section id="recommendations" class="recommendation-section">
-      <div class="container">
-        <h2 class="gradient-text reveal" style="text-align: center; margin-bottom: 40px;">Professional Endorsement</h2>
-      <div class="endorsement-card reveal">
-          <div class="quote-mark">"</div>
-
-          <p class="endorsement-text">
-  "His <b>adaptability, responsibility, attention to detail,</b> and ability to <b>learn quickly</b> impressed me, making him a valuable <b>asset to any company</b>."
-</p>
-
-          <div class="endorsement-footer">
-            <div class="author-box">
-              <div class="company-logo">
-                <img src={sonhotocLogo.src} alt="Sonhotoc company logo" />
-              </div>
-              <div class="author-info">
-                <span class="author-name">Paula Cristina Dias Teixeira</span>
-                <span class="author-role">Manager @ Sonhotoc-Contabilidade e Fiscalidade, Lda. <small style="opacity: 0.6; font-weight: 400;">(Portugal)</small></span>
-              </div>
-            </div>
-            
-          </div>
-          
-          <br>
-          <a href={`${import.meta.env.BASE_URL}/Jose_Galvao_Recommendation2.pdf`} target="_blank" class="letter-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-            </svg>
-            Original Letter (PT)
-          </a>
-        </div>
-       <br> 
-      </div>
-        <div class="endorsement-card reveal">
-          <div class="quote-mark">"</div>
-
-          <p class="endorsement-text">
-            "His ability to <b>learn and apply acquired knowledge</b> in new situations truly impressed me, predicting a promising professional career. José will surely be an <b>asset to any company</b>."
-          </p>
-
-          <div class="endorsement-footer">
-            <div class="author-box">
-              <div class="company-logo">
-                <img src={liquilentesLogo.src} alt="Liquilentes company logo" />
-              </div>
-              <div class="author-info">
-                <span class="author-name">Henrique Manuel Jorge</span>
-                <span class="author-role">Manager @ Liquilentes, Lda. <small style="opacity: 0.6; font-weight: 400;">(Portugal)</small></span>
-              </div>
-            </div>
-            
-          </div>
-          
-          <br>
-          <a href={`${import.meta.env.BASE_URL}/Jose_Galvao_Recommendation.pdf`} target="_blank" class="letter-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-            </svg>
-            Original Letter (PT)
-          </a>
-        </div>
-      </div>
-
-    </section>
-
-    <div class="divider"></div>
-    <br>
-
-
-    <!-- CONTACT SECTION -->
+<!-- CONTACT SECTION -->
     <section id="contact" class="contact-section reveal">
       <div class="container">
         <div class="availability-badge">

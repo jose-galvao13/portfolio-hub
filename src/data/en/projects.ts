@@ -295,7 +295,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       titleKey: 'project.auditai.title',
       typeKey: 'project.auditai.type',
       desc: "<b>🔴 Problem:</b> Manual auditing relies on sampling a small fraction of transactions, leaving most data unchecked.<br><b>🟢 Solution:</b> Self-directed project using an LLM plus statistical analysis to flag high-risk accounting entries.<br><b>🚀 Impact:</b> Scores 100% of transactions instead of a 5% sample, on a synthetic test ledger — a proof of concept, not a deployed audit tool.",
-      stack: ["Python", "LLM", "Pandas", "Streamlit"],
+      stack: ["Python", "LLM", "Pandas"],
       linkRepo: "https://github.com/jose-galvao13/audit-ai",
       linkDemo: "#",
       caseStudy: `audit-ai`,
