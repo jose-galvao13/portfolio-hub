@@ -38,6 +38,8 @@ import _fraudapi3  from '../assets/images/fraudapi3.png';
 import _fraudapi4  from '../assets/images/fraudapi4.png';
 import _auditai  from '../assets/images/auditai.png';
 import _auditai2  from '../assets/images/auditai2.png';
+import { decisionosScreens } from './decisionos-screens';
+
 
 export interface Project {
   /** Unique identifier for the project */
@@ -67,6 +69,22 @@ export function getProjectsData(baseUrl: string): Project[] {
   return [
     // ── FEATURED ───────────────────────────────────────────────────────────
     {
+      id: 'decisionos',
+      titleKey: 'project.decisionos.title',
+      typeKey: 'project.decisionos.type',
+      desc: "<b>🔴 Problem:</b> Dashboards show what happened, but nobody records what was decided, why, or whether it worked — and AI chat tools happily 'confirm' numbers they were handed.<br><b>🟢 Solution:</b> Self-directed full-stack platform: imports Excel or PostgreSQL data, detects business problems with 9 evidence-backed detectors, simulates scenarios, and tracks every decision from proposal to measured outcome. The AI advisor can only quote numbers the server computed itself.<br><b>🚀 Impact:</b> ~18.5k lines of code, 426 automated backend tests and a multi-tenant security model — validated on a synthetic demo company, not on real customer data.",
+      stack: ["Node.js", "React", "PostgreSQL", "SQL", "LLM Tool-Calling"],
+      linkRepo: "https://github.com/jose-galvao13/DecisionOS",
+      linkDemo: "#",
+      caseStudy: `decisionos`,
+      images: decisionosScreens.map(s => s.src),
+      imageAlts: decisionosScreens.map(s => s.alt.en),
+      complexity: "advanced",
+      businessImpact: "high",
+      featured: true,
+      category: ['ai', 'bi', 'engineering'],
+    },
+    {
       id: 'churn-analysis',
       titleKey: 'project.churn.title',
       typeKey: 'project.churn.type',
@@ -87,7 +105,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       ],
       complexity: "advanced",
       businessImpact: "high",
-      featured: true,
+      featured: false,
       category: ['ml', 'bi'],
     },
     {
@@ -124,7 +142,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       imageAlts: ["Power BI dashboard showing price per m² across Portuguese municipalities with geo-spatial map"],
       complexity: "intermediate",
       businessImpact: "medium",
-      featured: true,
+      featured: false,
       category: ['bi'],
     },
     {
@@ -144,7 +162,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       ],
       complexity: "advanced",
       businessImpact: "high",
-      featured: true,
+      featured: false,
       category: ['ai', 'finance'],
     },
 
@@ -287,7 +305,7 @@ export function getProjectsData(baseUrl: string): Project[] {
       ],
       complexity: "advanced",
       businessImpact: "high",
-      featured: true,
+      featured: false,
       category: ['ml', 'engineering'],
     },
 {

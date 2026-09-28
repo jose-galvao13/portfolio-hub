@@ -74,6 +74,13 @@ const translations = {
   'projects.viewImages':   { en: 'Click to expand image',   pt: 'Clique para ampliar imagem' },
   'projects.prevImage':    { en: 'Previous image',          pt: 'Imagem anterior' },
   'projects.nextImage':    { en: 'Next image',              pt: 'Próxima imagem' },
+  'projects.flagship':          { en: '🏆 Main Project',            pt: '🏆 Projeto Principal' },
+  'projects.flagship.case':     { en: 'Read the full case study',   pt: 'Ler o case study completo' },
+  'projects.flagship.code':     { en: 'View source code',           pt: 'Ver código' },
+  'projects.flagship.tests':    { en: 'backend tests',              pt: 'testes no backend' },
+  'projects.flagship.api':      { en: 'API endpoints',              pt: 'endpoints da API' },
+  'projects.flagship.detect':   { en: 'decision detectors',         pt: 'detetores de decisão' },
+  'projects.flagship.tools':     { en: 'server-side AI tools',      pt: 'ferramentas de IA no servidor' },
   
   // ── Project titles & types ─────────────────────────────────────────────────
   'project.churn.title':     { en: 'Customer Churn & Retention Analytics',    pt: 'Análise de Churn & Retenção de Clientes' },
@@ -102,6 +109,8 @@ const translations = {
   'project.fraudapi.type':   { en: 'MLOps & API Engineering',                 pt: 'Engenharia de MLOps e API'},
   'project.auditai.title': { en: 'Audit AI — Intelligent Compliance', pt: 'Audit AI — Compliance Inteligente' },
   'project.auditai.type':  { en: 'AI & Auditing', pt: 'IA & Auditoria' },
+  'project.decisionos.title': { en: 'DecisionOS — Decision Intelligence Platform', pt: 'DecisionOS — Plataforma de Decision Intelligence' },
+  'project.decisionos.type':  { en: 'Full-Stack Data Product / AI', pt: 'Produto de Dados Full-Stack / IA' },
 
   // ── Skills section ────────────────────────────────────────────────────────
   'skills.heading':          { en: 'Technical',            pt: 'Competências' },

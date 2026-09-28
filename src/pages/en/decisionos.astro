@@ -1,0 +1,270 @@
+---
+import CaseStudyLayout from '../../layouts/en/CaseStudyLayout.astro';
+import archImg from '../../assets/images/decisionos-architecture.png';
+import lifecycleImg from '../../assets/images/decisionos-lifecycle.png';
+
+const metrics = [
+  { icon: '🧪', value: '426',  label: 'Automated Backend Tests' },
+  { icon: '🔌', value: '60+',  label: 'REST API Endpoints' },
+  { icon: '🧭', value: '9',    label: 'Decision Detectors' },
+  { icon: '🤖', value: '23',   label: 'Server-Side AI Tools' }
+];
+
+const stack = ['Node.js', 'Express', 'React', 'PostgreSQL', 'Tailwind CSS', 'Vitest', 'Playwright', 'LLM Tool-Calling'];
+---
+
+<CaseStudyLayout
+  title="DecisionOS — Decision Intelligence Platform"
+  description="A multi-tenant web platform that turns Excel and PostgreSQL data into evidence-backed business decisions, simulates their impact, tracks each one to a measured outcome, and exposes an AI advisor that can only quote numbers the server computed itself."
+  projectType="Full-Stack Data Product / AI / Decision Intelligence"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/DecisionOS"
+  currentLang="en"
+>
+  <section>
+    <h2>🎯 Business Challenge</h2>
+    <p>
+      Most analytics tools stop at the chart. A dashboard tells a manager that margin fell 3 points, but nobody records <strong>what was decided, who owned it, what impact was expected, or whether it actually worked</strong>. At the same time, generic "chat with your data" tools have a subtler flaw: they will happily explain — or even confirm — whatever numbers they were handed, including wrong ones.
+    </p>
+    <p>
+      I built DecisionOS to close that loop end to end. The core challenges were:
+    </p>
+    <ul>
+      <li><strong>Messy Real-World Inputs:</strong> Business spreadsheets rarely have "row 1 = header". They come with title rows, blank lines, Portuguese and English column names, and columns like <em>Amount</em> that could mean revenue, cost or quantity.</li>
+      <li><strong>Trustworthy AI:</strong> An advisor that a client can steer with fabricated numbers is worse than no advisor. The model must never see data the server did not compute.</li>
+      <li><strong>Decisions With Accountability:</strong> Insights are only useful if they become owned, approved, tracked decisions with a measurable result.</li>
+      <li><strong>Multi-Tenant Safety:</strong> One deployment, many organisations, each with strictly isolated data and role-based permissions.</li>
+    </ul>
+    <p><em>DecisionOS is a self-directed project. It was validated on a synthetic demo company ("Nortica Demo S.A.": 14 months of transactions, 5 products, regions and channels, with a deliberately planted churn and margin-decline story) — not on a real customer's data or in a live production environment.</em></p>
+  </section>
+
+  <section>
+    <h2>💡 Solution Architecture</h2>
+    <p>
+      The platform is a Node.js/Express API on PostgreSQL with a React front end. Every stage of the pipeline is a separate module with its own tests, so structure, meaning, analytics, decisions and AI can each be reasoned about — and broken — independently.
+    </p>
+
+    <figure style="margin: 2rem 0;">
+      <img src={archImg.src} alt="DecisionOS system architecture: data sources, Data Understanding engine, unified data model, analytics, decision engine, simulator, AI advisor and decision log" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);" loading="lazy" />
+      <figcaption style="text-align: center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.5rem;">System architecture — from raw files to auditable decisions.</figcaption>
+    </figure>
+
+    <h3>Layers at a Glance</h3>
+    <ul>
+      <li><strong>Ingestion:</strong> Excel/CSV upload with a column-mapping wizard, a guarded connector for a customer's own PostgreSQL, and a separate import path for stock portfolios.</li>
+      <li><strong>Data Understanding Engine:</strong> detects where the table starts and what each column means, with an explicit confidence score.</li>
+      <li><strong>Unified Data Model:</strong> one tenant-scoped PostgreSQL schema (19 tables) — a transactions fact table plus customer, product, region and channel dimensions.</li>
+      <li><strong>Engines:</strong> Analytics, Decision, Simulation and the AI Advisor, all reading from the same analytics object.</li>
+      <li><strong>Decision Log:</strong> the persisted lifecycle of every decision, from proposal to measured outcome.</li>
+    </ul>
+
+    <h3>Request Flow</h3>
+    <pre is:raw><code>Excel / PostgreSQL → Data Understanding → mapping (user-editable) → validation + quality score
+   → async import job → Unified Data Model → Analytics → Decisions / Simulator / Advisor → Decision Log</code></pre>
+  </section>
+
+  <section>
+    <h2>🔍 Data Understanding Engine</h2>
+    <p>
+      The engine treats <em>where the table is</em> and <em>what the columns mean</em> as two separate problems that never mix. Its phases are deliberately ordered:
+    </p>
+    <ul>
+      <li><strong>Structure discovery:</strong> finds the real header row inside a raw sheet, skipping title rows and blank lines.</li>
+      <li><strong>Profiling:</strong> infers each column's data type and distribution.</li>
+      <li><strong>Semantic detection:</strong> scores every column against each semantic type (revenue, customer, product…) using four independent signals — header text (weight 0.40), data type (0.20), value distribution (0.25) and relationships (0.15) — instead of trusting the header alone. Portuguese and English synonyms are both supported.</li>
+      <li><strong>Candidate competition:</strong> the ranked list is kept, not just the winner.</li>
+      <li><strong>Confidence:</strong> a high score alone is not enough — the winner must also beat the runner-up by a margin.</li>
+    </ul>
+
+    <pre is:raw><code>DEFAULT_THRESHOLDS = { auto: 0.95, review: 0.75, minMargin: 0.12 }
+
+Revenue 87% / Cost 84%  → margin  3% → REVIEW  (two plausible readings)
+Revenue 97% / Cost 41%  → margin 56% → AUTO    (unambiguous)</code></pre>
+
+    <p>
+      Low confidence never becomes a silent guess: below the thresholds the wizard asks the user, and generic fallback types (measure, category, identifier) stop a column from ending up as "unknown" just because the vocabulary did not cover its domain.
+    </p>
+
+    <h3>Data Quality Score</h3>
+    <ul>
+      <li>Each import is scored 0–100 with 🔴/🟡/🟢 severities for issues such as missing customer IDs, invalid dates, missing or invalid revenue, and mixed currencies.</li>
+      <li>The report is stored per data source and surfaced in a Data Quality Center page.</li>
+      <li>Refreshing a source <strong>replaces</strong> its transactions instead of appending, so re-imports are idempotent.</li>
+      <li>Imports run through an async job queue (<code>FOR UPDATE SKIP LOCKED</code>) processed by a background worker, so a large file never blocks the API.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🧭 Decision Engine</h2>
+    <p>
+      The engine turns the analytics object into <strong>decision primitives</strong>. It ships nine detectors: revenue decline, margin deterioration, customer risk, product profitability, pricing opportunity, cost leakage, sales anomaly, forecast deviation and working-capital opportunity.
+    </p>
+    <p>Three rules keep it honest:</p>
+    <ul>
+      <li><strong>Every number is traceable:</strong> nothing is invented; each figure comes from something the analytics engine computed on that organisation's own transactions, and each decision carries its evidence.</li>
+      <li><strong>A detector stays silent without enough data</strong> instead of emitting a decision with a hollow confidence score.</li>
+      <li><strong>Confidence is a function, not a constant:</strong> it rewards months of history, transaction volume and a low-volatility signal, and it penalises thin data.</li>
+    </ul>
+
+    <pre is:raw><code>function computeConfidence({ months = 0, transactions = 0, volatility = null }) {
+  let score = 45;
+  if (months >= 12) score += 20; else if (months >= 6) score += 10; else if (months < 3) score -= 20;
+  if (transactions >= 5000) score += 20; else if (transactions >= 1000) score += 10; else if (transactions < 100) score -= 20;
+  if (volatility != null) {
+    if (volatility < 0.15) score += 15; else if (volatility < 0.3) score += 5; else score -= 15;
+  }
+  return Math.max(5, Math.min(96, Math.round(score)));   // deliberately never 100%
+}</code></pre>
+
+    <h3>One Anomaly Implementation, Shared</h3>
+    <p>
+      Sales anomalies and forecast deviations use one method: fit an ordinary-least-squares trend to the monthly series and flag months whose actual value sits more than a z-threshold of residual standard deviations away from that trend. The same function backs the AI advisor's <code>find_anomalies</code> tool, so <strong>a decision on the feed and an answer from the advisor about the same month can never disagree</strong>.
+    </p>
+  </section>
+
+  <section>
+    <h2>🧪 Simulator & Portfolio Risk</h2>
+    <h3>Business Scenarios</h3>
+    <ul>
+      <li>What-if levers for price, marketing spend, churn, cost and volume, plus "discontinue this product".</li>
+      <li>Every scenario returns its assumptions and a risk label derived from the months of history and the series volatility.</li>
+      <li>Ranges are presented as estimates — never labelled as a statistical confidence interval.</li>
+    </ul>
+
+    <h3>Stock Portfolio Module</h3>
+    <ul>
+      <li>Import of holdings and price history, concentration alerts (single-position limit and a Herfindahl-style HHI) and a sell-position simulator with a value-at-risk block.</li>
+      <li>Risk metrics return <em>"insufficient data"</em> below a minimum number of daily return observations (60 by default) instead of computing a statistically meaningless number.</li>
+      <li>The advisor is instructed to describe risk and scenarios, never to recommend buying or selling, and to append a not-financial-advice notice.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📋 Decision Lifecycle</h2>
+    <p>
+      The Decision Engine recomputes fresh from current data on every call (detect and explain). The Decision Log is a separate, persisted record of what was <em>actually</em> decided (decide, act and measure).
+    </p>
+
+    <figure style="margin: 2rem 0;">
+      <img src={lifecycleImg.src} alt="DecisionOS decision lifecycle from detection to measured outcome, with the seven decision statuses" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);" loading="lazy" />
+      <figcaption style="text-align: center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.5rem;">A decision keeps its evidence, its owner and its result.</figcaption>
+    </figure>
+
+    <ul>
+      <li><strong>Statuses:</strong> proposed → pending approval → approved → in progress → completed → archived, with a rejected branch. Every transition is written to the audit log.</li>
+      <li><strong>Role-gated approval:</strong> approving, rejecting, reassigning an owner and recording an outcome require the manager role or higher.</li>
+      <li><strong>Expected vs. actual:</strong> the expected impact range is frozen at creation, then compared against the recorded outcome as a variance.</li>
+      <li><strong>No fake ROI:</strong> ROI is computed only once a real outcome exists — never estimated or back-filled from the expected impact.</li>
+      <li><strong>Automated measurement:</strong> for revenue and gross-profit decisions, a background loop compares a baseline window (captured when the decision moved to in progress) against an equal-length window after the measurement period. It never overwrites a manual outcome, measures each decision only once, and writes a note on every result that this is a before/after delta — <strong>not a causal claim</strong>.</li>
+      <li><strong>Derived notifications:</strong> the bell in the header stores nothing except what was read; every alert (pending approvals, failed imports, poor data quality, concentrated portfolio…) is derived on request from current data, so it disappears by itself once the reason is gone.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🤖 AI Advisor — Guardrails by Design</h2>
+    <p>
+      The advisor runs a tool-calling loop on the server. The browser sends only a question; <strong>the server computes analytics from the authenticated organisation's own data</strong> and gives the model 23 tools to query it (overview, revenue, profit, period comparison, products, regions, channels, customers, profit leaks, forecasts, six simulators, anomalies, portfolio and decisions).
+    </p>
+    <pre is:raw><code>app.post("/api/advisor", requireAuth, aiLimiter, async (req, res) => {
+  const analytics = await computeAnalyticsForOrg(req.user.orgId, filters);  // never from the client
+  for (let round = 0; round < maxRounds; round++) {
+    const msg = await chatCompletion({ system, messages, tools: AI_TOOLS_SCHEMA });
+    if (!msg.tool_calls?.length) return res.json({ text: msg.content });
+    // run each tool against server-side analytics, feed results back
+  }
+});</code></pre>
+    <ul>
+      <li><strong>No client-supplied numbers:</strong> an earlier design accepted an analytics payload from the browser. Removing it means nobody can get the model to "confirm" fabricated figures — it is never given the chance to receive any.</li>
+      <li><strong>Server-enforced rules:</strong> portfolio guardrails are appended to the system prompt on the server so they cannot be dropped by whoever calls the endpoint.</li>
+      <li><strong>Cost and abuse control:</strong> a bounded number of tool rounds and a stricter per-user rate limit on AI routes.</li>
+      <li><strong>Provider-agnostic:</strong> a small client for any OpenAI-compatible API (Groq by default, or OpenRouter, Cerebras, Ollama), converting the tool schema on the way out.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🔐 Multi-Tenancy & Security</h2>
+    <ul>
+      <li><strong>Tenant isolation:</strong> the organisation ID comes only from the verified JWT, never from a request body, and scopes every query.</li>
+      <li><strong>Role hierarchy:</strong> <code>viewer &lt; manager &lt; finance &lt; admin &lt; owner</code>, enforced per route with a small <code>requireMinRole()</code> middleware.</li>
+      <li><strong>Session revocation on stateless JWTs:</strong> deactivating a user or changing a password or role invalidates tokens issued before that moment, checked synchronously from a small in-memory registry so no route pays a database round trip.</li>
+      <li><strong>Password policy that tells the truth:</strong> bcrypt only reads the first 72 bytes, so longer passwords are rejected rather than silently truncated.</li>
+      <li><strong>Encrypted credentials:</strong> connector passwords are stored with AES-256-GCM using a dedicated key, never reused from the JWT or LLM secrets.</li>
+      <li><strong>SSRF guard:</strong> the database connector resolves the host once, blocks loopback, private, link-local and cloud-metadata ranges, then connects to the already-validated IP — which defeats DNS rebinding. Schema and table names are validated against <code>information_schema</code> before being used as quoted identifiers.</li>
+      <li><strong>Abuse controls:</strong> general and AI-specific rate limits, a CORS allow-list and an audit log on user, data-source and decision changes.</li>
+    </ul>
+    <pre is:raw><code>export function requireMinRole(minRole) {
+  const minRank = ROLE_RANK[minRole];
+  return (req, res, next) => {
+    const rank = ROLE_RANK[req.user?.role];
+    if (rank == null || rank &lt; minRank) return res.status(403).json({ error: `requires role '${minRole}' or higher` });
+    next();
+  };
+}</code></pre>
+  </section>
+
+  <section>
+    <h2>✅ Engineering Quality</h2>
+    <ul>
+      <li><strong>426 backend tests in 34 files</strong> (Vitest + Supertest), all passing. Several route tests run against PGlite, a real Postgres engine compiled to WASM, so genuine SQL is exercised rather than mocked.</li>
+      <li><strong>18 front-end test files</strong> (Vitest + Testing Library) covering components, pages and helpers.</li>
+      <li><strong>A Playwright end-to-end spec</strong> drives the full flow: register, import a dataset, watch the async job land, then analytics, a decision, the advisor and the simulator against a real stack.</li>
+      <li><strong>Dependency hygiene:</strong> an audit flagged the <code>xlsx</code> package on npm (stale, with known prototype-pollution and ReDoS issues). I moved it to the maintainers' official build (SheetJS 0.20.x), which is where fixed releases are now published.</li>
+      <li><strong>Documented limits:</strong> both READMEs say plainly what is not built, instead of implying completeness.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lessons Learned</h2>
+
+    <h3>What Worked</h3>
+    <ul>
+      <li><strong>One source of truth for numbers:</strong> having the Decision Engine, simulators and advisor all consume the same analytics object removed a whole class of "the AI said X but the dashboard says Y" bugs.</li>
+      <li><strong>Separating structure from meaning:</strong> splitting "where is the table" from "what is this column" made each phase testable in isolation.</li>
+      <li><strong>Refusing to guess:</strong> returning "insufficient data", a review flag or a capped confidence score builds more trust than a confident-looking number on thin evidence.</li>
+    </ul>
+
+    <h3>Challenges Overcome</h3>
+    <ul>
+      <li><strong>Ambiguous columns:</strong> a high absolute score for "Total = revenue" was not enough; adding the margin over the runner-up is what separated real confidence from coincidence.</li>
+      <li><strong>Revocation without a session table:</strong> comparing a token's issued-at time with a per-user "valid after" timestamp allowed instant sign-out without a database call on every request.</li>
+      <li><strong>Language-agnostic notifications:</strong> the backend sends a stable kind plus raw values, and the browser builds the sentence from the language dictionary, so alerts follow the PT/EN switch.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>⚠️ Scope & Honest Limitations</h2>
+    <ul>
+      <li><strong>Not validated on real customers:</strong> the results come from a synthetic demo company; no claim is made about business impact in production.</li>
+      <li><strong>Simple forecasting:</strong> the forecast is a linear trend (OLS) with no seasonality, adequate for a first signal but not for seasonal businesses.</li>
+      <li><strong>Single-instance state:</strong> the session registry and upload staging live in process memory, so the API should run as one instance until they move to Redis.</li>
+      <li><strong>Token in localStorage:</strong> convenient, but exposed to XSS; an httpOnly cookie would be safer.</li>
+      <li><strong>Measurement is correlational:</strong> automated outcomes are plain before/after deltas and say so on every record.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Future Enhancements</h2>
+    <ul>
+      <li><strong>Shared state:</strong> move sessions and import staging to Redis so the API can scale horizontally.</li>
+      <li><strong>Safer sessions:</strong> httpOnly cookies with CSRF protection instead of a token in localStorage.</li>
+      <li><strong>Server-owned prompts:</strong> build the advisor's system prompt entirely on the server rather than accepting it from the client.</li>
+      <li><strong>Better forecasting:</strong> add seasonality-aware models (e.g. Holt-Winters or ETS) and backtest them against the linear baseline.</li>
+      <li><strong>More sources:</strong> MySQL and SQL Server connectors, plus one-click auto-fix for common data-quality issues.</li>
+      <li><strong>Real-world validation:</strong> pilot with a small business's data to test whether the detectors and measured outcomes hold up outside a synthetic dataset.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Technical Stack Deep Dive</h2>
+    <ul>
+      <li><strong>Node.js + Express:</strong> API with async error handling, rate limiting (<code>express-rate-limit</code>), CORS allow-list and multipart uploads (<code>multer</code>).</li>
+      <li><strong>PostgreSQL:</strong> tenant-scoped schema, a jobs table for the async queue, an audit log and encrypted connection configs; PGlite for tests.</li>
+      <li><strong>React 18 + Vite + Tailwind CSS:</strong> multi-page dashboard, Recharts visualisations, a PT/EN dictionary and light/dark themes.</li>
+      <li><strong>Auth:</strong> <code>jsonwebtoken</code> with <code>bcryptjs</code>, role hierarchy and a revocation registry.</li>
+      <li><strong>SheetJS:</strong> parsing and exporting Excel/CSV files.</li>
+      <li><strong>LLM tool-calling:</strong> a provider-agnostic OpenAI-compatible client with a 23-tool schema executed server-side.</li>
+      <li><strong>Vitest, Supertest, Testing Library, Playwright:</strong> unit, route, component and end-to-end testing.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

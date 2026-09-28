@@ -1,0 +1,270 @@
+---
+import CaseStudyLayout from '../../layouts/pt/CaseStudyLayout.astro';
+import archImg from '../../assets/images/decisionos-architecture.png';
+import lifecycleImg from '../../assets/images/decisionos-lifecycle.png';
+
+const metrics = [
+  { icon: '🧪', value: '426',  label: 'Testes Automáticos no Backend' },
+  { icon: '🔌', value: '60+',  label: 'Endpoints da API REST' },
+  { icon: '🧭', value: '9',    label: 'Detetores de Decisão' },
+  { icon: '🤖', value: '23',   label: 'Ferramentas de IA no Servidor' }
+];
+
+const stack = ['Node.js', 'Express', 'React', 'PostgreSQL', 'Tailwind CSS', 'Vitest', 'Playwright', 'LLM Tool-Calling'];
+---
+
+<CaseStudyLayout
+  title="DecisionOS — Plataforma de Decision Intelligence"
+  description="Plataforma web multi-tenant que transforma dados de Excel e PostgreSQL em decisões de negócio baseadas em evidência, simula o seu impacto, acompanha cada uma até um resultado medido e disponibiliza um assistente de IA que só pode citar números calculados pelo próprio servidor."
+  projectType="Produto de Dados Full-Stack / IA / Decision Intelligence"
+  stack={stack}
+  metrics={metrics}
+  githubUrl="https://github.com/jose-galvao13/DecisionOS"
+  currentLang="pt"
+>
+  <section>
+    <h2>🎯 Desafio de Negócio</h2>
+    <p>
+      A maioria das ferramentas de analítica fica-se pelo gráfico. Um dashboard diz ao gestor que a margem caiu 3 pontos, mas ninguém regista <strong>o que foi decidido, quem ficou responsável, que impacto se esperava, nem se realmente funcionou</strong>. Ao mesmo tempo, as ferramentas genéricas de "conversar com os dados" têm uma falha mais subtil: explicam — ou até confirmam — quaisquer números que lhes entreguem, incluindo números errados.
+    </p>
+    <p>
+      Construí o DecisionOS para fechar este ciclo de ponta a ponta. Os principais desafios foram:
+    </p>
+    <ul>
+      <li><strong>Dados Reais e Desarrumados:</strong> as folhas de cálculo de negócio raramente têm "linha 1 = cabeçalho". Trazem linhas de título, linhas em branco, colunas em português e inglês, e colunas como <em>Valor</em> que tanto podem ser receita, custo ou quantidade.</li>
+      <li><strong>IA de Confiança:</strong> um assistente que um cliente consegue manipular com números inventados é pior do que não ter assistente. O modelo nunca deve ver dados que o servidor não calculou.</li>
+      <li><strong>Decisões com Responsabilização:</strong> os insights só servem se se transformarem em decisões com dono, aprovação, acompanhamento e resultado mensurável.</li>
+      <li><strong>Segurança Multi-Tenant:</strong> uma instalação, várias organizações, cada uma com dados rigorosamente isolados e permissões por papel.</li>
+    </ul>
+    <p><em>O DecisionOS é um projeto de estudo pessoal. Foi validado numa empresa de demonstração sintética ("Nortica Demo S.A.": 14 meses de transações, 5 produtos, regiões e canais, com uma história de churn e queda de margem plantada de propósito) — não em dados reais de um cliente nem num ambiente de produção.</em></p>
+  </section>
+
+  <section>
+    <h2>💡 Arquitetura da Solução</h2>
+    <p>
+      A plataforma é uma API Node.js/Express sobre PostgreSQL com um front end em React. Cada fase do pipeline é um módulo separado, com testes próprios, por isso estrutura, significado, analítica, decisões e IA podem ser analisados — e quebrados — de forma independente.
+    </p>
+
+    <figure style="margin: 2rem 0;">
+      <img src={archImg.src} alt="Arquitetura do DecisionOS: fontes de dados, motor de Data Understanding, modelo de dados unificado, analítica, motor de decisões, simulador, assistente de IA e registo de decisões" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);" loading="lazy" />
+      <figcaption style="text-align: center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.5rem;">Arquitetura do sistema — dos ficheiros em bruto a decisões auditáveis.</figcaption>
+    </figure>
+
+    <h3>As Camadas em Resumo</h3>
+    <ul>
+      <li><strong>Ingestão:</strong> upload de Excel/CSV com assistente de mapeamento de colunas, um conector protegido para a base PostgreSQL do próprio cliente e um circuito de importação separado para carteiras de ações.</li>
+      <li><strong>Data Understanding Engine:</strong> deteta onde a tabela começa e o que significa cada coluna, com um score de confiança explícito.</li>
+      <li><strong>Modelo de Dados Unificado:</strong> um esquema PostgreSQL único e isolado por organização (19 tabelas) — uma tabela de factos de transações mais dimensões de clientes, produtos, regiões e canais.</li>
+      <li><strong>Motores:</strong> Analítica, Decisões, Simulação e o Assistente de IA, todos a ler do mesmo objeto de analítica.</li>
+      <li><strong>Registo de Decisões:</strong> o ciclo de vida persistido de cada decisão, da proposta ao resultado medido.</li>
+    </ul>
+
+    <h3>Fluxo do Pedido</h3>
+    <pre is:raw><code>Excel / PostgreSQL → Data Understanding → mapeamento (editável) → validação + score de qualidade
+   → job de importação assíncrono → Modelo Unificado → Analítica → Decisões / Simulador / Assistente → Registo de Decisões</code></pre>
+  </section>
+
+  <section>
+    <h2>🔍 Data Understanding Engine</h2>
+    <p>
+      O motor trata <em>onde está a tabela</em> e <em>o que significam as colunas</em> como dois problemas distintos que nunca se misturam. As fases estão deliberadamente ordenadas:
+    </p>
+    <ul>
+      <li><strong>Descoberta de estrutura:</strong> encontra a verdadeira linha de cabeçalho dentro de uma folha em bruto, ignorando linhas de título e linhas em branco.</li>
+      <li><strong>Profiling:</strong> infere o tipo de dados e a distribuição de cada coluna.</li>
+      <li><strong>Deteção semântica:</strong> pontua cada coluna face a cada tipo semântico (receita, cliente, produto…) com quatro sinais independentes — texto do cabeçalho (peso 0,40), tipo de dados (0,20), distribuição dos valores (0,25) e relações (0,15) — em vez de confiar apenas no nome. São suportados sinónimos em português e inglês.</li>
+      <li><strong>Competição de candidatos:</strong> a lista ordenada é mantida, não apenas o vencedor.</li>
+      <li><strong>Confiança:</strong> um score alto não basta — o vencedor tem também de superar o segundo classificado por uma margem.</li>
+    </ul>
+
+    <pre is:raw><code>DEFAULT_THRESHOLDS = { auto: 0.95, review: 0.75, minMargin: 0.12 }
+
+Receita 87% / Custo 84%  → margem  3% → REVIEW  (duas leituras plausíveis)
+Receita 97% / Custo 41%  → margem 56% → AUTO    (sem ambiguidade)</code></pre>
+
+    <p>
+      A baixa confiança nunca se transforma num palpite silencioso: abaixo dos limiares, o assistente pergunta ao utilizador, e tipos genéricos de reserva (medida, categoria, identificador) evitam que uma coluna fique "desconhecida" só porque o vocabulário não cobria o seu domínio.
+    </p>
+
+    <h3>Score de Qualidade de Dados</h3>
+    <ul>
+      <li>Cada importação recebe um score de 0 a 100 com gravidades 🔴/🟡/🟢 para problemas como IDs de cliente em falta, datas inválidas, receita em falta ou inválida e moedas misturadas.</li>
+      <li>O relatório fica guardado por fonte de dados e é apresentado num Centro de Qualidade de Dados.</li>
+      <li>Atualizar uma fonte <strong>substitui</strong> as suas transações em vez de acrescentar, por isso as reimportações são idempotentes.</li>
+      <li>As importações passam por uma fila de jobs assíncrona (<code>FOR UPDATE SKIP LOCKED</code>) processada por um worker em segundo plano, pelo que um ficheiro grande nunca bloqueia a API.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🧭 Motor de Decisões</h2>
+    <p>
+      O motor transforma o objeto de analítica em <strong>primitivas de decisão</strong>. Inclui nove detetores: queda de receita, deterioração da margem, risco de clientes, rentabilidade de produtos, oportunidade de preço, fuga de custos, anomalia de vendas, desvio face à previsão e oportunidade de fundo de maneio.
+    </p>
+    <p>Três regras mantêm-no honesto:</p>
+    <ul>
+      <li><strong>Todos os números são rastreáveis:</strong> nada é inventado; cada valor vem de algo que o motor de analítica calculou sobre as transações da própria organização, e cada decisão traz a sua evidência.</li>
+      <li><strong>Um detetor fica em silêncio sem dados suficientes</strong> em vez de emitir uma decisão com uma confiança vazia.</li>
+      <li><strong>A confiança é uma função, não uma constante:</strong> premeia meses de histórico, volume de transações e um sinal pouco volátil, e penaliza dados escassos.</li>
+    </ul>
+
+    <pre is:raw><code>function computeConfidence({ months = 0, transactions = 0, volatility = null }) {
+  let score = 45;
+  if (months >= 12) score += 20; else if (months >= 6) score += 10; else if (months < 3) score -= 20;
+  if (transactions >= 5000) score += 20; else if (transactions >= 1000) score += 10; else if (transactions < 100) score -= 20;
+  if (volatility != null) {
+    if (volatility < 0.15) score += 15; else if (volatility < 0.3) score += 5; else score -= 15;
+  }
+  return Math.max(5, Math.min(96, Math.round(score)));   // deliberadamente nunca 100%
+}</code></pre>
+
+    <h3>Uma Só Implementação de Anomalias, Partilhada</h3>
+    <p>
+      As anomalias de vendas e os desvios face à previsão usam o mesmo método: ajustar uma tendência de mínimos quadrados (OLS) à série mensal e assinalar os meses cujo valor real esteja a mais do que um limiar de desvios-padrão dos resíduos face a essa tendência. A mesma função alimenta a ferramenta <code>find_anomalies</code> do assistente de IA, por isso <strong>uma decisão no feed e uma resposta do assistente sobre o mesmo mês nunca podem contradizer-se</strong>.
+    </p>
+  </section>
+
+  <section>
+    <h2>🧪 Simulador e Risco de Carteira</h2>
+    <h3>Cenários de Negócio</h3>
+    <ul>
+      <li>Alavancas "e se…" para preço, investimento em marketing, churn, custo e volume, mais "descontinuar este produto".</li>
+      <li>Cada cenário devolve os seus pressupostos e uma etiqueta de risco derivada dos meses de histórico e da volatilidade da série.</li>
+      <li>Os intervalos são apresentados como estimativas — nunca rotulados como intervalo de confiança estatístico.</li>
+    </ul>
+
+    <h3>Módulo de Carteira de Ações</h3>
+    <ul>
+      <li>Importação de posições e histórico de preços, alertas de concentração (limite por posição e um índice HHI, do tipo Herfindahl) e um simulador de venda de posição com bloco de value-at-risk.</li>
+      <li>As métricas de risco devolvem <em>"dados insuficientes"</em> abaixo de um número mínimo de observações de retornos diários (60 por defeito) em vez de calcular um número estatisticamente sem significado.</li>
+      <li>O assistente tem instruções para descrever risco e cenários, nunca recomendar comprar ou vender, e acrescentar um aviso de que não constitui aconselhamento financeiro.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📋 Ciclo de Vida da Decisão</h2>
+    <p>
+      O Motor de Decisões recalcula de raiz, a partir dos dados atuais, em cada chamada (detetar e explicar). O Registo de Decisões é um registo separado e persistido do que foi <em>realmente</em> decidido (decidir, agir e medir).
+    </p>
+
+    <figure style="margin: 2rem 0;">
+      <img src={lifecycleImg.src} alt="Ciclo de vida de uma decisão no DecisionOS, da deteção ao resultado medido, com os sete estados de decisão" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);" loading="lazy" />
+      <figcaption style="text-align: center; font-size: 0.85rem; opacity: 0.7; margin-top: 0.5rem;">Uma decisão mantém a sua evidência, o seu responsável e o seu resultado.</figcaption>
+    </figure>
+
+    <ul>
+      <li><strong>Estados:</strong> proposta → pendente de aprovação → aprovada → em curso → concluída → arquivada, com um ramo de rejeição. Cada transição fica escrita no audit log.</li>
+      <li><strong>Aprovação por papel:</strong> aprovar, rejeitar, reatribuir responsável e registar um resultado exigem o papel de manager ou superior.</li>
+      <li><strong>Esperado vs. real:</strong> o intervalo de impacto esperado é congelado na criação e depois comparado com o resultado registado, como variância.</li>
+      <li><strong>Sem ROI inventado:</strong> o ROI só é calculado quando existe um resultado real — nunca estimado nem preenchido retroativamente a partir do impacto esperado.</li>
+      <li><strong>Medição automática:</strong> para decisões de receita e lucro bruto, um ciclo em segundo plano compara uma janela de referência (capturada quando a decisão passou a "em curso") com uma janela do mesmo tamanho depois do período de medição. Nunca sobrescreve um resultado manual, mede cada decisão apenas uma vez e escreve em cada resultado uma nota a dizer que é uma variação antes/depois — <strong>não uma afirmação de causalidade</strong>.</li>
+      <li><strong>Notificações derivadas:</strong> o sino no cabeçalho não guarda nada além do que foi lido; cada alerta (aprovações pendentes, importações falhadas, má qualidade de dados, carteira concentrada…) é derivado a pedido a partir dos dados atuais, e desaparece sozinho quando a razão deixa de existir.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🤖 Assistente de IA — Salvaguardas por Design</h2>
+    <p>
+      O assistente corre um ciclo de tool-calling no servidor. O browser envia apenas uma pergunta; <strong>o servidor calcula a analítica a partir dos dados da organização autenticada</strong> e dá ao modelo 23 ferramentas para os consultar (visão geral, receita, lucro, comparação de períodos, produtos, regiões, canais, clientes, fugas de lucro, previsões, seis simuladores, anomalias, carteira e decisões).
+    </p>
+    <pre is:raw><code>app.post("/api/advisor", requireAuth, aiLimiter, async (req, res) => {
+  const analytics = await computeAnalyticsForOrg(req.user.orgId, filters);  // nunca vem do cliente
+  for (let round = 0; round < maxRounds; round++) {
+    const msg = await chatCompletion({ system, messages, tools: AI_TOOLS_SCHEMA });
+    if (!msg.tool_calls?.length) return res.json({ text: msg.content });
+    // executa cada ferramenta sobre a analítica do servidor e devolve os resultados ao modelo
+  }
+});</code></pre>
+    <ul>
+      <li><strong>Sem números fornecidos pelo cliente:</strong> um desenho anterior aceitava um payload de analítica vindo do browser. Removê-lo significa que ninguém consegue fazer o modelo "confirmar" valores inventados — nunca lhe é dada essa possibilidade.</li>
+      <li><strong>Regras aplicadas no servidor:</strong> as salvaguardas de carteira são acrescentadas ao prompt de sistema no servidor, para não poderem ser retiradas por quem chama o endpoint.</li>
+      <li><strong>Controlo de custo e abuso:</strong> número limitado de rondas de ferramentas e um rate limit por utilizador mais apertado nas rotas de IA.</li>
+      <li><strong>Agnóstico ao fornecedor:</strong> um pequeno cliente para qualquer API compatível com OpenAI (Groq por defeito, ou OpenRouter, Cerebras, Ollama), que converte o esquema de ferramentas à saída.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🔐 Multi-Tenancy e Segurança</h2>
+    <ul>
+      <li><strong>Isolamento entre organizações:</strong> o ID da organização vem apenas do JWT verificado, nunca do corpo do pedido, e delimita todas as queries.</li>
+      <li><strong>Hierarquia de papéis:</strong> <code>viewer &lt; manager &lt; finance &lt; admin &lt; owner</code>, aplicada por rota com um pequeno middleware <code>requireMinRole()</code>.</li>
+      <li><strong>Revogação de sessões com JWTs sem estado:</strong> desativar um utilizador ou mudar a password ou o papel invalida os tokens emitidos antes desse momento, verificado de forma síncrona num pequeno registo em memória, para nenhuma rota pagar uma ida à base de dados.</li>
+      <li><strong>Política de passwords que diz a verdade:</strong> o bcrypt só lê os primeiros 72 bytes, por isso passwords mais longas são rejeitadas em vez de truncadas em silêncio.</li>
+      <li><strong>Credenciais cifradas:</strong> as passwords dos conectores são guardadas com AES-256-GCM, usando uma chave dedicada, nunca reutilizada dos segredos do JWT ou do LLM.</li>
+      <li><strong>Proteção contra SSRF:</strong> o conector de base de dados resolve o host uma só vez, bloqueia intervalos de loopback, privados, link-local e de metadados cloud, e liga-se depois ao IP já validado — o que derrota o DNS rebinding. Os nomes de schemas e tabelas são validados contra o <code>information_schema</code> antes de serem usados como identificadores entre aspas.</li>
+      <li><strong>Controlo de abuso:</strong> rate limits gerais e específicos de IA, uma lista de origens CORS permitidas e um audit log nas alterações a utilizadores, fontes de dados e decisões.</li>
+    </ul>
+    <pre is:raw><code>export function requireMinRole(minRole) {
+  const minRank = ROLE_RANK[minRole];
+  return (req, res, next) => {
+    const rank = ROLE_RANK[req.user?.role];
+    if (rank == null || rank &lt; minRank) return res.status(403).json({ error: `requires role '${minRole}' or higher` });
+    next();
+  };
+}</code></pre>
+  </section>
+
+  <section>
+    <h2>✅ Qualidade de Engenharia</h2>
+    <ul>
+      <li><strong>426 testes no backend, em 34 ficheiros</strong> (Vitest + Supertest), todos a passar. Vários testes de rotas correm sobre o PGlite, um motor Postgres real compilado para WASM, pelo que é SQL genuíno que é exercitado, e não simulado.</li>
+      <li><strong>18 ficheiros de teste no front end</strong> (Vitest + Testing Library) que cobrem componentes, páginas e funções auxiliares.</li>
+      <li><strong>Um teste end-to-end em Playwright</strong> percorre o fluxo completo: registo, importação de um dataset, ver o job assíncrono terminar, e depois analítica, uma decisão, o assistente e o simulador, contra uma stack real.</li>
+      <li><strong>Higiene de dependências:</strong> uma auditoria assinalou o pacote <code>xlsx</code> no npm (desatualizado, com falhas conhecidas de prototype pollution e ReDoS). Migrei-o para a build oficial dos autores (SheetJS 0.20.x), que é onde agora são publicadas as versões corrigidas.</li>
+      <li><strong>Limites documentados:</strong> ambos os READMEs dizem com clareza o que não está feito, em vez de sugerirem que está tudo completo.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎓 Lições Aprendidas</h2>
+
+    <h3>O que Funcionou</h3>
+    <ul>
+      <li><strong>Uma única fonte de verdade para os números:</strong> ter o Motor de Decisões, os simuladores e o assistente a consumir o mesmo objeto de analítica eliminou toda uma classe de erros do tipo "a IA disse X mas o dashboard diz Y".</li>
+      <li><strong>Separar estrutura de significado:</strong> dividir "onde está a tabela" de "o que é esta coluna" tornou cada fase testável isoladamente.</li>
+      <li><strong>Recusar adivinhar:</strong> devolver "dados insuficientes", uma marca de revisão ou uma confiança limitada gera mais confiança do que um número com ar seguro assente em pouca evidência.</li>
+    </ul>
+
+    <h3>Desafios Ultrapassados</h3>
+    <ul>
+      <li><strong>Colunas ambíguas:</strong> um score absoluto alto para "Total = receita" não chegava; foi acrescentar a margem sobre o segundo candidato que separou a confiança real da coincidência.</li>
+      <li><strong>Revogação sem tabela de sessões:</strong> comparar a hora de emissão de um token com um instante "válido a partir de" por utilizador permitiu terminar sessões de imediato sem uma chamada à base de dados em cada pedido.</li>
+      <li><strong>Notificações independentes do idioma:</strong> o backend envia um tipo estável mais os valores em bruto, e o browser constrói a frase a partir do dicionário de idiomas, por isso os alertas acompanham a troca PT/EN.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>⚠️ Âmbito e Limitações</h2>
+    <ul>
+      <li><strong>Não validado com clientes reais:</strong> os resultados vêm de uma empresa de demonstração sintética; não é feita qualquer afirmação sobre impacto de negócio em produção.</li>
+      <li><strong>Previsão simples:</strong> a previsão é uma tendência linear (OLS) sem sazonalidade, adequada como primeiro sinal mas não para negócios sazonais.</li>
+      <li><strong>Estado numa só instância:</strong> o registo de sessões e o staging de uploads vivem na memória do processo, por isso a API deve correr como uma única instância até estes passarem para Redis.</li>
+      <li><strong>Token no localStorage:</strong> conveniente, mas exposto a XSS; um cookie httpOnly seria mais seguro.</li>
+      <li><strong>A medição é correlacional:</strong> os resultados automáticos são simples variações antes/depois e dizem-no em cada registo.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🚀 Melhorias Futuras</h2>
+    <ul>
+      <li><strong>Estado partilhado:</strong> mover sessões e staging de importações para Redis, para a API poder escalar horizontalmente.</li>
+      <li><strong>Sessões mais seguras:</strong> cookies httpOnly com proteção CSRF em vez de um token no localStorage.</li>
+      <li><strong>Prompts geridos pelo servidor:</strong> construir o prompt de sistema do assistente inteiramente no servidor, em vez de o aceitar do cliente.</li>
+      <li><strong>Melhor previsão:</strong> acrescentar modelos com sazonalidade (por ex. Holt-Winters ou ETS) e fazer backtest face à base linear.</li>
+      <li><strong>Mais fontes:</strong> conectores MySQL e SQL Server, e correção automática de problemas comuns de qualidade de dados.</li>
+      <li><strong>Validação no mundo real:</strong> piloto com dados de uma pequena empresa para testar se os detetores e os resultados medidos se aguentam fora de um dataset sintético.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📚 Stack Técnica em Detalhe</h2>
+    <ul>
+      <li><strong>Node.js + Express:</strong> API com tratamento assíncrono de erros, rate limiting (<code>express-rate-limit</code>), lista CORS de origens permitidas e uploads multipart (<code>multer</code>).</li>
+      <li><strong>PostgreSQL:</strong> esquema isolado por organização, uma tabela de jobs para a fila assíncrona, audit log e configurações de ligação cifradas; PGlite para os testes.</li>
+      <li><strong>React 18 + Vite + Tailwind CSS:</strong> dashboard multi-página, visualizações com Recharts, dicionário PT/EN e temas claro/escuro.</li>
+      <li><strong>Autenticação:</strong> <code>jsonwebtoken</code> com <code>bcryptjs</code>, hierarquia de papéis e registo de revogação.</li>
+      <li><strong>SheetJS:</strong> leitura e exportação de ficheiros Excel/CSV.</li>
+      <li><strong>LLM tool-calling:</strong> cliente compatível com OpenAI e agnóstico ao fornecedor, com um esquema de 23 ferramentas executadas no servidor.</li>
+      <li><strong>Vitest, Supertest, Testing Library, Playwright:</strong> testes unitários, de rotas, de componentes e end-to-end.</li>
+    </ul>
+  </section>
+</CaseStudyLayout>

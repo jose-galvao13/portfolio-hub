@@ -7,8 +7,15 @@
 
   const currentYear = new Date().getFullYear();
   const allProjects  = getProjects(import.meta.env.BASE_URL);
+  // O projeto principal (DecisionOS) é o único 'featured'; os restantes ficam em "Mostrar mais".
   const featuredProjects = allProjects.filter(p => p.featured);
   const otherProjects    = allProjects.filter(p => !p.featured);
+  const mainProjectStats = [
+    { value: '426', label: 'backend tests', key: 'projects.flagship.tests' },
+    { value: '60+', label: 'API endpoints', key: 'projects.flagship.api' },
+    { value: '9', label: 'decision detectors', key: 'projects.flagship.detect' },
+    { value: '23', label: 'server-side AI tools', key: 'projects.flagship.tools' },
+  ];
   ---
 
   <!-- Google tag (gtag.js) -->
@@ -76,6 +83,8 @@
 
 
 
+
+
     <!-- FEATURED PROJECTS SECTION -->
     <section id="portfolio" class="projects-section">
       <div class="container">
@@ -114,6 +123,10 @@
               complexity={project.complexity}
               businessImpact={project.businessImpact}
               dataSection="featured"
+              wide={project.id === 'decisionos'}
+              badge="🏆 Main Project"
+              badgeKey="projects.flagship"
+              stats={mainProjectStats}
               category={project.category} 
             />
           ))}
@@ -644,14 +657,14 @@ if (filterSelect) filterSelect.addEventListener('change', updateProjects);
       featuredGrid.querySelectorAll('.glass-project-card').forEach(card => {
         const skills = Array.from(card.querySelectorAll('.tech-tag')).map(t => t.textContent.trim());
         const isMatch = skills.includes(selectedSkill);
-        card.style.display = isMatch ? 'block' : 'none';
+        card.style.display = isMatch ? '' : 'none';
         card.style.opacity = isMatch ? '1' : '0';
       });
     } else {
       originalOtherCards.forEach(card => otherGrid.appendChild(card));
 
       document.querySelectorAll('.glass-project-card').forEach(card => {
-        card.style.display = 'block';
+        card.style.display = '';
         card.style.opacity = '1';
       });
 

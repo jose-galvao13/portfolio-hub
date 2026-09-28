@@ -15,13 +15,17 @@ interface Props {
   complexity?: string;
   businessImpact?: string;
   dataSection?: 'featured' | 'other';
+  wide?: boolean;
+  badge?: string;
+  badgeKey?: string;
+  stats?: { value: string; label: string; key?: string }[];
   category?: string | string[];
 }
 
 const {
   title, type, desc, stack, linkRepo, linkDemo,
   caseStudy, images, imageAlts, id,
-  complexity, businessImpact, dataSection, category,
+  complexity, businessImpact, dataSection, wide = false, badge, badgeKey, stats, category,
 } = Astro.props;
 
 const currentLocale = 'pt';
@@ -55,7 +59,7 @@ function getAlt(index: number): string {
 ---
 
 <div
-  class="glass-project-card reveal-stagger"
+  class:list={['glass-project-card', 'reveal-stagger', { 'is-wide': wide }]}
   id={id}
   data-section={dataSection}
   data-category={Array.isArray(category) ? category.join(',') : (category ?? '')}
@@ -97,16 +101,47 @@ function getAlt(index: number): string {
     )}
 
     <div class="visual-overlay" aria-hidden="true"></div>
+
+
+    {wide && images.length > 1 && (
+
+
+      <span class="carousel-counter" aria-hidden="true">1 / {images.length}</span>
+
+
+    )}
   </div>
 
   <!-- Secção de Conteúdo -->
   <div class="card-content">
     <div class="content-header">
+      {wide && badge && <span class="wide-badge" data-i18n={badgeKey}>{badge}</span>}
       <span class="project-badge">{type}</span>
       <h3 class="project-name">{title}</h3>
     </div>
 
     <div class="project-brief" set:html={desc} />
+
+
+    {wide && stats && stats.length > 0 && (
+
+
+      <ul class="wide-stats">
+
+
+        {stats.map(st => (
+
+
+          <li><strong>{st.value}</strong><span data-i18n={st.key}>{st.label}</span></li>
+
+
+        ))}
+
+
+      </ul>
+
+
+    )}
 
     <div class="tech-container" aria-label={t.technologiesUsed}>
       {stack.map(tech => (
@@ -373,6 +408,52 @@ function getAlt(index: number): string {
     .main-cta-btn { width: 100%; justify-content: center; }
   }
 
+  /* ── Variante larga (projeto principal) ── */
+  .glass-project-card.is-wide {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    height: auto;
+    border-color: rgba(0, 212, 255, 0.25);
+    box-shadow: 0 10px 40px var(--card-shadow, rgba(0, 0, 0, 0.35));
+  }
+  .is-wide .card-visuals { flex: 1.15 1 0; aspect-ratio: auto; min-height: 460px; }
+  .is-wide .carousel-viewport { position: absolute; inset: 0; }
+  .is-wide .carousel-controls { opacity: 1; bottom: 14px; }
+  /* Com dezenas de imagens os pontos deixam de fazer sentido: fica o contador "n / total" */
+  .is-wide .carousel-dots { display: none; }
+  .is-wide .card-content { flex: 1 1 0; padding: 2rem 2.25rem; gap: 1rem; }
+  .is-wide .project-name { font-size: clamp(1.5rem, 2.6vw, 2.1rem); }
+  .is-wide .project-brief { font-size: 0.95rem; line-height: 1.65; }
+
+  .carousel-counter {
+    position: absolute; top: 12px; right: 12px; z-index: 10;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;
+    padding: 0.25rem 0.65rem; border-radius: 999px;
+    background: var(--nav-arrow-bg, rgba(0, 0, 0, 0.6));
+    border: 1px solid var(--nav-arrow-border, rgba(255, 255, 255, 0.1));
+    color: var(--nav-arrow-color, #fff);
+    pointer-events: none;
+  }
+
+  .wide-badge {
+    align-self: flex-start; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0.35rem 0.8rem; border-radius: 999px; color: var(--accent-cyan, #00d4ff);
+    border: 1px solid var(--accent-cyan, #00d4ff); background: rgba(14, 165, 233, 0.1);
+    margin-bottom: 0.75rem;
+  }
+
+  .wide-stats { list-style: none; padding: 0; margin: 0.25rem 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+  .wide-stats li { text-align: center; padding: 0.6rem 0.25rem; border-radius: 10px; border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08)); }
+  .wide-stats strong { display: block; font-size: 1.35rem; color: var(--accent-cyan, #00d4ff); }
+  .wide-stats span { font-size: 0.7rem; color: var(--card-text-color, #a0a0a0); line-height: 1.2; display: block; }
+
+  @media (max-width: 860px) {
+    .glass-project-card.is-wide { flex-direction: column; }
+    .is-wide .card-visuals { flex: none; min-height: 0; aspect-ratio: 16 / 10; }
+    .is-wide .card-content { padding: 1.5rem 1.25rem; }
+    .wide-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+
   /* ── DARK MODE (default) ── */
   :root,
   [data-theme="dark"] {
@@ -422,10 +503,18 @@ function getAlt(index: number): string {
       const dots   = card.querySelectorAll<HTMLElement>('.dot-indicator');
       const prev   = card.querySelector<HTMLButtonElement>('.prev');
       const next   = card.querySelector<HTMLButtonElement>('.next');
+      const counter = card.querySelector<HTMLElement>('.carousel-counter');
 
       if (images.length <= 1) return;
 
       let current = 0;
+
+      // Galeria grande: pré-carrega tudo na primeira interação
+      if (card.classList.contains('is-wide')) {
+        card.addEventListener('mouseenter', () => {
+          images.forEach(i => { (i as HTMLImageElement).loading = 'eager'; });
+        }, { once: true });
+      }
 
       function update(index: number) {
         images.forEach((img, i) => {
@@ -439,6 +528,7 @@ function getAlt(index: number): string {
           dot.tabIndex = i === index ? 0 : -1;
         });
         current = index;
+        if (counter) counter.textContent = `${index + 1} / ${images.length}`;
       }
 
       next?.addEventListener('click', e => { e.preventDefault(); update((current + 1) % images.length); });
